@@ -9,20 +9,20 @@
         </div>
         <div class="input">
             <div class="input-border">
-                <input type="text" class="border" name="userCode" v-model="userCode" placeholder="账户">
+                <input type="text" class="border" name="userCode" v-model="userCode" placeholder="请输入登录账号">
             </div>
             <div class="input-border">
-                <input :type="typePwd" class="border" name="passWord"  
+                <input :type="typePwd" class="border" name="passWord"
                     v-model="passWord"
                     show-password
-                    @keyup.enter="login" placeholder="密码">
+                    @keyup.enter="login" placeholder="请输入登录密码">
                     <img  @click="showPwd" :src="eyeIcon"  class="eyeIcon" >
             </div>
         </div>
         <div class="action">
             <div class="btn-login" @click="login"> 登 录 </div>
         </div>
-        <div class="icon">
+        <div class="icon" style="display:none">
             <i class="iconfont icon-qq"></i>
             <i class="iconfont icon-weibo"></i>
             <i class="iconfont icon-weixin"></i>
@@ -33,63 +33,62 @@
 </template>
 
 <script>
-import { loginIn } from "@/api/loginApi";
+import { loginIn } from '@/api/loginApi'
 import eye_close from '@/assets/icon/eye_close.png'
 import eye_open from '@/assets/icon/eye_open.png'
 
 export default {
-  name: "validCode",
+  name: 'validCode',
   props: {
     width: {
       type: String,
-      default: "100px",
+      default: '100px'
     },
     height: {
       type: String,
-      default: "40px",
+      default: '40px'
     },
     length: {
       type: Number,
-      default: 4,
-    },
+      default: 4
+    }
   },
-  data() {
+  data () {
     return {
-      typePwd:'password',
-      eyeIcon:eye_close,
-      userCode: "",
-      passWord: "",
+      typePwd: 'password',
+      eyeIcon: eye_close,
+      userCode: '',
+      passWord: '',
       codeList: [],
-      particularsForm: {},
-    };
+      particularsForm: {}
+    }
   },
-  mounted() {
-    
+  mounted () {
+
   },
   methods: {
     /** 验证用户密码 */
-    login() {
-      let params = { userCode: this.userCode, passWord: this.passWord };
+    login () {
+      const params = { userCode: this.userCode, passWord: this.passWord }
       loginIn(params).then((response) => {
-        let resultCode = response.resultCode;
-        if ("2000" === resultCode) {
-          //存用户信息
-          localStorage.setItem('userToken', response.resultEntity.userToken);
-          localStorage.setItem('userName', response.resultEntity.userName);
-          this.$router.push("/main");
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 存用户信息
+          localStorage.setItem('userToken', response.resultEntity.userToken)
+          localStorage.setItem('userName', response.resultEntity.userName)
+          this.$router.push('/main')
         } else {
-          //这个分支是错误返回分支
-          alert(response.resultMsg);
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
         }
-      });
+      })
     },
-     showPwd (){
-      this.typePwd = this.typePwd === 'password' ? 'text' : 'password';
-      this.eyeIcon = this.eyeIcon === eye_close ? eye_open : eye_close;
-      
-    },
-  },
-};
+    showPwd () {
+      this.typePwd = this.typePwd === 'password' ? 'text' : 'password'
+      this.eyeIcon = this.eyeIcon === eye_close ? eye_open : eye_close
+    }
+  }
+}
 </script>
 
 <style>
@@ -106,7 +105,7 @@ export default {
   overflow-y: hidden;
   overflow-x: hidden;
 }
-.login-text{   
+.login-text{
     position: absolute;
     right: 10%;
     top: 20%;
@@ -124,7 +123,6 @@ export default {
     color: white;
     font-size: 25px;
 }
-
 
 .login {
     width: 300px;
@@ -156,7 +154,8 @@ export default {
 
 .login .input-border {
     /*实现颜色从左到右渐变效果*/
-    background-image: linear-gradient(to right, #e8198b, #3B65BB);
+    /* background-image: linear-gradient(to right, #e8198b, #3B65BB); */
+    border: 1px solid #3B65BB;
     height: 45px;
     width: 100%;
     margin-bottom: 20px;
@@ -176,8 +175,8 @@ export default {
 }
 
 .login .btn-login {
-    width: 60%;
-    border: 2px solid #3B65BB;
+    width: 100%;
+    border: 1px solid #3B65BB;
     margin: 0 auto;
     text-align: center;
     line-height: 40px;
@@ -193,7 +192,7 @@ export default {
 
 .login .icon {
     text-align: center;
-    width: 60%;
+    width: 100%;
     margin: 0 auto;
     margin-top: 18px;
     border-top: 1px dashed #eee;
@@ -208,9 +207,8 @@ export default {
 }
 
 .typePwd {
-    type: 
+    type:
 
 }
-
 
 </style>
