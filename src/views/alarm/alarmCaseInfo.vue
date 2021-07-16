@@ -293,7 +293,12 @@ export default {
     }
   },
   methods: {
-
+    tabRowClassName ({ row, rowIndex }) {
+      const index = rowIndex + 1
+      if (index % 2 === 0) {
+        return 'double-row'
+      }
+    },
     handleClose (done) {
       done()
     },

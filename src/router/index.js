@@ -10,11 +10,15 @@ const routes = [
     component: require('@/views/login/login.vue').default
   },
   {
-    path: '/login',
+    path: '/index',
+    name: 'index',
+    component: require('@/views/index/app.vue').default
+  },
+  {
+    path: '/',
     name: 'Login',
     component: require('@/views/login/login.vue').default
   },
-
   {
     path: '/main',
     name: 'Main',

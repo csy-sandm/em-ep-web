@@ -9,5 +9,5 @@ yarn serve
 
 https://lanhuapp.com/url/EP7F8-6nC32
 
-## NDS更新缓存命令
+## DNS更新缓存命令
 ipconfig /flushdns

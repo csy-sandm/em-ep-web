@@ -17,25 +17,25 @@
 </template>
 
 <script>
-	import Header from "./layout/header.vue"
-	import sidebar from "./layout/sidebar.vue"
-	export default {
-		components: {
-			Header,
-			sidebar
-		},
-		data() {
-			return {
-			}
-		},
-		methods: {
-		},
-		created() {
-		},
-		mounted() {
-			//this.$router.push("/index")
-		}
-	}
+import Header from './layout/header.vue'
+import sidebar from './layout/sidebar.vue'
+export default {
+  components: {
+    Header,
+    sidebar
+  },
+  data () {
+    return {
+    }
+  },
+  methods: {
+  },
+  created () {
+  },
+  mounted () {
+    // this.$router.push("/index")
+  }
+}
 </script>
 
 <style lang="scss" scoped>

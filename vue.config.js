@@ -15,14 +15,14 @@ module.exports = {
   devServer: {
     proxy: {
       '/em-ep/': {
-        target: 'http://127.0.0.1:11004',
+        target: 'http://47.118.50.171:11004',
         ws: false,
         pathRewrite: {
           '^/em-ep/': '/'
         }
       },
       "/": {
-        target: "http://127.0.0.1:11003",
+        target: "http://47.118.50.171:11003",
       },
 
     }
