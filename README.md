@@ -1,29 +1,10 @@
-# pixiu-vc-web
+# EM-EP-WEB
 
-## Project setup
+## 项目运行
 ```
-npm install
+yarn install
+yarn serve
 ```
+## 蓝狐高保真地址
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+https://lanhuapp.com/url/EP7F8-6nC32
