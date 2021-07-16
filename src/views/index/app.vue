@@ -1,13 +1,20 @@
 <template>
     <div class="index-container">
-123123
+        <Map />
+        <Header class="header-container"/>
     </div>
 </template>
 
 <script>
+import Map from './map/app.vue'
+import Header from '../../components/layout/header.vue'
 export default {
-
+  components: {
+    Map,
+    Header
+  }
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -19,12 +26,13 @@ export default {
     .map {
         width: 100%;
         height: 100%;
-        ::v-deep .gaia-toolbar {
-            display: none;
-        }
-        ::v-deep .cesium-performanceDisplay {
-            display: none;
-        }
+    }
+    .header-container{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
     }
 }
 </style>

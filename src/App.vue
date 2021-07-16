@@ -13,6 +13,11 @@
   color: #2c3e50;
 }
 
+body {
+    display: block;
+    margin: 0px;
+}
+
 #nav {
   padding: 30px;
 }

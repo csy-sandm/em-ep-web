@@ -20,6 +20,7 @@
     "three": "^0.126.1",
     "three-orbit-controls": "^82.1.0",
     "vue": "^2.6.11",
+    "vue-baidu-map": "^0.21.22",
     "vue-color": "^2.8.1",
     "vue-router": "^3.2.0",
     "vue-table2": "^1.0.4",
