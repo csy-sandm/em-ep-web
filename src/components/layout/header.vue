@@ -108,8 +108,7 @@ export default {
 		line-height: 64px;
 		text-align: center;
 		color: white;
-		background: #04244F;//纯色
-
+		background-color: rgba(4,36,79,0.7);
 		.title{
 		float: left;
 		height: 70px;
