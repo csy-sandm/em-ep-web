@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- 标题 class="el-menu-demo"-->
-		<el-menu
+		<!-- <el-menu
 				:default-active="activeIndex2"
 				class="title-info"
 				mode="horizontal"
@@ -10,9 +10,15 @@
 				active-text-color="#ffd04b" >
 			<el-menu-item index="1">站点历史数据</el-menu-item>
 		</el-menu>
-		<br />
+		<br /> -->
+		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 15px 15px 0px 15px;">
+			<el-tab-pane label="站点历史数据" name="first"></el-tab-pane>
+			<el-tab-pane label="测试数据2" name="second"></el-tab-pane>
+			<el-tab-pane label="测试数据3" name="third"></el-tab-pane>
+			<el-tab-pane label="测试数据4" name="fourth"></el-tab-pane>
+		</el-tabs>
 
-		<div class="content-info">
+		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="padding:10px">
 			<el-col class="grid">
@@ -89,12 +95,12 @@
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
-							@click="editData(scope.row)">编辑</el-button>
+							@click="editData(scope.row)"></el-button>
 					<el-button
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)">删除</el-button>
+							@click="delData(scope.row)"></el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -206,6 +212,7 @@ import {
 export default {
   data () {
     return {
+      activeName: 'first',
       // 控制 新增弹出框是否显示
       dialogAddVisible: false,
       // 控制 修改弹出框是否显示
@@ -266,9 +273,12 @@ export default {
     }
   },
   methods: {
+    handleClick (tab, event) {
+      console.log(tab, event)
+    },
     tabRowClassName ({ row, rowIndex }) {
       const index = rowIndex + 1
-      if (index % 2 === 0) {
+      if (index % 2 == 0) {
         return 'double-row'
       }
     },

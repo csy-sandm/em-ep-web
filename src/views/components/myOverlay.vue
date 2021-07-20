@@ -7,6 +7,9 @@
     <div class="marker-info">
       <div class="marker-title">
         <span class="title-name">义达铝业-义达排口</span>
+        <div class="info-close" @click="infoWindowClose()" >
+          <img :src="close" class="img-content" />
+        </div>
       </div>
       <div class="assets-content">
           <div class="assets-info" v-for="(item,index) of data" :key="index">
@@ -25,11 +28,13 @@
 
 <script>
 import noData from '../../assets/img/no-data.png'
+import close from '../../assets/img/close.png'
 export default {
   props: ['text', 'position', 'active', 'data'],
   data () {
     return {
-      noData
+      noData,
+      close
     }
   },
   watch: {
@@ -41,8 +46,8 @@ export default {
     }
   },
   methods: {
-    handleClick () {
-      global.alert('Well done.')
+    infoWindowClose () {
+      this.$emit('infoWindowClose')
     },
     draw ({ el, BMap, map }) {
       const { lng, lat } = this.position
@@ -62,7 +67,6 @@ export default {
   overflow: hidden;
   box-shadow: 0 0 5px #000;
   color: #fff;
-  padding: 10px;
   position: absolute;
 }
 
@@ -81,6 +85,20 @@ export default {
       font-size: 16px;
       color: white;
       margin-left: 10px;
+      float: left;
+    }
+    .info-close{
+      height: 40px;
+      width: 40px;
+      float: right;
+      display:flex;
+      align-items:center;/*垂直居中*/
+      justify-content: center;/*水平居中*/
+      .img-content{
+          width: 10px;
+          height: 10px;
+          background-size:100% 100%;
+      }
     }
   }
   .assets-content{

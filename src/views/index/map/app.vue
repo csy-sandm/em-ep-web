@@ -1,31 +1,15 @@
 <template>
   <div class="map-container">
-        <baidu-map class="map" :center="markerPoint" :zoom="16" @ready="handler" >
-           <bm-marker :position="markerPoint" :dragging="true" @click="infoWindowOpen">
-               <!-- <bm-info-window :show="show" @close="infoWindowClose" @open="infoWindowOpen">
-                  <div class="marker-info">
-                    <div class="marker-title">
-                      <span class="title-name">义达铝业-义达排口</span>
-                    </div>
-                    <div class="assets-content">
-                        <div class="assets-info" v-for="(item,index) of assetsInfo" :key="index">
-                            <div class="assets-img">
-                                <img :src="noData" class="img-content">
-                            </div>
-                            <div class="assets-detail">
-                                <span class="assets-name">{{ item.name }}</span>
-                                <span class="assets-value">{{ item.value}}</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-               </bm-info-window> -->
-            </bm-marker>
-            <my-overlay
-              :position="markerPoint"
-              :data="assetsInfo"
-              text="点击我">
-            </my-overlay>
+        <baidu-map class="map" :center="markerPoint" :zoom="16" :scroll-wheel-zoom="true" @ready="handler">
+           <div v-for="(marker,index) of markerList" :key="index">
+              <bm-marker :position="marker.markerPoint" @click="infoWindowOpen(marker)" />
+           </div>
+           <my-overlay
+             v-if="show"
+             :position="clickPoint"
+             :data="clickInfo"
+             @infoWindowClose="infoWindowClose">
+           </my-overlay>
         </baidu-map>
   </div>
 </template>
@@ -38,31 +22,39 @@ export default {
   },
   data () {
     return {
-      active: false,
       markerPoint: { lng: 116.4154785, lat: 39.91548784 },
-      show: false,
-      assetsInfo: [
+      markerList: [
         {
-          name: '站点数',
-          value: 35
+          markerPoint: { lng: 116.4154785, lat: 39.91548784 },
+          assetsInfo: [
+            {
+              name: '站点数111',
+              value: 1111
+            }
+          ]
         },
         {
-          name: '设备数',
-          value: 168
+          markerPoint: { lng: 116.5154785, lat: 39.71548784 },
+          assetsInfo: [
+            {
+              name: '站点数222',
+              value: 222
+            }
+          ]
         },
         {
-          name: '客户数',
-          value: 245
-        },
-        {
-          name: '运维工程师',
-          value: 36
-        },
-        {
-          name: '运维部门',
-          value: 13
+          markerPoint: { lng: 116.1154785, lat: 39.41548784 },
+          assetsInfo: [
+            {
+              name: '站点数333',
+              value: 3333
+            }
+          ]
         }
-      ]
+      ],
+      show: false,
+      clickInfo: [],
+      clickPoint: {}
     }
   },
   methods: {
@@ -74,8 +66,15 @@ export default {
     infoWindowClose () {
       this.show = false
     },
-    infoWindowOpen () {
-      this.active = true
+    infoWindowOpen (marker) {
+      if (marker && marker.markerPoint) {
+        this.clickPoint = marker.markerPoint
+      }
+      if (marker && marker.assetsInfo) {
+        this.clickInfo = marker.assetsInfo
+        console.log(this.clickInfo)
+      }
+      this.show = true
     }
   }
 }
