@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/Login',
+    path: '/',
     name: 'Login',
     component: require('@/views/login/login.vue').default
   },
