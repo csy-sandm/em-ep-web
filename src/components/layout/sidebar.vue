@@ -27,7 +27,7 @@
       initMenu() {
         initMenu().then((response) => {
         let resultCode = response.resultCode;
-       
+
         if ("2000" === resultCode) {
           //这里根据查询结果，赋值给页面菜单
           this.routes = response.resultEntity
@@ -36,7 +36,7 @@
           alert(response.resultMsg);
         }
       });
-      
+
       }
     },
     watch: {},
@@ -54,10 +54,9 @@
   .sidebar-style {
     width: 100%;
     height: 100%;
-    
     .tac {
       width: 100%;
-      background: #313E5D;
+      background: #0B2A54;
     }
   }
 

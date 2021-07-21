@@ -4,18 +4,18 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Login',
-  //   component: require('@/views/login/login.vue').default
-  // },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: require('@/views/login/login.vue').default
+  },
   {
     path: '/index',
     name: 'index',
     component: require('@/views/index/app.vue').default
   },
   {
-    path: '/',
+    path: '/Main',
     name: 'Main',
     component: require('@/components/main.vue').default,
     children: [

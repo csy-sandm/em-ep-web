@@ -16,28 +16,28 @@
 </template>
 
 <script>
-  export default {
-    name: 'SideNavItem',
-    props: {
-      item: {
-        type: Object,
-        required: true
-      },
-      menuUrl: {
-        type: String,
-        default: ''
-      }
+export default {
+  name: 'SideNavItem',
+  props: {
+    item: {
+      type: Object,
+      required: true
     },
-    methods: {
-      hasChild(itemChildren) {
-        if (itemChildren !== undefined && itemChildren.length !== 0) {
-          return true
-        } else {
-          return false
-        }
+    menuUrl: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    hasChild (itemChildren) {
+      if (itemChildren !== undefined && itemChildren.length !== 0) {
+        return true
+      } else {
+        return false
       }
     }
   }
+}
 </script>
 
 <style scoped>

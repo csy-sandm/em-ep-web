@@ -107,7 +107,8 @@ export default {
 		height: 100%;
 		text-align: center;
 		color: white;
-		background-color: rgba(4,36,79,0.7);
+		// background-color: rgba(4,36,79);
+    background: #062247;
 		.title{
 		float: left;
 		height: 70px;

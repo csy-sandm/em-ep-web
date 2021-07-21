@@ -1,14 +1,14 @@
 <template>
 	<el-container  class="main-container">
-		<el-header class="header-box" style="height: 64px">
-			<Header></Header>
+		<el-header class="header-box" style="height: 70px">
+			<MainH></MainH>
 		</el-header>
 		<el-container class="inner-container">
-      <el-aside width="13%" style="background-color: #FFFFFF;">
+      <el-aside width="200px">
         <sidebar></sidebar>
       </el-aside>
 			<el-container style="width: 100%; height: 100%">
-				<el-main style="width: 100%; height: 100%">
+				<el-main style="width: 100%; height: 100%;padding: 10px;">
 					<router-view></router-view>
 				</el-main>
 			</el-container>
@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import Header from './layout/header.vue'
+import MainH from './layout/mainH.vue'
 import sidebar from './layout/sidebar.vue'
 export default {
   components: {
-    Header,
+    MainH,
     sidebar
   },
   data () {
@@ -49,7 +49,7 @@ export default {
 } */
 .main-container {
 	width: 100%;
-	height: 900px;
+	height: 100vh;
 	.el-header {
 		padding: 0px !important;
 		-webkit-box-sizing: border-box;
@@ -59,10 +59,7 @@ export default {
 	}
 	.inner-container {
 		height: calc(100% - 10vh);
-		/*.show-container {*/
-		/*	width: 100%;*/
-		/*	height: 100%;*/
-		/*}*/
+    background: #F3F3F3;
 	}
 	.el-main {
 		display: block;

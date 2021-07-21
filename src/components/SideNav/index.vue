@@ -10,32 +10,32 @@
 </template>
 
 <script>
-  import SideNavItem from './SideNavItem'
-  export default {
-    name: 'index',
-    components: {
-      SideNavItem
+import SideNavItem from './SideNavItem'
+export default {
+  name: 'index',
+  components: {
+    SideNavItem
+  },
+  props: {
+    routes: {
+      type: Array,
+      required: true
     },
-    props: {
-      routes: {
-        type: Array,
-        required: true
-      },
-      activeMenu: {
-        type: String,
-        required: false
-      }
-    },
-    data() {
-      return {
-        menuStyle: {
-          backgroundColor: '#313E5D',
-          textColor: '#A4A9C0',
-          activeTextColor: '#FFCA00',
-        }
+    activeMenu: {
+      type: String,
+      required: false
+    }
+  },
+  data () {
+    return {
+      menuStyle: {
+        backgroundColor: '#0B2A54',
+        textColor: 'white',
+        activeTextColor: 'white'
       }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

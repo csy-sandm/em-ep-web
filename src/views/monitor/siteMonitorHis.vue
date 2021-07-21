@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="his-container">
 		<!-- 标题 class="el-menu-demo"-->
 		<!-- <el-menu
 				:default-active="activeIndex2"
@@ -11,30 +11,33 @@
 			<el-menu-item index="1">站点历史数据</el-menu-item>
 		</el-menu>
 		<br /> -->
-		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 15px 15px 0px 15px;">
+		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
 			<el-tab-pane label="站点历史数据" name="first"></el-tab-pane>
-			<el-tab-pane label="测试数据2" name="second"></el-tab-pane>
-			<el-tab-pane label="测试数据3" name="third"></el-tab-pane>
-			<el-tab-pane label="测试数据4" name="fourth"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
-		<el-row style="padding:10px">
-			<el-col class="grid">
+		<el-row style="margin-top: 20px;">
+			<el-col class="grid" style="width:50%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="数据唯一标识" style="width: 300px"  >
+						<el-form-item label="数据唯一标识:" style="width: 300px"  >
 							<el-input v-model="queryParam.uId" placeholder="请输入数据唯一标识"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="text-align: right">
+			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
 				<!-- 按钮 -->
+				<el-button
+						class="add-button"
+						type="primary"
+						@click="addData()"
+						icon="el-icon-circle-plus-outline"
+						size="mini" >新增</el-button>
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -55,24 +58,11 @@
 						size="mini" >导出</el-button>
 			</el-col>
 		</el-row>
-		<br />
-
-		<!-- 功能按钮 -->
-		<el-row style="left: 20px;width: 95%;">
-			<el-col :span="1" class="grid" >
-				<el-button
-						class="add-button"
-						type="primary"
-						@click="addData()"
-						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
-			</el-col>
-		</el-row>
-		<br />
 
 		<!-- 表格 -->
 		<el-table
 				:data="dataList"
+        stripe
 				style="width: 100%;margin-top:10px"
 				:header-cell-style="{color:'#313E5D',background:'#C3D2E6',fontFamily:'MicrosoftYaHeiUI',fontSize:'14px'}"
 				:row-class-name="tabRowClassName"
@@ -105,17 +95,19 @@
 			</el-table-column>
 		</el-table>
 
-		<!-- 分页 -->
-		<el-pagination
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				:current-page="page"
-				:page-sizes="[5, 10, 15, 20]"
-				:page-size="size"
-				style="float: right"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="total">
-		</el-pagination>
+    <div class="page-container">
+      <!-- 分页 -->
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="size"
+          style="float: right;margin-top:15px;"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
+    </div>
 
 		<!-- 新增弹出框  -->
 		<el-dialog title="新增信息"
@@ -223,7 +215,7 @@ export default {
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -419,10 +411,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	#app {
-		font-family: Helvetica, sans-serif;
-		text-align: center;
-	}
+.his-container{
+    background: white;
+    margin: 10px 15px;
+}
+
+::v-deep{
+.el-input__inner:focus{
+    border:1px solid #DCDFE6
+}
+
+.el-tabs__item.is-active {
+    color: #0F6CC3;
+}
+
+.el-tabs__item:hover {
+    color: #0F6CC3;
+}
+
+.el-tabs__active-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background-color: #0F6CC3;
+    z-index: 1;
+    transition: transform .3s cubic-bezier(.645,.045,.355,1);
+    list-style: none;
+}
+}
 
 	//覆盖 el-button 样式
 	.serach-button{
@@ -430,6 +447,12 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+	.serach-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.refresh-button{
@@ -437,6 +460,12 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+    .refresh-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.export-button{
@@ -444,92 +473,30 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+	.export-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.add-button{
 		color:white;
-		background: #0F6CC3 ;
+		background: #1D9FCA ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
 	}
 
-	.planWorkorderInfo-container{
-		background: #F3F3F3;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		.title-info{
-			height: 20px;
-			padding: 20px 0px 0px 20px;
-		}
-		.content-info{
-			flex: 1;
-			background: white;
-			margin: 10px;
-		}
-		::v-deep{
-			.el-breadcrumb__inner {
-				color: #313E5D;
-				font-size: 17px;
-			}
-
-			.el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
-				font-weight: 400;
-				color: #313E5D;
-				cursor: text;
-			}
-
-			.el-breadcrumb__separator {
-				margin: 0 9px;
-				font-weight: 700;
-				color: #313E5D;
-			}
-
-			.el-input__inner {
-				-webkit-appearance: none;
-				background-color: #FFF;
-				background-image: none;
-				border-radius: 4px;
-				border: 1px solid #DCDFE6;
-				box-sizing: border-box;
-				color: #606266;
-				display: inline-block;
-				font-size: inherit;
-				height: 30px;
-				line-height: 30px;
-				outline: 0;
-				padding: 0 15px;
-				transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-				width: 100%;
-			}
-
-			.el-form-item {
-				margin-bottom: 10px;
-			}
-
-			.el-table__empty-block {
-				text-align: center;
-				width: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.el-pagination {
-				white-space: nowrap;
-				padding: 10px 10px;
-				color: #303133;
-				font-weight: 700;
-			}
-			.el-table .double-row{
-				background:#C3D2E6
-			}
-
-			.el-table__body, .el-table__footer, .el-table__header {
-				table-layout: fixed;
-				border-collapse: separate;
-				color: #313E5D;
-			}
-		}
+	.add-button:hover{
+		background: #1D9FCA ;
+		opacity: 0.6;
 	}
+
+  .page-container{
+    width: 100%;
+    height: 60px;
+    background: white;
+  }
 </style>
