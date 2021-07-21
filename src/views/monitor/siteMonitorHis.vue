@@ -111,32 +111,37 @@
 
 		<!-- 新增弹出框  -->
 		<el-dialog title="新增信息"
-				   style="text-align: left !important"
+				   style="text-align: left !important;margin-top: 15vh;"
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="数据唯一标识" style="width: 500px" prop="uId" >
+			<el-form ref="form" label-width="150px" :model="insertParam"  :rules="rules"  >
+				<el-form-item label="数据唯一标识" style="width: 50%;float: left;" prop="uId" >
 					<el-input v-model="insertParam.uId"   placeholder="请输入数据唯一标识"></el-input>
 				</el-form-item>
-				<el-form-item label="站点编码" style="width: 500px"  >
+				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编码"></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 500px"  >
+				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.dataKey"   placeholder="请输入数据因子编号"></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 500px"  >
+				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.dataName"   placeholder="请输入监测因子名称"></el-input>
 				</el-form-item>
-				<el-form-item label="数据值" style="width: 500px"  >
+				<el-form-item label="数据值" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.dataValue"   placeholder="请输入数据值"></el-input>
 				</el-form-item>
-				<el-form-item label="数据采集时间" style="width: 500px"  >
-					<el-input v-model="insertParam.dataTime" type="datetime-local"  placeholder="请输入数据采集时间"></el-input>
+				<el-form-item label="数据采集时间" style="width: 50%;float: left;">
+          <el-date-picker
+            style="width: 100%;"
+            v-model="insertParam.dataTime"
+            type="datetime"
+            placeholder="请输入数据采集时间">
+          </el-date-picker>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer" >
-        <el-button type="success" @click="insertData(insertParam)">保存</el-button>
-        <el-button type="primary" @click="dialogAddVisible = false">取消</el-button>
+        <el-button class="save-button" type="success" @click="insertData(insertParam)">保存</el-button>
+        <el-button class="cancel-button" type="primary" @click="dialogAddVisible = false">取消</el-button>
       </span>
 		</el-dialog>
 
@@ -417,6 +422,28 @@ export default {
 }
 
 ::v-deep{
+.el-dialog__body {
+  padding: 30px 20px;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+  flex: 1;
+  display: flex;
+}
+
+.el-dialog__footer {
+    padding: 10px 20px 10px;
+    text-align: right;
+    box-sizing: border-box;
+    background: #C3D2E6;
+}
+
+.el-dialog__header {
+    padding: 15px;
+    background: #C3D2E6;
+    font-weight: bold;
+}
+
 .el-input__inner:focus{
     border:1px solid #DCDFE6
 }
@@ -463,7 +490,7 @@ export default {
 		height: 40px;
 	}
 
-    .refresh-button:hover{
+  .refresh-button:hover{
 		background: #0F6CC3 ;
 		opacity: 0.6;
 	}
@@ -491,6 +518,32 @@ export default {
 
 	.add-button:hover{
 		background: #1D9FCA ;
+		opacity: 0.6;
+	}
+
+  .cancel-button{
+		color:white;
+		background: #1D9FCA ;
+		opacity: 0.8;
+		border-radius: 3px;
+		height: 40px;
+	}
+
+	.cancel-button:hover{
+		background: #1D9FCA ;
+		opacity: 0.6;
+	}
+
+  .save-button{
+		color:white;
+		background: #0F6CC3 ;
+		opacity: 0.8;
+		border-radius: 3px;
+		height: 40px;
+	}
+
+	.save-button:hover{
+		background: #0F6CC3 ;
 		opacity: 0.6;
 	}
 
