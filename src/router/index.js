@@ -12,12 +12,7 @@ const routes = [
   {
     path: '/index',
     name: 'index',
-    component: require('@/views/index/app.vue').default
-  },
-  {
-    path: '/Main',
-    name: 'Main',
-    component: require('@/components/main.vue').default,
+    component: require('@/views/index/app.vue').default,
     children: [
       {
         path: '/bigScreen',
@@ -141,6 +136,11 @@ const routes = [
         component: require('@/views/sysManager/operateLog.vue').default
       }
     ]
+  },
+  {
+    path: '/Main',
+    name: 'Main',
+    component: require('@/components/main.vue').default
   }
 
 ]

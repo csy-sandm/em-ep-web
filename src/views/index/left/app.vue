@@ -3,7 +3,7 @@
         <div class="work-finish">
             <ModuleTitle
                 :title="'工单完成情况'"
-                :pic-url="noData"
+                :pic-url="titleIcon"
             />
             <div class="work-content">
                 <div class="work-info" v-for="(item,index) of workInfo" :key="index">
@@ -22,12 +22,12 @@
         <div class="assets">
             <ModuleTitle
                 :title="'资产情况'"
-                :pic-url="noData"
+                :pic-url="titleIcon"
             />
             <div class="assets-content">
                 <div class="assets-info" v-for="(item,index) of assetsInfo" :key="index">
                     <div class="assets-img">
-                        <img :src="noData" class="img-content">
+                        <img :src="deviceIcon" class="img-content">
                     </div>
                     <div class="assets-detail">
                         <span class="assets-name">{{ item.name }}</span>
@@ -39,7 +39,7 @@
         <div class="order-status">
             <ModuleTitle
                 :title="'工单动态'"
-                :pic-url="noData"
+                :pic-url="titleIcon"
             />
             <div class="order-content">
                 <div :class="['order-info', item.result === 0 ? 'order-finished' : 'order-unfinished']" v-for="(item,index) of orderInfo" :key="index">
@@ -54,14 +54,17 @@
 
 <script>
 import ModuleTitle from '../../components/moduleTitle'
-import noData from '../../../assets/img/no-data.png'
+import titleIcon from '../../../assets/img/title-icon.png'
+import deviceIcon from '../../../assets/img/device.png'
+
 export default {
   components: {
     ModuleTitle
   },
   data () {
     return {
-      noData,
+      titleIcon,
+      deviceIcon,
       workInfo: [
         {
           name: '正常完工',
@@ -139,6 +142,11 @@ export default {
       } else {
         return '开始了工单'
       }
+    }
+  },
+  methods: {
+    handleSwitchEvent () {
+      // this.$router.push({ path: '/Main' })
     }
   }
 }

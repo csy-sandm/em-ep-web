@@ -20,7 +20,7 @@
         <div class="alarm">
             <ModuleTitle
                 :title="'工单动态'"
-                :pic-url="noData"
+                :pic-url="titleIcon"
             />
             <div class="alarm-info">
                 <div class="alarm-detail" v-for="(item,index) of alarmInfo" :key="index">
@@ -61,7 +61,7 @@
 <script>
 import ModuleTitle from '../../components/moduleTitle'
 import GaugeChart from '../../components/gaugeChart'
-import noData from '../../../assets/img/no-data.png'
+import titleIcon from '../../../assets/img/title-icon.png'
 
 export default {
   components: {
@@ -70,7 +70,7 @@ export default {
   },
   data () {
     return {
-      noData,
+      titleIcon,
       alarmInfo: [
         {
           hour: '14:42',
@@ -111,7 +111,7 @@ export default {
     .general-info{
         width: 100%;
         height: 200px;
-        margin-top: 10px;
+        margin-top: 50px;
         .general-left{
             width: 48%;
             height: 100%;

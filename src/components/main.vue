@@ -1,8 +1,5 @@
 <template>
 	<el-container  class="main-container">
-		<el-header class="header-box" style="height: 70px">
-			<MainH></MainH>
-		</el-header>
 		<el-container class="inner-container">
       <el-aside width="200px">
         <sidebar></sidebar>

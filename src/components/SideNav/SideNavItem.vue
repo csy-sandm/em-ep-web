@@ -1,6 +1,6 @@
 <template>
   <!--  <side-nav-item></side-nav-item>-->
-  <el-menu-item v-if="!hasChild(item.menuInfoEntity)" :route="{ path: item.menuUrl}" :index="item.menuId">
+  <el-menu-item v-if="!hasChild(item.menuInfoEntity)" :route="{ path: item.menuUrl}" :index="item.menuId" @click="setInfoShowTrue()">
     <i :class="item.menuIcon"></i>
     <span>{{ item.menuName }}</span>
   </el-menu-item>
@@ -11,7 +11,7 @@
       <span>{{ item.menuName }}</span>
     </template>
     <side-nav-item v-for="child in item.menuInfoEntity" :key="child.path" :is-nest="true" :item="child"
-      :route-path="item.menuUrl" class="nest-menu" />
+      :route-path="item.menuUrl" class="nest-menu" @click="setInfoShowTrue()" />
   </el-submenu>
 </template>
 
@@ -29,6 +29,9 @@ export default {
     }
   },
   methods: {
+    setInfoShowTrue () {
+      this.$store.commit('setInfoShowTrue')
+    },
     hasChild (itemChildren) {
       if (itemChildren !== undefined && itemChildren.length !== 0) {
         return true

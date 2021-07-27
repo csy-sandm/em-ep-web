@@ -2,11 +2,11 @@
 	<el-container class="header-style"  >
 		<!-- <img class="project-title" src="../../assets/header/title.png" alt="title" > -->
 		<div class="title">
-			<span>{{ companyName }}</span>
+			<div class="title-name">{{ companyName }}</div>
 		</div>
 		<div class="header-setting menu-box">
-			<div style="width: 100%;height: 50%;color: #FFF;">{{dateTimeValue}}</div>
-			<div style="width: 100%;height: 50%;color: #FFF;">
+			<div style="width: 100%;height: 35px;line-height:40px;color: #FFF;">{{dateTimeValue}}</div>
+			<div style="width: 100%;height: 35px;line-height:30px;color: #FFF;">
 				<span style="position: relative;left: 0px;color: #FFF;">{{weatherList.type}}</span>
 				<span style="position: relative;left: 5px;color: #FFF;">{{weatherList.fengxiang}}:{{weatherList.fengli}}</span>
 				<span style="position: relative;left: 10px;color: #FFF;">{{weatherList.low}}/{{weatherList.high}}</span>
@@ -103,19 +103,22 @@ export default {
 
 <style lang="scss" scoped>
 	.header-style {
-		width: 100%;
-		height: 100%;
-		text-align: center;
-		color: white;
-		background-color: rgba(4,36,79,0.7);
-		.title{
-		float: left;
-		height: 70px;
-		line-height: 70px;
-		font-size: 1.2vw;
-		font-weight: 600;
-		margin-left: 35px;
-		}
+    width: 100%;
+    height: 70px;
+    background: rgba(4, 36, 79, 0.85);
+    box-shadow: 0px 0px 13px 2px rgba(0, 0, 0, 0.4);
+	  .title{
+      width: 18%;
+      height: 70px;
+      background: rgba(63,103,237, 0.1);
+      .title-name{
+        height: 70px;
+        line-height: 70px;
+        font-size: 25px;
+        color: white;
+        text-align: center;
+      }
+    }
 		.project-title {
 			float: left;
 			margin-left: 30px;
@@ -143,14 +146,14 @@ export default {
 	}
 
 	.header-setting {
-		height: 38px;
-		margin-top: -5px;
+		height: 70px;
 		right: 12%;
 		position: absolute;
 	}
 
 	.header-loginOut {
-		height: 38px;
+		height: 70px;
+    line-height: 70px;
 		position: absolute;
 	}
 </style>
