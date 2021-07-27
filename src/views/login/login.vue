@@ -76,7 +76,7 @@ export default {
           // 存用户信息
           localStorage.setItem('userToken', response.resultEntity.userToken)
           localStorage.setItem('userName', response.resultEntity.userName)
-          this.$router.push('/Main')
+          this.$router.push('/index')
         } else {
           // 这个分支是错误返回分支
           alert(response.resultMsg)

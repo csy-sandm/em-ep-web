@@ -1,6 +1,9 @@
 <template >
 	<el-container class="header-style"  >
 		<!-- <img class="project-title" src="../../assets/header/title.png" alt="title" > -->
+    <div class="logo">
+        <img class="logo-img" :src="logoIcon" >
+    </div>
 		<div class="title">
 			<div class="title-name">{{ companyName }}</div>
 		</div>
@@ -22,10 +25,12 @@
 <script>
 // import Cookies from 'js-cookie'
 import { getWeatherShow } from '@/api/mainApi.js'
+import logoIcon from '../../assets/img/logo.png'
 
 export default {
   data () {
     return {
+      logoIcon,
       menuValue: '',
       dateTimeValue: '',
       userName: '',
@@ -107,16 +112,31 @@ export default {
     height: 70px;
     background: rgba(4, 36, 79, 0.85);
     box-shadow: 0px 0px 13px 2px rgba(0, 0, 0, 0.4);
+    .logo{
+      width: 100px;
+      height: 70px;
+      float: left;
+      display:flex;
+      align-items:center;/*垂直居中*/
+      justify-content: center;/*水平居中*/
+      background: rgba(63,103,237, 0.1);
+      .logo-img{
+          width: 40px;
+          height: 40px;
+          background-size:100% 100%;
+      }
+    }
 	  .title{
-      width: 18%;
+      width: 15%;
       height: 70px;
       background: rgba(63,103,237, 0.1);
+      float: left;
       .title-name{
         height: 70px;
         line-height: 70px;
         font-size: 25px;
         color: white;
-        text-align: center;
+        text-align: left;
       }
     }
 		.project-title {
