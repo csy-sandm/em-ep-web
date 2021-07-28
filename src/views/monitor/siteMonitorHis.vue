@@ -418,7 +418,7 @@ export default {
 <style lang="scss" scoped>
 .his-container{
     background: white;
-    margin: 10px 15px;
+    margin: 35px 15px;
 }
 
 ::v-deep{

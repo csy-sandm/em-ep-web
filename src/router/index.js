@@ -4,16 +4,22 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+  { path: '/', redirect: '/login' },
   {
-    path: '/',
-    name: 'Login',
+    path: '/login',
+    name: 'login',
     component: require('@/views/login/login.vue').default
   },
   {
-    path: '/index',
-    name: 'index',
-    component: require('@/views/index/app.vue').default,
+    path: '/main',
+    name: 'main',
+    component: require('@/components/main.vue').default,
     children: [
+      {
+        path: '/index',
+        name: 'index',
+        component: require('@/views/index/app.vue').default
+      },
       {
         path: '/bigScreen',
         name: 'BigScreen',
@@ -136,12 +142,12 @@ const routes = [
         component: require('@/views/sysManager/operateLog.vue').default
       }
     ]
-  },
-  {
-    path: '/Main',
-    name: 'Main',
-    component: require('@/components/main.vue').default
   }
+  // {
+  //   path: '/Main',
+  //   name: 'Main',
+  //   component: require('@/components/main.vue').default
+  // }
 
 ]
 

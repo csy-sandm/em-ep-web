@@ -43,7 +43,6 @@ export default {
       }
     }
   },
-
   computed: {
     menuShow () {
       return this.$store.state.menuShowState

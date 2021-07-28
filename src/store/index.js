@@ -5,8 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    menuShowState: false,
-    infoShowState: false
+    menuShowState: false
   },
   mutations: {
     setMenuShowFalse (state) {
@@ -14,12 +13,6 @@ export default new Vuex.Store({
     },
     setMenuShowTrue (state) {
       state.menuShowState = true
-    },
-    setInfoShowFalse (state) {
-      state.infoShowState = false
-    },
-    setInfoShowTrue (state) {
-      state.infoShowState = true
     }
   },
   actions: {

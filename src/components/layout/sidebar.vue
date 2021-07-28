@@ -31,6 +31,14 @@
         if ("2000" === resultCode) {
           //这里根据查询结果，赋值给页面菜单
           this.routes = response.resultEntity
+          if(this.routes && this.routes.length > 0){
+              if(this.routes[0] && this.routes[0].menuInfoEntity && this.routes[0].menuInfoEntity.length > 0){
+                this.$router.push(this.routes[0].menuInfoEntity[0].menuUrl)
+              }else{
+                this.$router.push(this.routes[0].menuUrl)
+              }
+          }
+          console.log('this.routesthis.routes', this.routes)
         } else {
           //这个分支是错误返回分支
           alert(response.resultMsg);
