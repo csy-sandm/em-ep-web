@@ -1,5 +1,5 @@
 <template>
-	<div class="his-container">
+	<div class="box-container">
 		<!-- 标题 class="el-menu-demo"-->
 		<!-- <el-menu
 				:default-active="activeIndex2"
@@ -150,25 +150,33 @@
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="200px">
-				<el-form-item label="数据唯一标识" style="width: 500px" >
+			<el-form ref="form" label-width="150px">
+				<el-form-item label="数据唯一标识" style="width: 50%;float: left;">
 					<el-input v-model="editParam.uId"  placeholder="请输入数据唯一标识" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="站点编码" style="width: 500px" >
+				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编码"  ></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 500px" >
+				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
 					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 500px" >
+				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
 					<el-input v-model="editParam.dataName"  placeholder="请输入监测因子名称"  ></el-input>
 				</el-form-item>
-				<el-form-item label="数据值" style="width: 500px" >
+				<el-form-item label="数据值" style="width: 50%;float: left;">
 					<el-input v-model="editParam.dataValue"  placeholder="请输入数据值"  ></el-input>
 				</el-form-item>
-				<el-form-item label="数据采集时间" style="width: 500px" >
-					<el-input v-model="editParam.dataTime" type="datetime-local" placeholder="请输入数据采集时间"  ></el-input>
+        <el-form-item label="数据采集时间" style="width: 50%;float: left;">
+          <el-date-picker
+            style="width: 100%;"
+            v-model="editParam.dataTime"
+            type="datetime"
+            placeholder="请输入数据采集时间">
+          </el-date-picker>
 				</el-form-item>
+				<!-- <el-form-item label="数据采集时间" style="width: 50%;float: left;">
+					<el-input v-model="editParam.dataTime" type="datetime-local" placeholder="请输入数据采集时间"  ></el-input>
+				</el-form-item> -->
 			</el-form>
 			<span slot="footer" class="dialog-footer">
         <el-button type="success" @click="updateData(editParam)">提交</el-button>
@@ -416,7 +424,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.his-container{
+.box-container{
     background: white;
     margin: 35px 15px;
 }

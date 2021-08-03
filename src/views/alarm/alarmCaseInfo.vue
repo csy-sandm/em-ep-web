@@ -1,34 +1,33 @@
 <template>
-	<div>
+	<div class="box-container">
 		<!-- 标题 class="el-menu-demo"-->
-		<el-menu
-				:default-active="activeIndex2"
-				class="title-info"
-				mode="horizontal"
-				background-color="#545c64"
-				text-color="#fff"
-				active-text-color="#ffd04b" >
-			<el-menu-item index="1">告警方案</el-menu-item>
-		</el-menu>
-		<br />
+		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
+			<el-tab-pane label="告警方案" name="first"></el-tab-pane>
+		</el-tabs>
 
-		<div class="content-info">
+		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
-		<el-row style="padding:10px">
-			<el-col class="grid">
+		<el-row style="margin-top: 20px;">
+			<el-col class="grid" style="width:50%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="告警方案编号" style="width: 300px"  >
+						<el-form-item label="告警方案编号:" style="width: 300px"  >
 							<el-input v-model="queryParam.caseId" placeholder="请输入告警方案编号"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="text-align: right">
+			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
 				<!-- 按钮 -->
+				<el-button
+						class="add-button"
+						type="primary"
+						@click="addData()"
+						icon="el-icon-circle-plus-outline"
+						size="mini" >新增</el-button>
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -49,20 +48,6 @@
 						size="mini" >导出</el-button>
 			</el-col>
 		</el-row>
-		<br />
-
-		<!-- 功能按钮 -->
-		<el-row style="left: 20px;width: 95%;">
-			<el-col :span="1" class="grid" >
-				<el-button
-						class="add-button"
-						type="primary"
-						@click="addData()"
-						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
-			</el-col>
-		</el-row>
-		<br />
 
 		<!-- 表格 -->
 		<el-table
@@ -92,59 +77,66 @@
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
-							@click="editData(scope.row)">编辑</el-button>
+							@click="editData(scope.row)"></el-button>
 					<el-button
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)">删除</el-button>
+							@click="delData(scope.row)"></el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 
-		<!-- 分页 -->
-		<el-pagination
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				:current-page="page"
-				:page-sizes="[5, 10, 15, 20]"
-				:page-size="size"
-				style="float: right"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="total">
-		</el-pagination>
+    <div class="page-container">
+      <!-- 分页 -->
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="size"
+          style="float: right;margin-top:15px;"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
+    </div>
 
 		<!-- 新增弹出框  -->
 		<el-dialog title="新增信息"
 				   style="text-align: left !important"
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="告警方案编号" style="width: 500px" prop="caseId" >
+			<el-form ref="form" label-width="150px" :model="insertParam"  :rules="rules"  >
+				<el-form-item label="告警方案编号" style="width: 50%;float: left;" prop="caseId" >
 					<el-input v-model="insertParam.caseId"   placeholder="请输入告警方案编号"></el-input>
 				</el-form-item>
-				<el-form-item label="站点id" style="width: 500px"  >
+				<el-form-item label="站点id" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteId"   placeholder="请输入站点id"></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 500px"  >
+				<el-form-item label="数据因子编号" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.dataKey"   placeholder="请输入数据因子编号"></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 500px"  >
+				<el-form-item label="监测因子名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.dataName"   placeholder="请输入监测因子名称"></el-input>
 				</el-form-item>
-				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 500px"  >
+				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.caseType"   placeholder="请输入报警类型(1:超标报警 2:无变化报警 3:无数据报警)"></el-input>
 				</el-form-item>
-				<el-form-item label="告警边界值" style="width: 500px"  >
+				<el-form-item label="告警边界值" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.caseValue"   placeholder="请输入告警边界值"></el-input>
 				</el-form-item>
-				<el-form-item label="报警消息接收人,逗号隔开" style="width: 500px"  >
+				<el-form-item label="报警消息接收人,逗号隔开" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.alarmMsgReceiver"   placeholder="请输入报警消息接收人,逗号隔开"></el-input>
 				</el-form-item>
-				<el-form-item label="告警方案创建时间" style="width: 500px"  >
-					<el-input v-model="insertParam.createTime" type="datetime-local"  placeholder="请输入告警方案创建时间"></el-input>
+				<el-form-item label="告警方案创建时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="insertParam.createTime"
+						type="datetime"
+						placeholder="请输入告警方案创建时间">
+					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="创建人" style="width: 500px"  >
+				<el-form-item label="创建人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.creator"   placeholder="请输入创建人"></el-input>
 				</el-form-item>
 			</el-form>
@@ -159,32 +151,37 @@
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="200px">
-				<el-form-item label="告警方案编号" style="width: 500px" >
+			<el-form ref="form" label-width="150px">
+				<el-form-item label="告警方案编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.caseId"  placeholder="请输入告警方案编号" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="站点id" style="width: 500px" >
+				<el-form-item label="站点id" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点id"  ></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 500px" >
+				<el-form-item label="数据因子编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 500px" >
+				<el-form-item label="监测因子名称" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.dataName"  placeholder="请输入监测因子名称"  ></el-input>
 				</el-form-item>
-				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 500px" >
+				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.caseType"  placeholder="请输入报警类型(1:超标报警 2:无变化报警 3:无数据报警)"  ></el-input>
 				</el-form-item>
-				<el-form-item label="告警边界值" style="width: 500px" >
+				<el-form-item label="告警边界值" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.caseValue"  placeholder="请输入告警边界值"  ></el-input>
 				</el-form-item>
-				<el-form-item label="报警消息接收人,逗号隔开" style="width: 500px" >
+				<el-form-item label="报警消息接收人,逗号隔开" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.alarmMsgReceiver"  placeholder="请输入报警消息接收人,逗号隔开"  ></el-input>
 				</el-form-item>
-				<el-form-item label="告警方案创建时间" style="width: 500px" >
-					<el-input v-model="editParam.createTime" type="datetime-local" placeholder="请输入告警方案创建时间"  ></el-input>
+				<el-form-item label="告警方案创建时间" style="width: 50%;float: left;" >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="editParam.createTime"
+						type="datetime"
+						placeholder="请输入告警方案创建时间">
+					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="创建人" style="width: 500px" >
+				<el-form-item label="创建人" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.creator"  placeholder="请输入创建人"  ></el-input>
 				</el-form-item>
 			</el-form>
@@ -227,6 +224,7 @@ import {
 export default {
   data () {
     return {
+      activeName: 'first',
       // 控制 新增弹出框是否显示
       dialogAddVisible: false,
       // 控制 修改弹出框是否显示
@@ -293,6 +291,9 @@ export default {
     }
   },
   methods: {
+    handleClick (tab, event) {
+      console.log(tab, event)
+    },
     tabRowClassName ({ row, rowIndex }) {
       const index = rowIndex + 1
       if (index % 2 === 0) {
@@ -436,10 +437,57 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	#app {
-		font-family: Helvetica, sans-serif;
-		text-align: center;
-	}
+.box-container{
+    background: white;
+    margin: 35px 15px;
+}
+
+::v-deep{
+.el-dialog__body {
+  padding: 30px 20px;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+  flex: 1;
+  display: flex;
+}
+
+.el-dialog__footer {
+    padding: 10px 20px 10px;
+    text-align: right;
+    box-sizing: border-box;
+    background: #C3D2E6;
+}
+
+.el-dialog__header {
+    padding: 15px;
+    background: #C3D2E6;
+    font-weight: bold;
+}
+
+.el-input__inner:focus{
+    border:1px solid #DCDFE6
+}
+
+.el-tabs__item.is-active {
+    color: #0F6CC3;
+}
+
+.el-tabs__item:hover {
+    color: #0F6CC3;
+}
+
+.el-tabs__active-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background-color: #0F6CC3;
+    z-index: 1;
+    transition: transform .3s cubic-bezier(.645,.045,.355,1);
+    list-style: none;
+}
+}
 
 	//覆盖 el-button 样式
 	.serach-button{
@@ -447,6 +495,12 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+	.serach-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.refresh-button{
@@ -454,6 +508,12 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+  .refresh-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.export-button{
@@ -461,92 +521,56 @@ export default {
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
+	}
+
+	.export-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
 
 	.add-button{
 		color:white;
+		background: #1D9FCA ;
+		opacity: 0.8;
+		border-radius: 3px;
+		height: 40px;
+	}
+
+	.add-button:hover{
+		background: #1D9FCA ;
+		opacity: 0.6;
+	}
+
+  .cancel-button{
+		color:white;
+		background: #1D9FCA ;
+		opacity: 0.8;
+		border-radius: 3px;
+		height: 40px;
+	}
+
+	.cancel-button:hover{
+		background: #1D9FCA ;
+		opacity: 0.6;
+	}
+
+  .save-button{
+		color:white;
 		background: #0F6CC3 ;
 		opacity: 0.8;
 		border-radius: 3px;
+		height: 40px;
 	}
 
-	.planWorkorderInfo-container{
-		background: #F3F3F3;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		.title-info{
-			height: 20px;
-			padding: 20px 0px 0px 20px;
-		}
-		.content-info{
-			flex: 1;
-			background: white;
-			margin: 10px;
-		}
-		::v-deep{
-			.el-breadcrumb__inner {
-				color: #313E5D;
-				font-size: 17px;
-			}
-
-			.el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
-				font-weight: 400;
-				color: #313E5D;
-				cursor: text;
-			}
-
-			.el-breadcrumb__separator {
-				margin: 0 9px;
-				font-weight: 700;
-				color: #313E5D;
-			}
-
-			.el-input__inner {
-				-webkit-appearance: none;
-				background-color: #FFF;
-				background-image: none;
-				border-radius: 4px;
-				border: 1px solid #DCDFE6;
-				box-sizing: border-box;
-				color: #606266;
-				display: inline-block;
-				font-size: inherit;
-				height: 30px;
-				line-height: 30px;
-				outline: 0;
-				padding: 0 15px;
-				transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-				width: 100%;
-			}
-
-			.el-form-item {
-				margin-bottom: 10px;
-			}
-
-			.el-table__empty-block {
-				text-align: center;
-				width: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.el-pagination {
-				white-space: nowrap;
-				padding: 10px 10px;
-				color: #303133;
-				font-weight: 700;
-			}
-			.el-table .double-row{
-				background:#C3D2E6
-			}
-
-			.el-table__body, .el-table__footer, .el-table__header {
-				table-layout: fixed;
-				border-collapse: separate;
-				color: #313E5D;
-			}
-		}
+	.save-button:hover{
+		background: #0F6CC3 ;
+		opacity: 0.6;
 	}
+
+  .page-container{
+    width: 100%;
+    height: 60px;
+    background: white;
+  }
 </style>

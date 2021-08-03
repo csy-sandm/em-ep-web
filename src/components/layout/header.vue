@@ -4,9 +4,9 @@
     <div class="logo">
         <img class="logo-img" :src="logoIcon" >
     </div>
-		<div class="title">
+		<!-- <div class="title">
 			<div class="title-name">{{ companyName }}</div>
-		</div>
+		</div> -->
 		<div class="header-setting menu-box">
 			<div style="width: 100%;height: 35px;line-height:40px;color: #FFF;">{{dateTimeValue}}</div>
 			<div style="width: 100%;height: 35px;line-height:30px;color: #FFF;">
@@ -113,15 +113,16 @@ export default {
     background: rgba(4, 36, 79, 0.85);
     box-shadow: 0px 0px 13px 2px rgba(0, 0, 0, 0.4);
     .logo{
-      width: 100px;
+      width: 450px;
       height: 70px;
+      margin-left: 20px;
       float: left;
       display:flex;
       align-items:center;/*垂直居中*/
       justify-content: center;/*水平居中*/
-      background: rgba(63,103,237, 0.1);
+      // background: rgba(63,103,237, 0.1);
       .logo-img{
-          width: 40px;
+          width: 100%;
           height: 40px;
           background-size:100% 100%;
       }
