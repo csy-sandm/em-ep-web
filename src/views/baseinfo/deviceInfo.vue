@@ -1,12 +1,12 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="设备信息" name="first"></el-tab-pane>
+			<el-tab-pane label="设备管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
@@ -15,10 +15,15 @@
 							<el-input v-model="queryParam.deviceId" placeholder="请输入设备编号"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="安装站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.deviceAddr" placeholder="请输入安装站点"></el-input>
+						</el-form-item>
+					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
 				<el-button
 						class="add-button"
@@ -65,14 +70,14 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceName" label="设备名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceType" label="设备类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="deviceLat" label="设备百度坐标_维度"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="deviceLon" label="设备百度坐标_经度"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="deviceLat" label="设备百度坐标_维度"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="deviceLon" label="设备百度坐标_经度"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="installTime" label="安装日期"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="estimatRetirementTime" label="预计报废时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="contractId" label="关联合同"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="contractId" label="关联合同"></el-table-column> -->
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="instrumentBrand" label="仪器品牌"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="instrumentStandards" label="规格"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="company" label="公司/单位"></el-table-column>

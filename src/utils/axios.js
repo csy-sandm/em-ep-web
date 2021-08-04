@@ -13,7 +13,7 @@ axios.defaults.headers['Content-Type'] = 'application/json';
 
 // create an axios instance
 const service = axios.create({
-  baseURL: '/', // url = base url + request url
+  baseURL: '/emApi', // url = base url + request url
   // baseURL: 'http://39.105.109.252:9000',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000 // request timeout

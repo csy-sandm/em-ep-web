@@ -1,8 +1,6 @@
 <template class="login-html">
   <div  width= "1920px" height= "1080px" >
-     <!--<iframe src= 'http://www.hightopo.cn/demo/ht-ironworks/'  class="background-iframe"  ></iframe>  -->
-    <iframe src= 'http://www.hightopo.cn/demo/city/'  class="background-iframe"  ></iframe>
-     <!-- <iframe src= 'http://www.hightopo.cn/demo/heat-station/blue/'  class="background-iframe"  ></iframe>-->
+    <img src = "@/assets/img/login_bg.png" class = "backpng" >
     <div class="login login-text">
         <div class="header">
             登 录
@@ -118,6 +116,14 @@ export default {
     left: 0px;
     top: -2px;
 }
+
+.backpng{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+}
+
 
 .text{
     color: white;

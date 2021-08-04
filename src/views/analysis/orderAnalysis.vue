@@ -1,13 +1,13 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="工单分析" name="first"></el-tab-pane>
+			<el-tab-pane label="工单统计" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
@@ -19,14 +19,14 @@
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"

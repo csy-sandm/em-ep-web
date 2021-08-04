@@ -2,7 +2,8 @@
   <div class="map-container">
         <baidu-map class="map" :center="markerPoint" :zoom="16" :scroll-wheel-zoom="true" @ready="handler">
            <div v-for="(marker,index) of markerList" :key="index">
-              <bm-marker :position="marker.markerPoint" @click="infoWindowOpen(marker)" />
+              <bm-marker :position="marker.markerPoint" @click="infoWindowOpen(marker)"
+              :icon="{url: `${mapMaker}`, size: {width: 32, height: 32}}"/>
            </div>
            <my-overlay
              v-if="show"
@@ -16,12 +17,15 @@
 
 <script>
 import MyOverlay from '../../components/myOverlay'
+import mapMaker from '../../../assets/img/mapMaker.png'
+import mapStyle from './map.js'
 export default {
   components: {
     MyOverlay
   },
   data () {
     return {
+      mapMaker,
       markerPoint: { lng: 116.4154785, lat: 39.91548784 },
       markerList: [
         {
@@ -60,8 +64,11 @@ export default {
   methods: {
     // 给地图设置主题色，我设置的是黑夜主题
     handler ({ BMap, map }) {
-      const mapStyle = { style: 'midnight' }
-      map.setMapStyle(mapStyle)
+      // const mapStyle = { style: 'midnight' }
+      // map.setMapStyle(mapStyle)
+      map.setMapStyle({
+        styleJson: mapStyle
+      })
     },
     infoWindowClose () {
       this.show = false

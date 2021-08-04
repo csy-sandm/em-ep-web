@@ -2,7 +2,7 @@
 	<div class="box-container">
 
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="用户信息表" name="first"></el-tab-pane>
+			<el-tab-pane label="账号管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
@@ -79,17 +79,13 @@
 			<el-table-column :show-overflow-tooltip="true" prop="userStatus" label="用户状态"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="loginErrNum" label="错误登录次数"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="lockTime" label="锁定时间"></el-table-column>
-			<el-table-column label="编辑" width="100">
+			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="删除" width="100">
-				<template slot-scope="scope">
 					<el-button
 							type="danger"
 							icon="el-icon-delete"

@@ -7,7 +7,7 @@
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
@@ -16,17 +16,22 @@
 							<el-input v-model="queryParam.orderId" placeholder="请输入工单编码"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="运维站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入运维站点"></el-input>
+						</el-form-item>
+					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -64,19 +69,19 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="orderId" label="工单编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderType" label="工单类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="运维站点"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="instrumentId" label="关联仪器"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="instrumentId" label="关联仪器"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="工单责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="collaborator" label="工单协同人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="orderDesc" label="任务描述"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="orderImg" label="相关照片"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="orderDesc" label="任务描述"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="orderImg" label="相关照片"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="priority" label="优先级"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderStatus" label="工单状态"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="planCompletionDay" label="计划完工日"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="receiveTime" label="接单时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="receiveTime" label="接单时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="startWorkTime" label="开工时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="completionTime" label="完工时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="工单创建时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="工单创建人"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="工单创建人"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button

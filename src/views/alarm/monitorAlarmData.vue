@@ -12,32 +12,37 @@
 		</el-menu>
 		<br /> -->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="站点历史数据" name="first"></el-tab-pane>
+			<el-tab-pane label="实时告警" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="站点ID:" style="width: 300px"  >
-							<el-input v-model="queryParam.siteId" placeholder="请输入站点ID"></el-input>
+						<el-form-item label="站点编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
+						</el-form-item>
+					</el-col>
+        <el-col :span="6" class="grid">
+						<el-form-item label="数据因子编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.dataKey" placeholder="请输入数据因子编号"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -72,12 +77,12 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点id"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true"  prop="alarmId" label="告警编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="alarmId" label="告警id唯一标识"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="alarmType" label="告警类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="alarmContext" label="报警内容"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="alarmTime" label="告警时间"></el-table-column>
@@ -117,8 +122,8 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="站点id" style="width: 50%;float: left;" prop="siteId" >
-					<el-input v-model="insertParam.siteId"   placeholder="请输入站点id"></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;" prop="siteId" >
+					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编号"></el-input>
 				</el-form-item>
 				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.dataKey"   placeholder="请输入数据因子编号"></el-input>
@@ -137,8 +142,8 @@
 						placeholder="请输入数据采集时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="告警id唯一标识" style="width: 50%;float: left;">
-					<el-input v-model="insertParam.alarmId"   placeholder="请输入告警id唯一标识"></el-input>
+				<el-form-item label="告警编号" style="width: 50%;float: left;">
+					<el-input v-model="insertParam.alarmId"   placeholder="请输入告警编号"></el-input>
 				</el-form-item>
 				<el-form-item label="告警类型" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.alarmType"   placeholder="请输入告警类型"></el-input>
@@ -167,8 +172,8 @@
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px">
-				<el-form-item label="站点id" style="width: 50%;float: left;">
-					<el-input v-model="editParam.siteId"  placeholder="请输入站点id" :disabled="true" ></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;">
+					<el-input v-model="editParam.siteId"  placeholder="请输入站点编号" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
 					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
@@ -187,8 +192,8 @@
 						placeholder="请输入数据采集时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="告警id唯一标识" style="width: 50%;float: left;">
-					<el-input v-model="editParam.alarmId"  placeholder="请输入告警id唯一标识"  ></el-input>
+				<el-form-item label="告警编号" style="width: 50%;float: left;" :disabled="true" >
+					<el-input v-model="editParam.alarmId"  placeholder="请输入告警编号"  ></el-input>
 				</el-form-item>
 				<el-form-item label="告警类型" style="width: 50%;float: left;">
 					<el-input v-model="editParam.alarmType"  placeholder="请输入告警类型"  ></el-input>
@@ -269,12 +274,12 @@ export default {
       delParam: {},
       // 下载导出需要的表头
       tableHeader: [
-        '站点id',
+        '站点编号',
         '数据因子编号',
         '监测因子名称',
         '数据值',
         '数据采集时间',
-        '告警id唯一标识',
+        '告警编号',
         '告警类型',
         '报警内容',
         '告警时间'

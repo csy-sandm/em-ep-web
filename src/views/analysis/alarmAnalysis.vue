@@ -1,32 +1,32 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="告警分析" name="first"></el-tab-pane>
+			<el-tab-pane label="故障统计" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 <!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="站点ID:" style="width: 300px"  >
-							<el-input v-model="queryParam.siteId" placeholder="请输入站点ID"></el-input>
+						<el-form-item label="站点编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -61,11 +61,11 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点id"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteName" label="站点名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerDepart" label="责任部门"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="关系责任人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="deviceId" label="设备ID/设备编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="deviceId" label="设备编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceName" label="设备名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceType" label="设备类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceUse" label="用途"></el-table-column>
@@ -110,8 +110,8 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="站点id" style="width: 50%;float: left;" prop="siteId" >
-					<el-input v-model="insertParam.siteId"   placeholder="请输入站点id"></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;" prop="siteId" >
+					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编号"></el-input>
 				</el-form-item>
 				<el-form-item label="站点名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteName"   placeholder="请输入站点名称"></el-input>
@@ -122,8 +122,8 @@
 				<el-form-item label="关系责任人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.responsiblerPerson"   placeholder="请输入关系责任人"></el-input>
 				</el-form-item>
-				<el-form-item label="设备ID/设备编号" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.deviceId"   placeholder="请输入设备ID/设备编号"></el-input>
+				<el-form-item label="设备编号" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.deviceId"   placeholder="请输入设备编号"></el-input>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceName"   placeholder="请输入设备名称"></el-input>
@@ -169,8 +169,8 @@
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px">
-				<el-form-item label="站点id" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.siteId"  placeholder="请输入站点id" :disabled="true" ></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.siteId"  placeholder="请输入站点编号" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="站点名称" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.siteName"  placeholder="请输入站点名称"  ></el-input>
@@ -181,8 +181,8 @@
 				<el-form-item label="关系责任人" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.responsiblerPerson"  placeholder="请输入关系责任人"  ></el-input>
 				</el-form-item>
-				<el-form-item label="设备ID/设备编号" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.deviceId"  placeholder="请输入设备ID/设备编号"  ></el-input>
+				<el-form-item label="设备编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.deviceId"  placeholder="请输入设备编号"  ></el-input>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.deviceName"  placeholder="请输入设备名称"  ></el-input>
@@ -280,11 +280,11 @@ export default {
       delParam: {},
       // 下载导出需要的表头
       tableHeader: [
-        '站点id',
+        '站点编号',
         '站点名称',
         '责任部门',
         '关系责任人',
-        '设备ID/设备编号',
+        '设备编号',
         '设备名称',
         '设备类型',
         '用途',

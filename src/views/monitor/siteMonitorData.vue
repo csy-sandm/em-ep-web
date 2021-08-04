@@ -12,7 +12,7 @@
 		</el-menu>
 		<br /> -->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="站点历史数据" name="first"></el-tab-pane>
+			<el-tab-pane label="站点实时数据" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
@@ -32,12 +32,12 @@
 
 			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -72,7 +72,7 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="uId" label="数据唯一标识"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="uId" label="数据唯一标识"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
@@ -151,7 +151,7 @@
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px">
 				<el-form-item label="数据唯一标识" style="width: 50%;float: left;">
-					<el-input v-model="editParam.uId"  placeholder="请输入数据唯一标识"  ></el-input>
+					<el-input v-model="editParam.uId"  placeholder="请输入数据唯一标识"  :disabled="true"  ></el-input>
 				</el-form-item>
 				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编码" :disabled="true" ></el-input>

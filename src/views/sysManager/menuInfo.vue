@@ -2,7 +2,7 @@
 	<div class="box-container">
 		<!-- 标题 -->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="系统菜单表" name="first"></el-tab-pane>
+			<el-tab-pane label="菜单管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
@@ -73,17 +73,13 @@
 			<el-table-column :show-overflow-tooltip="true" prop="menuOrder" label="菜单顺序"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="menuIcon" label="菜单图标"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="menuType" label="菜单类型"></el-table-column>
-			<el-table-column label="编辑" width="100">
+			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="删除" width="100">
-				<template slot-scope="scope">
 					<el-button
 							type="danger"
 							icon="el-icon-delete"

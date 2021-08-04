@@ -70,17 +70,13 @@
 			<el-table-column :show-overflow-tooltip="true" prop="logTime" label="日志时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="logLevel" label="日志级别"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="logIp" label="ip"></el-table-column>
-			<el-table-column label="编辑" width="100">
+			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="删除" width="100">
-				<template slot-scope="scope">
 					<el-button
 							type="danger"
 							icon="el-icon-delete"

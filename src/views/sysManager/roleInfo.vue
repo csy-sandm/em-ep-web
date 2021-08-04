@@ -1,7 +1,7 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="角色表" name="first"></el-tab-pane>
+			<el-tab-pane label="角色管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
@@ -69,17 +69,13 @@
 			<el-table-column :show-overflow-tooltip="true" prop="roleStatus" label="角色状态 0:启用 -1:冻结"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="roleRemark" label="备注信息"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="parentRoleCode" label="父级角色ID"></el-table-column>
-			<el-table-column label="编辑" width="100">
+			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="删除" width="100">
-				<template slot-scope="scope">
 					<el-button
 							type="danger"
 							icon="el-icon-delete"

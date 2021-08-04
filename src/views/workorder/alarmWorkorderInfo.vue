@@ -2,13 +2,13 @@
 	<div class="box-container">
 		<!-- 标题 class="el-menu-demo"-->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="站点监测实时数据" name="first"></el-tab-pane>
+			<el-tab-pane label="故障工单" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
@@ -17,17 +17,22 @@
 							<el-input v-model="queryParam.orderId" placeholder="请输入工单编码"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="运维站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入运维站点"></el-input>
+						</el-form-item>
+					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
-				<el-button
+				<!-- <el-button
 						class="add-button"
 						type="primary"
 						@click="addData()"
 						icon="el-icon-circle-plus-outline"
-						size="mini" >新增</el-button>
+						size="mini" >新增</el-button> -->
 				<el-button
 						class="serach-button"
 						type="primary"
@@ -64,20 +69,20 @@
 			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderId" label="工单编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderType" label="工单类型"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="failureTime" label="故障发生时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="reportTime" label="报备时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="failureTime" label="发生时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="reportTime" label="报备时间"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="运维站点"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="instrumentId" label="关联仪器"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="工单责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="collaborator" label="工单协同人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="priority" label="优先级"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="orderDesc" label="任务描述"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="orderImg" label="相关照片"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="orderDesc" label="任务描述"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="orderImg" label="相关照片"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="orderStatus" label="工单状态"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dispatchTime" label="派单时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="completionTime" label="故障解决时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="工单创建时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="工单创建人/派单人"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="completionTime" label="解决时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="工单创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="工单创建人/派单人"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
@@ -120,12 +125,12 @@
 				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.orderType"   placeholder="请输入工单类型"></el-input>
 				</el-form-item>
-				<el-form-item label="故障发生时间" style="width: 50%;float: left;"  >
+				<el-form-item label="发生时间" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.failureTime"
 						type="datetime"
-						placeholder="请输入故障发生时间">
+						placeholder="请输入发生时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="报备时间" style="width: 50%;float: left;"  >
@@ -168,12 +173,12 @@
 						placeholder="请输入派单时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="故障解决时间" style="width: 50%;float: left;"  >
+				<el-form-item label="解决时间" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.completionTime"
 						type="datetime"
-						placeholder="请输入故障解决时间">
+						placeholder="请输入解决时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="工单创建时间" style="width: 50%;float: left;"  >
@@ -206,12 +211,12 @@
 				<el-form-item label="工单类型" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.orderType"  placeholder="请输入工单类型"  ></el-input>
 				</el-form-item>
-				<el-form-item label="故障发生时间" style="width: 50%;float: left;" >
+				<el-form-item label="发生时间" style="width: 50%;float: left;" >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="editParam.failureTime"
 						type="datetime"
-						placeholder="请输入故障发生时间">
+						placeholder="请输入发生时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="报备时间" style="width: 50%;float: left;" >
@@ -254,12 +259,12 @@
 						placeholder="请输入派单时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="故障解决时间" style="width: 50%;float: left;" >
+				<el-form-item label="解决时间" style="width: 50%;float: left;" >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="editParam.completionTime"
 						type="datetime"
-						placeholder="请输入故障解决时间">
+						placeholder="请输入解决时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="工单创建时间" style="width: 50%;float: left;" >
@@ -340,7 +345,7 @@ export default {
       tableHeader: [
         '工单编码',
         '工单类型',
-        '故障发生时间',
+        '发生时间',
         '报备时间',
         '运维站点',
         '关联仪器',
@@ -351,7 +356,7 @@ export default {
         '相关照片',
         '工单状态',
         '派单时间',
-        '故障解决时间',
+        '解决时间',
         '工单创建时间',
         '工单创建人/派单人'
       ],

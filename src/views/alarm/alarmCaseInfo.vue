@@ -2,25 +2,30 @@
 	<div class="box-container">
 		<!-- 标题 class="el-menu-demo"-->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="告警方案" name="first"></el-tab-pane>
+			<el-tab-pane label="报警设置" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="告警方案编号:" style="width: 300px"  >
-							<el-input v-model="queryParam.caseId" placeholder="请输入告警方案编号"></el-input>
+						<el-form-item label="方案编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.caseId" placeholder="请输入方案编号"></el-input>
+						</el-form-item>
+					</el-col>
+        	<el-col :span="6" class="grid">
+						<el-form-item label="站点编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
 				<el-button
 						class="add-button"
@@ -62,14 +67,14 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="caseId" label="告警方案编号"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点id"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="caseType" label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="caseId" label="方案编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="因子编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="因子名称"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="caseType" label="报警类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="caseValue" label="告警边界值"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="alarmMsgReceiver" label="报警消息接收人,逗号隔开"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="告警方案创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="alarmMsgReceiver" label="消息接收人"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
@@ -107,33 +112,33 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="告警方案编号" style="width: 50%;float: left;" prop="caseId" >
-					<el-input v-model="insertParam.caseId"   placeholder="请输入告警方案编号"></el-input>
+				<el-form-item label="方案编号" style="width: 50%;float: left;" prop="caseId" >
+					<el-input v-model="insertParam.caseId"   placeholder="请输入方案编号"></el-input>
 				</el-form-item>
-				<el-form-item label="站点id" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.siteId"   placeholder="请输入站点id"></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;"  prop="caseId" >
+					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编号"></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.dataKey"   placeholder="请输入数据因子编号"></el-input>
+				<el-form-item label="因子编号" style="width: 50%;float: left;"  prop="caseId">
+					<el-input v-model="insertParam.dataKey"   placeholder="请输入因子编号"></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.dataName"   placeholder="请输入监测因子名称"></el-input>
+				<el-form-item label="因子名称" style="width: 50%;float: left;"   prop="caseId">
+					<el-input v-model="insertParam.dataName"   placeholder="请输入因子名称"></el-input>
 				</el-form-item>
-				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.caseType"   placeholder="请输入报警类型(1:超标报警 2:无变化报警 3:无数据报警)"></el-input>
+				<el-form-item label="报警类型" style="width: 50%;float: left;"   prop="caseId">
+					<el-input v-model="insertParam.caseType"   placeholder="请输入报警类型"></el-input>
 				</el-form-item>
 				<el-form-item label="告警边界值" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.caseValue"   placeholder="请输入告警边界值"></el-input>
 				</el-form-item>
-				<el-form-item label="报警消息接收人,逗号隔开" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.alarmMsgReceiver"   placeholder="请输入报警消息接收人,逗号隔开"></el-input>
+				<el-form-item label="消息接收人" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.alarmMsgReceiver"   placeholder="请输入消息接收人"></el-input>
 				</el-form-item>
-				<el-form-item label="告警方案创建时间" style="width: 50%;float: left;"  >
+				<el-form-item label="告警创建时间" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.createTime"
 						type="datetime"
-						placeholder="请输入告警方案创建时间">
+						placeholder="请输入告警创建时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="创建人" style="width: 50%;float: left;"  >
@@ -152,33 +157,33 @@
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px">
-				<el-form-item label="告警方案编号" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.caseId"  placeholder="请输入告警方案编号" :disabled="true" ></el-input>
+				<el-form-item label="方案编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.caseId"  placeholder="请输入方案编号" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="站点id" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.siteId"  placeholder="请输入站点id"  ></el-input>
+				<el-form-item label="站点编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.siteId"  placeholder="请输入站点编号"  :disabled="true"></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
+				<el-form-item label="因子编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.dataKey"  placeholder="请输入因子编号"  :disabled="true"></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.dataName"  placeholder="请输入监测因子名称"  ></el-input>
+				<el-form-item label="因子名称" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.dataName"  placeholder="请输入因子名称" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="报警类型(1:超标报警 2:无变化报警 3:无数据报警)" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.caseType"  placeholder="请输入报警类型(1:超标报警 2:无变化报警 3:无数据报警)"  ></el-input>
+				<el-form-item label="报警类型" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.caseType"  placeholder="请输入报警类型"  ></el-input>
 				</el-form-item>
 				<el-form-item label="告警边界值" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.caseValue"  placeholder="请输入告警边界值"  ></el-input>
 				</el-form-item>
-				<el-form-item label="报警消息接收人,逗号隔开" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.alarmMsgReceiver"  placeholder="请输入报警消息接收人,逗号隔开"  ></el-input>
+				<el-form-item label="消息接收人" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.alarmMsgReceiver"  placeholder="请输入消息接收人"  ></el-input>
 				</el-form-item>
-				<el-form-item label="告警方案创建时间" style="width: 50%;float: left;" >
+				<el-form-item label="告警创建时间" style="width: 50%;float: left;" >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="editParam.createTime"
 						type="datetime"
-						placeholder="请输入告警方案创建时间">
+						placeholder="请输入告警创建时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="创建人" style="width: 50%;float: left;" >
@@ -249,14 +254,14 @@ export default {
       delParam: {},
       // 下载导出需要的表头
       tableHeader: [
-        '告警方案编号',
-        '站点id',
-        '数据因子编号',
-        '监测因子名称',
-        '报警类型(1:超标报警 2:无变化报警 3:无数据报警)',
+        '方案编号',
+        '站点编号',
+        '因子编号',
+        '因子名称',
+        '报警类型',
         '告警边界值',
-        '报警消息接收人,逗号隔开',
-        '告警方案创建时间',
+        '消息接收人',
+        '告警创建时间',
         '创建人'
       ],
       // 下载导出需要的表头对应的key

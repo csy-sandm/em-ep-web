@@ -1,7 +1,7 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="站点信息" name="first"></el-tab-pane>
+			<el-tab-pane label="站点管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
@@ -65,11 +65,11 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerDepart" label="责任部门"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="关系责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="remark" label="备注"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="mnCode" label="现场机MN编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="mnCode" label="现场MN编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="运维状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column> -->
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button

@@ -56,11 +56,6 @@ const routes = [
         component: require('@/views/baseinfo/deviceInfo.vue').default
       },
       {
-        path: '/instrumentInfo',
-        name: 'InstrumentInfo',
-        component: require('@/views/baseinfo/instrumentInfo.vue').default
-      },
-      {
         path: '/siteInfo',
         name: 'SiteInfo',
         component: require('@/views/baseinfo/siteInfo.vue').default

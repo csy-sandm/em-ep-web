@@ -1,24 +1,29 @@
 <template>
 	<div class="box-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="客户信息" name="first"></el-tab-pane>
+			<el-tab-pane label="客户管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="客户ID:" style="width: 300px"  >
-							<el-input v-model="queryParam.customerId" placeholder="请输入客户ID"></el-input>
+						<el-form-item label="客户编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.customerId" placeholder="请输入客户编号"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="客户名称:" style="width: 300px"  >
+							<el-input v-model="queryParam.customerName" placeholder="请输入客户名称"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
 				<el-button
 						class="add-button"
@@ -60,7 +65,7 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="customerId" label="客户id"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="customerId" label="客户编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="customerName" label="客户名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="contactTelephone" label="联系电话"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="customerCategory" label="客户类别"></el-table-column>
@@ -68,15 +73,15 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="decisionType" label="决策类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="region" label="地区"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="provinceAndCity" label="所属省市"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="detailAddr" label="详细地址"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="detailAddr" label="详细地址"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="customerLon" label="客户百度坐标_经度"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="customerLat" label="客户百度坐标_纬度"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="customerLat" label="客户百度坐标_纬度"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerDepart" label="负责运维部门"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="关系责任人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间/添加时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
@@ -114,8 +119,8 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="客户id" style="width: 50%;float: left;" prop="customerId" >
-					<el-input v-model="insertParam.customerId"   placeholder="请输入客户id"></el-input>
+				<el-form-item label="客户编号" style="width: 50%;float: left;" prop="customerId" >
+					<el-input v-model="insertParam.customerId"   placeholder="请输入客户编号"></el-input>
 				</el-form-item>
 				<el-form-item label="客户名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.customerName"   placeholder="请输入客户名称"></el-input>
@@ -164,12 +169,12 @@
 				<el-form-item label="创建人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.creator"   placeholder="请输入创建人"></el-input>
 				</el-form-item>
-				<el-form-item label="创建时间/添加时间" style="width: 50%;float: left;"  >
+				<el-form-item label="创建时间" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.createTime"
 						type="datetime"
-						placeholder="请输入创建时间/添加时间">
+						placeholder="请输入创建时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="更新时间" style="width: 50%;float: left;"  >
@@ -193,8 +198,8 @@
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px">
-				<el-form-item label="客户id" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.customerId"  placeholder="请输入客户id" :disabled="true" ></el-input>
+				<el-form-item label="客户编号" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.customerId"  placeholder="请输入客户编号" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="客户名称" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.customerName"  placeholder="请输入客户名称"  ></el-input>
@@ -243,12 +248,12 @@
 				<el-form-item label="创建人" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.creator"  placeholder="请输入创建人"  ></el-input>
 				</el-form-item>
-				<el-form-item label="创建时间/添加时间" style="width: 50%;float: left;" >
+				<el-form-item label="创建时间" style="width: 50%;float: left;" >
 				<el-date-picker
 						style="width: 100%;"
 						v-model="editParam.createTime"
 						type="datetime"
-						placeholder="请输入创建时间/添加时间">
+						placeholder="请输入创建时间">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="更新时间" style="width: 50%;float: left;" >
@@ -324,7 +329,7 @@ export default {
       delParam: {},
       // 下载导出需要的表头
       tableHeader: [
-        '客户id',
+        '客户编号',
         '客户名称',
         '联系电话',
         '客户类别',
@@ -339,7 +344,7 @@ export default {
         '关系责任人',
         '最后一次服务时间',
         '创建人',
-        '创建时间/添加时间',
+        '创建时间',
         '更新时间'
       ],
       // 下载导出需要的表头对应的key

@@ -2,7 +2,7 @@
 	<div class="box-container">
 		<!-- 标题 -->
 		<el-tabs v-model="activeName" @tab-click="handleClick" style="padding: 0px 15px 0px 15px;background:#F3F3F3;font-weight: bold;">
-			<el-tab-pane label="部门信息" name="first"></el-tab-pane>
+			<el-tab-pane label="部门管理" name="first"></el-tab-pane>
 		</el-tabs>
 
 		<!-- 查询区域 -->
@@ -63,17 +63,13 @@
 			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="departId" label="部门ID"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="departName" label="部门名称"></el-table-column>
-			<el-table-column label="编辑" width="100">
+			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
-				</template>
-			</el-table-column>
-			<el-table-column label="删除" width="100">
-				<template slot-scope="scope">
 					<el-button
 							type="danger"
 							icon="el-icon-delete"

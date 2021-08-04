@@ -7,19 +7,24 @@
 		<div class="content-info" v-if="activeName === 'first'">
 		<!-- 查询区域 -->
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
-						<el-form-item label="数据唯一标识:" style="width: 300px"  >
-							<el-input v-model="queryParam.uId" placeholder="请输入数据唯一标识"></el-input>
+						<el-form-item label="工单编码:" style="width: 300px"  >
+							<el-input v-model="queryParam.uId" placeholder="请输入"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="运维站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入运维站点"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
 				<!-- <el-button
 						class="add-button"
@@ -82,19 +87,19 @@
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
-							icon="el-icon-edit"
+							icon="el-icon-info"
 							size="mini"
 							@click="editData(scope.row)"></el-button>
 
 					<el-button
-							type="danger"
-							icon="el-icon-delete"
+							type="success"
+							icon="el-icon-check"
 							size="mini"
-							@click="delData(scope.row)"></el-button>
+							@click="okData(scope.row)"></el-button>
 
 					<el-button
-							type="danger"
-							icon="el-icon-delete"
+							type="warning"
+							icon="el-icon-close"
 							size="mini"
 							@click="delData(scope.row)"></el-button>
 				</template>
@@ -204,11 +209,11 @@
 		</el-dialog>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="修改信息"
+		<el-dialog title="详细信息"
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="200px">
+			<el-form ref="form" label-width="200px"  :disabled="true">
 				<el-form-item label="工单编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.orderId" placeholder="请输入工单编号" :disabled="true" ></el-input>
 				</el-form-item>
@@ -289,16 +294,29 @@
       </span>
 		</el-dialog>
 
-		<!-- 删除弹出框  -->
+		<!-- 通过弹出框  -->
 		<el-dialog
 				title="提示"
 				style="text-align: left !important"
-				:visible.sync="dialogDelVisible"
+				:visible.sync="dialogOkVisible"
 				:before-close="handleClose" >
-			<span>你确定要删除这条数据吗?</span>
+			<span>你确定要通过这条工单吗?</span>
 			<span slot="footer" class="dialog-footer">
-        <el-button @click="handleDel()">确定</el-button>
-        <el-button type="primary" @click="dialogDelVisible = false">取消</el-button>
+        <el-button @click="handleOk()">确定</el-button>
+        <el-button type="primary" @click="dialogOkVisible = false">取消</el-button>
+      </span>
+		</el-dialog>
+
+		<!-- 驳回弹出框  -->
+		<el-dialog
+				title="提示"
+				style="text-align: left !important"
+				:visible.sync="dialogNoVisible"
+				:before-close="handleClose" >
+			<span>你确定要驳回这条工单吗?</span>
+			<span slot="footer" class="dialog-footer">
+        <el-button @click="handleNo()">确定</el-button>
+        <el-button type="primary" @click="dialogNoVisible = false">取消</el-button>
       </span>
 		</el-dialog>
 
@@ -328,7 +346,11 @@ export default {
       // 控制 修改弹出框是否显示
       dialogEditVisible: false,
       // 控制 删除弹出框是否显示
-      dialogDelVisible: false,
+	  dialogDelVisible: false,
+	  // 控制 通过弹出框是否显示
+	  dialogOkVisible: false,
+	  // 控制 驳回弹出框是否显示
+	  dialogNoVisible: false,
       // tab 页的形式设定
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
@@ -342,7 +364,11 @@ export default {
       // 插入时的参数
       insertParam: {},
       // 编辑时的参数
-      editParam: {},
+	  editParam: {},
+	 // 通过时时的参数
+	  okParam: {},
+	 // 驳回时的参数
+      noParam: {},
       // 删除时的参数
       delParam: {},
       // 下载导出需要的表头
@@ -490,11 +516,18 @@ export default {
       })
     },
 
-    // 删除
-    delData (row) {
-      this.delParam = row
-      this.dialogDelVisible = true
+    // 通过
+    okData (row) {
+      this.okParam = row
+      this.dialogOkVisible = true
     },
+
+    // 驳回
+	  delData (row) {
+      this.delParam = row
+      this.dialogNoVisible = true
+    },
+
     // 执行删除接口
     async handleDel () {
       const params = {

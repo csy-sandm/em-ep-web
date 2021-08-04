@@ -19,7 +19,7 @@
 
         <div class="alarm">
             <ModuleTitle
-                :title="'工单动态'"
+                :title="'监控报警'"
                 :pic-url="titleIcon"
             />
             <div class="alarm-info">
