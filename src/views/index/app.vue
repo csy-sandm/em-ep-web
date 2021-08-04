@@ -51,7 +51,7 @@ export default {
 <style lang="scss" scoped>
 .index-container{
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: relative;
     overflow: hidden;
     .map-info {

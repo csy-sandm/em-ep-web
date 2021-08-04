@@ -6,15 +6,15 @@
                     id="generalLeft"
                     height="160px"
                 />
-                <div class="general-left-title">待处理报警</div>
+                <!-- <div class="general-left-title">待处理报警</div> -->
             </div>
-            <div class="general-right">
+            <!-- <div class="general-right">
                 <GaugeChart
                     id="generalRight"
                     height="160px"
                 />
                 <div class="general-right-title">待完成报警工单</div>
-            </div>
+            </div> -->
         </div>
 
         <div class="alarm">
@@ -113,7 +113,7 @@ export default {
         height: 200px;
         margin-top: 50px;
         .general-left{
-            width: 48%;
+            width: 100%;
             height: 100%;
             float: left;
             background-color: rgba(4,36,79,0.7);
