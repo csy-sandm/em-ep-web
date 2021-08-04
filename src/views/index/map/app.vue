@@ -3,7 +3,7 @@
         <baidu-map class="map" :center="markerPoint" :zoom="16" :scroll-wheel-zoom="true" @ready="handler">
            <div v-for="(marker,index) of markerList" :key="index">
               <bm-marker :position="marker.markerPoint" @click="infoWindowOpen(marker)"
-              :icon="{url: `${mapMaker}`, size: {width: 32, height: 32}}"/>
+              :icon="{url: `${mapMaker}`, size: {width: 42, height: 42}}"/>
            </div>
            <my-overlay
              v-if="show"

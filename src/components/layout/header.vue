@@ -8,16 +8,25 @@
 			<div class="title-name">{{ companyName }}</div>
 		</div> -->
 		<div class="header-setting menu-box">
-			<div style="width: 100%;height: 35px;line-height:40px;color: #FFF;">{{dateTimeValue}}</div>
-			<div style="width: 100%;height: 35px;line-height:30px;color: #FFF;">
-				<span style="position: relative;left: 0px;color: #FFF;">{{weatherList.type}}</span>
+			<!-- <div style="width: 100%;height: 35px;line-height:40px;color: #FFF;">{{dateTimeValue}}</div> -->
+      <div class="header-title"> {{weatherList.type}} </div>
+      <div class="header-title"> {{`${weatherList.low} ~ ${weatherList.high}`}} </div>
+      <div class="header-title"> {{weatherList.fengxiang}} </div>
+			<!-- <div style="width: 100%;height: 35px;line-height:30px;color: #FFF;">
+				<span style="position: relative;left: 0px;color: #FFF;"></span>
 				<span style="position: relative;left: 5px;color: #FFF;">{{weatherList.fengxiang}}:{{weatherList.fengli}}</span>
-				<span style="position: relative;left: 10px;color: #FFF;">{{weatherList.low}}/{{weatherList.high}}</span>
-			</div>
+				<span style="position: relative;left: 10px;color: #FFF;"></span>
+			</div> -->
 		</div>
-		<div class="header-loginOut" style="right: 100px;font-size: 15px;" width = "400px" >
-			<span style="position: relative;left: 25px;color: #FFF;">{{userName}}</span>
-			<span style="position: relative;left: 40px;color: #CCC;" @click="loginOut();">退出</span>
+
+		<div class="header-loginOut" style="right: 50px;font-size: 17px;" >
+      <div class="user">
+          <img class="user-img" :src="urerIcon" >
+      </div>
+			<div style="float: left;width:170px;height: 70px;line-height:70px;font-size:17px;color:white">{{`${userName},欢迎登录`}}</div>
+      <div class="logout" @click="loginOut();">
+          <img class="logout-img" :src="logoutIcon" >
+      </div>
 		</div>
 	</el-container>
 </template>
@@ -26,11 +35,15 @@
 // import Cookies from 'js-cookie'
 import { getWeatherShow } from '@/api/mainApi.js'
 import logoIcon from '../../assets/img/logo.png'
+import urerIcon from '../../assets/img/urer.png'
+import logoutIcon from '../../assets/img/logout.png'
 
 export default {
   data () {
     return {
       logoIcon,
+      urerIcon,
+      logoutIcon,
       menuValue: '',
       dateTimeValue: '',
       userName: '',
@@ -168,13 +181,51 @@ export default {
 
 	.header-setting {
 		height: 70px;
-		right: 12%;
+		right: 17%;
 		position: absolute;
+    .header-title{
+      height: 70px;
+      line-height: 70px;
+      float: left;
+      margin-left: 10px;
+      color: white;
+      font-size: 17px;
+    }
 	}
 
 	.header-loginOut {
 		height: 70px;
     line-height: 70px;
 		position: absolute;
+    .user{
+      width: 50px;
+      height: 70px;
+      margin-left: 20px;
+      float: left;
+      display:flex;
+      align-items:center;/*垂直居中*/
+      justify-content: center;/*水平居中*/
+      // background: rgba(63,103,237, 0.1);
+      .user-img{
+          width: 20px;
+          height: 20px;
+          background-size:100% 100%;
+      }
+    }
+    .logout{
+      width: 50px;
+      height: 70px;
+      margin-left: 10px;
+      float: left;
+      display:flex;
+      align-items:center;/*垂直居中*/
+      justify-content: center;/*水平居中*/
+      // background: rgba(63,103,237, 0.1);
+      .logout-img{
+          width: 20px;
+          height: 20px;
+          background-size:100% 100%;
+      }
+    }
 	}
 </style>

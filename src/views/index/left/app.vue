@@ -4,7 +4,22 @@
             <ModuleTitle
                 :title="'工单完成情况'"
                 :pic-url="titleIcon"
-            />
+            >
+              <template v-slot:soltContent>
+                <div class="more-info">
+                  <div class="more-img">
+                      <div class="div-content lastmonth"></div>
+                  </div>
+                  <div class="more-tip">上月</div>
+                </div>
+                <div class="more-info">
+                  <div class="more-img">
+                      <div class="div-content thismonth"></div>
+                  </div>
+                  <div class="more-tip">本月</div>
+                </div>
+              </template>
+            </ModuleTitle>
             <div class="work-content">
                 <div class="work-info" v-for="(item,index) of workInfo" :key="index">
                     <div class="work-title">
@@ -40,7 +55,16 @@
             <ModuleTitle
                 :title="'工单动态'"
                 :pic-url="titleIcon"
-            />
+            >
+            <template v-slot:soltContent>
+                <div class="more-info">
+                  <div class="more-tip" style="color:#06BCFF;">更多</div>
+                  <div class="more-img">
+                      <img :src="moreIcon" class="img-content">
+                  </div>
+                </div>
+              </template>
+            </ModuleTitle>
             <div class="order-content">
                 <div :class="['order-info', item.result === 0 ? 'order-finished' : 'order-unfinished']" v-for="(item,index) of orderInfo" :key="index">
                     <span class="order-name">{{ item.name }}</span>
@@ -56,6 +80,7 @@
 import ModuleTitle from '../../components/moduleTitle'
 import titleIcon from '../../../assets/img/title-icon.png'
 import deviceIcon from '../../../assets/img/device.png'
+import moreIcon from '../../../assets/img/more.png'
 
 export default {
   components: {
@@ -65,6 +90,7 @@ export default {
     return {
       titleIcon,
       deviceIcon,
+      moreIcon,
       workInfo: [
         {
           name: '正常完工',
@@ -303,5 +329,40 @@ export default {
         -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
         border-radius: 4px;
         background: transparent;
+    }
+
+    .more-info{
+      width: 60px;
+      height: 40px;
+      float: right;
+      .more-img{
+        width: 20px;
+        height: 40px;
+        display:flex;
+        align-items:center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        float: left;
+        .div-content{
+            width: 10px;
+            height: 10px;
+        }
+        .img-content{
+            width: 20px;
+            height: 20px;
+        }
+        .thismonth{
+          background: #2379EB;
+        }
+        .lastmonth{
+          background: #1AD897;
+        }
+      }
+      .more-tip{
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        float: left;
+        color: white;
+      }
     }
 </style>

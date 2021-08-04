@@ -62,7 +62,7 @@ export default {
     }
   },
   mounted () {
-
+    // this.$router.push('/main')
   },
   methods: {
     /** 验证用户密码 */
@@ -123,7 +123,6 @@ export default {
     height: 100%;
     left: 0px;
 }
-
 
 .text{
     color: white;
