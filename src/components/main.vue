@@ -52,6 +52,7 @@ export default {
     }
   },
   created () {
+    this.$router.push('/index')
   },
   mounted () {
   }

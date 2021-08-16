@@ -23,7 +23,7 @@
       <div class="user">
           <img class="user-img" :src="urerIcon" >
       </div>
-			<div style="float: left;width:90px;height: 70px;line-height:70px;font-size:17px;color:white">{{`${userName},欢迎登录`}}</div>
+			<div style="float: left;height: 70px;line-height:70px;font-size:17px;color:white">{{`${userName},欢迎登录`}}</div>
       <div class="logout" @click="loginOut();">
           <img class="logout-img" :src="logoutIcon" >
       </div>
@@ -181,7 +181,7 @@ export default {
 
 	.header-setting {
 		height: 70px;
-		right: 12%;
+		right: 15%;
 		position: absolute;
     .header-title{
       height: 70px;

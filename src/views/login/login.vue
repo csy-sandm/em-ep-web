@@ -67,19 +67,23 @@ export default {
   methods: {
     /** 验证用户密码 */
     login () {
-      const params = { userCode: this.userCode, passWord: this.passWord }
-      loginIn(params).then((response) => {
-        const resultCode = response.resultCode
-        if (resultCode === '2000') {
-          // 存用户信息
-          localStorage.setItem('userToken', response.resultEntity.userToken)
-          localStorage.setItem('userName', response.resultEntity.userName)
-          this.$router.push('/main')
-        } else {
-          // 这个分支是错误返回分支
-          alert(response.resultMsg)
-        }
-      })
+      localStorage.setItem('userToken', '1111')
+      localStorage.setItem('userName', '1111')
+      this.$router.push('/main')
+
+      // const params = { userCode: this.userCode, passWord: this.passWord }
+      // loginIn(params).then((response) => {
+      //   const resultCode = response.resultCode
+      //   if (resultCode === '2000') {
+      //     // 存用户信息
+      //     localStorage.setItem('userToken', response.resultEntity.userToken)
+      //     localStorage.setItem('userName', response.resultEntity.userName)
+      //     this.$router.push('/main')
+      //   } else {
+      //     // 这个分支是错误返回分支
+      //     alert(response.resultMsg)
+      //   }
+      // })
     },
     showPwd () {
       this.typePwd = this.typePwd === 'password' ? 'text' : 'password'
