@@ -3,7 +3,7 @@ import myrequest from '@/utils/axios'
 /** 封装的主界面的接口 */
 export function initMenu() {
     return myrequest({
-      url: '/MenuInfoController/queryListByUser',
+      url: '/v1/MenuInfoController/queryListByUser',
       method: 'post',
       data: {}
     })

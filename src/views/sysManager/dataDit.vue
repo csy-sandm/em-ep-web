@@ -13,7 +13,7 @@
 
 <script>
 // 引入上文中公众文件方法中的导出功能，注意文件路径
-import { outExportExcel } from "@/api/roleInfoApi";
+import { outExportExcel } from "@/api/login/roleInfoApi";
 export default {
   data() {
     return {

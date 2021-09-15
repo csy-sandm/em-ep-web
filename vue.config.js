@@ -6,6 +6,7 @@
  * @LastEditors: John Holl
  */
 
+ 
 module.exports = {
   lintOnSave: false,
   publicPath: './', // vueConf.baseUrl, // 根域上下文目录
@@ -14,17 +15,34 @@ module.exports = {
   // 选项...
   devServer: {
     proxy: {
-      '/em-ep/': {
-        target: 'http://47.118.50.171:11004',
+      '/emApi/': {
+        target: 'http://47.118.50.171:9003',
         ws: false,
         pathRewrite: {
-          '^/em-ep/': '/'
+          '^/emApi/': '/'
         }
-      },
-      "/": {
-        target: "http://47.118.50.171:11003",
-      },
-
+      }
     }
+    // proxy: {
+    //   '/emApi/em-ep/': {
+    //    // target: 'http://47.118.50.171:11004',
+    //    target: 'http://127.0.0.1:11004',
+    //     ws: false,
+    //     pathRewrite: {
+    //       '^/emApi/em-ep/': '/'
+    //     }
+    //   },
+    //   "/emApi/v1/": {
+    //     //target: "http://47.118.50.171:11003/",
+    //     target: "http://127.0.0.1:11003/",
+    //     ws: false,
+    //     pathRewrite: {
+    //       '^/emApi/': '/'
+    //     }
+    //   },
+    // }
+
+
+
   }
 }

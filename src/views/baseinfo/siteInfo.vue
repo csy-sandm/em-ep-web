@@ -6,7 +6,7 @@
 
 		<div class="content-info" v-if="activeName === 'first'">
 		<el-row style="margin-top: 20px;">
-			<el-col class="grid" style="width:50%;float:left">
+			<el-col class="grid" style="width:70%;float:left">
 				<!-- 输入框 -->
 				<el-form ref="form" label-width="120px" >
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
@@ -15,10 +15,17 @@
 							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="责任部门:" style="width: 300px"  >
+							<el-input v-model="queryParam.responsiblerDepart" placeholder="请输入责任部门"></el-input>
+						</el-form-item>
+					</el-col>
+
+
 				</el-form>
 			</el-col>
 
-			<el-col :span="22" class="grid" style="width:50%;float:left;text-align: right">
+			<el-col :span="22" class="grid" style="width:30%;float:left;text-align: right">
 				<!-- 按钮 -->
 				<el-button
 						class="add-button"

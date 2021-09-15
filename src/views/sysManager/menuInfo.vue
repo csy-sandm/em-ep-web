@@ -201,7 +201,7 @@ import {
   menuInfoUpdateList,
   menuInfoUpdate,
   menuInfoDelete
-} from '@/api/menuInfoApi.js'
+} from '@/api/login/menuInfoApi.js'
 
 export default {
   data () {

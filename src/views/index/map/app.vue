@@ -26,31 +26,34 @@ export default {
   data () {
     return {
       mapMaker,
-      markerPoint: { lng: 116.4154785, lat: 39.91548784 },
+      markerPoint: { lng: 118.816042, lat: 32.061859 },
       markerList: [
         {
-          markerPoint: { lng: 116.4154785, lat: 39.91548784 },
+          //118.816042,32.061859
+          markerPoint: { lng: 118.816042, lat: 32.061859 },
           assetsInfo: [
             {
-              name: '站点数111',
+              name: '站点111',
               value: 1111
             }
           ]
         },
         {
-          markerPoint: { lng: 116.5154785, lat: 39.71548784 },
+          //118.837961,32.014048
+          markerPoint: { lng: 118.837961, lat: 32.014048 },
           assetsInfo: [
             {
-              name: '站点数222',
+              name: '站点222',
               value: 222
             }
           ]
         },
         {
-          markerPoint: { lng: 116.1154785, lat: 39.41548784 },
+          //118.906951,32.114905
+          markerPoint: { lng: 118.906951, lat: 32.114905 },
           assetsInfo: [
             {
-              name: '站点数333',
+              name: '站点333',
               value: 3333
             }
           ]
@@ -92,8 +95,8 @@ export default {
     width: 100%;
     height: 100%;
     .map {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
     }
 }
 

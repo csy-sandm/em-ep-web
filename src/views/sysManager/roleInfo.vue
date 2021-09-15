@@ -185,7 +185,7 @@ import {
   roleInfoUpdateList,
   roleInfoUpdate,
   roleInfoDelete
-} from '@/api/roleInfoApi.js'
+} from '@/api/login/roleInfoApi.js'
 
 export default {
   data () {

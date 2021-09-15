@@ -72,7 +72,7 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<!-- <el-table-column :show-overflow-tooltip="true"  prop="uId" label="数据唯一标识"></el-table-column> -->
+			<el-table-column :show-overflow-tooltip="true"  prop="uuid" label="数据唯一标识"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
@@ -115,7 +115,7 @@
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
 				<el-form-item label="数据唯一标识" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.uId"   placeholder="请输入数据唯一标识"></el-input>
+					<el-input v-model="insertParam.uuid"   placeholder="请输入数据唯一标识"></el-input>
 				</el-form-item>
 				<el-form-item label="站点编码" style="width: 50%;float: left;" prop="siteId" >
 					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编码"></el-input>
@@ -151,7 +151,7 @@
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px">
 				<el-form-item label="数据唯一标识" style="width: 50%;float: left;">
-					<el-input v-model="editParam.uId"  placeholder="请输入数据唯一标识"  :disabled="true"  ></el-input>
+					<el-input v-model="editParam.uuid"  placeholder="请输入数据唯一标识"  :disabled="true"  ></el-input>
 				</el-form-item>
 				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编码" :disabled="true" ></el-input>
@@ -247,7 +247,7 @@ export default {
       ],
       // 下载导出需要的表头对应的key
       tableKey: [
-        'uId',
+        'uuid',
         'siteId',
         'dataKey',
         'dataName',
@@ -351,6 +351,8 @@ export default {
     },
     // 更新
     async updateData (editParam) {
+
+      console.log(editParam);
       siteMonitorDataUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -375,7 +377,7 @@ export default {
     // 执行删除接口
     async handleDel () {
       const params = {
-        siteId: this.delParam.siteId
+        uuid: this.delParam.uuid
       }
       siteMonitorDataDelete(params).then((response) => {
         const resultCode = response.resultCode

@@ -307,6 +307,7 @@
       </span>
 		</el-dialog>
 
+		
 		<!-- 驳回弹出框  -->
 		<el-dialog
 				title="提示"
@@ -520,9 +521,9 @@ export default {
     okData (row) {
       this.okParam = row
       this.dialogOkVisible = true
-    },
+	},
 
-    // 驳回
+	// 驳回
 	  delData (row) {
       this.delParam = row
       this.dialogNoVisible = true

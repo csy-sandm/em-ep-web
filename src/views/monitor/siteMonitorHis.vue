@@ -24,7 +24,7 @@
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
 						<el-form-item label="数据唯一标识:" style="width: 300px"  >
-							<el-input v-model="queryParam.uId" placeholder="请输入数据唯一标识"></el-input>
+							<el-input v-model="queryParam.uuid" placeholder="请输入数据唯一标识"></el-input>
 						</el-form-item>
 					</el-col>
           <el-col :span="6" class="grid">
@@ -83,7 +83,7 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="uId" label="数据唯一标识"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="uuid" label="数据唯一标识"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
@@ -125,8 +125,8 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="数据唯一标识" style="width: 50%;float: left;" prop="uId" >
-					<el-input v-model="insertParam.uId"   placeholder="请输入数据唯一标识"></el-input>
+				<el-form-item label="数据唯一标识" style="width: 50%;float: left;" prop="uuid" >
+					<el-input v-model="insertParam.uuid"   placeholder="请输入数据唯一标识"></el-input>
 				</el-form-item>
 				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编码"></el-input>
@@ -162,7 +162,7 @@
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="150px">
 				<el-form-item label="数据唯一标识" style="width: 50%;float: left;">
-					<el-input v-model="editParam.uId"  placeholder="请输入数据唯一标识" :disabled="true" ></el-input>
+					<el-input v-model="editParam.uuid"  placeholder="请输入数据唯一标识" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="站点编码" style="width: 50%;float: left;">
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编码"  ></el-input>
@@ -261,7 +261,7 @@ export default {
       ],
       // 下载导出需要的表头对应的key
       tableKey: [
-        'uId',
+        'uuid',
         'siteId',
         'dataKey',
         'dataName',
@@ -272,7 +272,7 @@ export default {
       tableData: [],
       // 必填字段 前面加'*'
       rules: {
-        uId: [{ required: true, message: '请输入', trigger: 'blur' }]
+        uuid: [{ required: true, message: '请输入', trigger: 'blur' }]
       }
 
     }
@@ -365,6 +365,8 @@ export default {
     },
     // 更新
     async updateData (editParam) {
+       console.log(editParam);
+       
       siteMonitorHisUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -389,7 +391,7 @@ export default {
     // 执行删除接口
     async handleDel () {
       const params = {
-        uId: this.delParam.uId
+        uuid: this.delParam.uuid
       }
       siteMonitorHisDelete(params).then((response) => {
         const resultCode = response.resultCode

@@ -27,9 +27,20 @@
 							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
 						</el-form-item>
 					</el-col>
-        <el-col :span="6" class="grid">
-						<el-form-item label="数据因子编号:" style="width: 300px"  >
-							<el-input v-model="queryParam.dataKey" placeholder="请输入数据因子编号"></el-input>
+          <el-col :span="6" class="grid">
+						<el-form-item label="监测因子编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.dataKey" placeholder="请输入监测因子编号"></el-input>
+						</el-form-item>
+					</el-col>
+          <el-col :span="6" class="grid">
+						<el-form-item label="报警类型:" style="width: 300px"  >
+							<el-select v-model="queryParam.alarmType" placeholder="请选择监测因子编号" @focus="getJobs">
+                <el-option
+                  v-for="item in staffJobs"
+                  :key="item.jobId"
+                  :label="item.jobName"
+                  :value="item.jobId"/>
+              </el-select>
 						</el-form-item>
 					</el-col>
 				</el-form>
@@ -79,10 +90,10 @@
 			</el-table-column>
       <el-table-column :show-overflow-tooltip="true"  prop="alarmId" label="告警编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="监测因子编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column> -->
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="alarmType" label="告警类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="alarmContext" label="报警内容"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="alarmTime" label="告警时间"></el-table-column>
@@ -125,8 +136,8 @@
 				<el-form-item label="站点编号" style="width: 50%;float: left;" prop="siteId" >
 					<el-input v-model="insertParam.siteId"   placeholder="请输入站点编号"></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
-					<el-input v-model="insertParam.dataKey"   placeholder="请输入数据因子编号"></el-input>
+				<el-form-item label="监测因子编号" style="width: 50%;float: left;">
+					<el-input v-model="insertParam.dataKey"   placeholder="请输入监测因子编号"></el-input>
 				</el-form-item>
 				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
 					<el-input v-model="insertParam.dataName"   placeholder="请输入监测因子名称"></el-input>
@@ -175,8 +186,8 @@
 				<el-form-item label="站点编号" style="width: 50%;float: left;">
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编号" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
-					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
+				<el-form-item label="监测因子编号" style="width: 50%;float: left;">
+					<el-input v-model="editParam.dataKey"  placeholder="请输入监测因子编号"  ></el-input>
 				</el-form-item>
 				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
 					<el-input v-model="editParam.dataName"  placeholder="请输入监测因子名称"  ></el-input>
@@ -275,7 +286,7 @@ export default {
       // 下载导出需要的表头
       tableHeader: [
         '站点编号',
-        '数据因子编号',
+        '监测因子编号',
         '监测因子名称',
         '数据值',
         '数据采集时间',

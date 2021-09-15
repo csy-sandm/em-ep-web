@@ -262,7 +262,7 @@ import {
   accountInfoUpdateList,
   accountInfoUpdate,
   accountInfoDelete
-} from '@/api/accountInfoApi.js'
+} from '@/api/login/accountInfoApi.js'
 
 export default {
   data () {

@@ -220,7 +220,7 @@ import {
   operateLogUpdateList,
   operateLogUpdate,
   operateLogDelete
-} from '@/api/operateLogApi.js'
+} from '@/api/login/operateLogApi.js'
 
 export default {
   data () {

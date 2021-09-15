@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { loginIn } from '@/api/loginApi'
+import { loginIn } from '@/api/login/loginApi'
 import eye_close from '@/assets/icon/eye_close.png'
 import eye_open from '@/assets/icon/eye_open.png'
 
@@ -62,28 +62,25 @@ export default {
     }
   },
   mounted () {
-    // this.$router.push('/main')
+
   },
   methods: {
     /** 验证用户密码 */
     login () {
-      localStorage.setItem('userToken', '1111')
-      localStorage.setItem('userName', '1111')
-      this.$router.push('/main')
-
-      // const params = { userCode: this.userCode, passWord: this.passWord }
-      // loginIn(params).then((response) => {
-      //   const resultCode = response.resultCode
-      //   if (resultCode === '2000') {
-      //     // 存用户信息
-      //     localStorage.setItem('userToken', response.resultEntity.userToken)
-      //     localStorage.setItem('userName', response.resultEntity.userName)
-      //     this.$router.push('/main')
-      //   } else {
-      //     // 这个分支是错误返回分支
-      //     alert(response.resultMsg)
-      //   }
-      // })
+      const params = { userCode: this.userCode, passWord: this.passWord }
+      loginIn(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 存用户信息
+          localStorage.setItem('userToken', response.resultEntity.userToken)
+          localStorage.setItem('userName', response.resultEntity.userName)
+          localStorage.setItem('departId', response.resultEntity.departId)
+          this.$router.push('/main')
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
     },
     showPwd () {
       this.typePwd = this.typePwd === 'password' ? 'text' : 'password'
@@ -127,6 +124,7 @@ export default {
     height: 100%;
     left: 0px;
 }
+
 
 .text{
     color: white;

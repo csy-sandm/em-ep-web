@@ -161,7 +161,7 @@ import {
   departInfoUpdateList,
   departInfoUpdate,
   departInfoDelete
-} from '@/api/em-ep/departInfoApi.js'
+} from '@/api/login/departInfoApi.js'
 
 export default {
   data () {

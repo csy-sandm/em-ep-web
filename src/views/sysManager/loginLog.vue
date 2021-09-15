@@ -206,7 +206,7 @@ import {
   loginLogUpdateList,
   loginLogUpdate,
   loginLogDelete
-} from '@/api/loginLogApi.js'
+} from '@/api/login/loginLogApi.js'
 
 export default {
   data () {
