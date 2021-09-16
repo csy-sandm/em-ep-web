@@ -1,12 +1,11 @@
 /*
- * @Description: 
+ * @Description:
  * @Author: John Holl
  * @Github: https://github.com/hzylyh
  * @Date: 2021-02-06 15:14:44
  * @LastEditors: John Holl
  */
 
- 
 module.exports = {
   lintOnSave: false,
   publicPath: './', // vueConf.baseUrl, // 根域上下文目录
@@ -41,8 +40,6 @@ module.exports = {
     //     }
     //   },
     // }
-
-
 
   }
 }

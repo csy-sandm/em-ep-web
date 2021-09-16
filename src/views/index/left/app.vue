@@ -82,6 +82,10 @@ import titleIcon from '../../../assets/img/title-icon.png'
 import deviceIcon from '../../../assets/img/device.png'
 import moreIcon from '../../../assets/img/more.png'
 
+import {
+  siteStatusQueryList
+} from '@/api/em-ep/siteStatusApi.js'
+
 export default {
   components: {
     ModuleTitle
@@ -171,9 +175,27 @@ export default {
     }
   },
   methods: {
+    // 查询
+    async siteStatusQueryList () {
+      const params = {}
+      siteStatusQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            console.log('responseresponse', response)
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     handleSwitchEvent () {
       // this.$router.push({ path: '/Main' })
     }
+  },
+  mounted () {
+    this.siteStatusQueryList()
   }
 }
 </script>

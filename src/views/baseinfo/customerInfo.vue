@@ -20,6 +20,17 @@
 							<el-input v-model="queryParam.customerName" placeholder="请输入客户名称"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="客户类型:" style="width: 300px"  >
+							<el-select v-model="queryParam.customerCategory" placeholder="请选择客户类型">
+							<el-option
+							v-for="item in customerTypeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
 				</el-form>
 			</el-col>
 
@@ -301,6 +312,10 @@ import {
   customerInfoDelete
 } from '@/api/em-ep/customerInfoApi.js'
 
+import {
+  customerTypeQueryList
+} from '@/api/em-ep/customerTypeApi.js'
+
 export default {
   data () {
     return {
@@ -372,8 +387,8 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         customerId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+      },
+      customerTypeList: []
     }
   },
   watch: {
@@ -387,6 +402,33 @@ export default {
     }
   },
   methods: {
+    // 查询
+    async queryCustomerTypeList () {
+      const params = {}
+      customerTypeQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.customerTypeList = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.customerTypeList.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].typeName
+              info.name = response.resultEntity[i].typeName
+              this.customerTypeList.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -414,6 +456,10 @@ export default {
     async getDataList () {
       this.queryParam.pageNum = this.page
       this.queryParam.pageSize = this.size
+
+	  if (this.queryParam && this.queryParam.customerCategory === '全部') {
+		  this.queryParam.customerCategory = ''
+	  }
       customerInfoQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -527,6 +573,7 @@ export default {
 
   },
   mounted () {
+    this.queryCustomerTypeList()
     this.getDataList()
   }
 }

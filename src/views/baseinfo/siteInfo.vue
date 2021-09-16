@@ -15,12 +15,83 @@
 							<el-input v-model="queryParam.siteId" placeholder="请输入站点编号"></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="6" class="grid">
+					<!-- <el-col :span="6" class="grid">
 						<el-form-item label="责任部门:" style="width: 300px"  >
 							<el-input v-model="queryParam.responsiblerDepart" placeholder="请输入责任部门"></el-input>
 						</el-form-item>
+					</el-col> -->
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="责任部门:" style="width: 300px"  >
+							<el-select v-model="queryParam.responsiblerDepart" placeholder="请选择责任部门">
+							<el-option
+							v-for="item in responsiblerDepartList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
 					</el-col>
 
+					<el-col :span="6" class="grid">
+						<el-form-item label="站点类型:" style="width: 300px"  >
+							<el-select v-model="queryParam.siteType" placeholder="请选择站点类型">
+							<el-option
+							v-for="item in siteTypeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="运维责任人:" style="width: 300px"  >
+							<el-input v-model="queryParam.responsiblerPerson" placeholder="请输入运维责任人"></el-input>
+						</el-form-item>
+					</el-col>
+
+					<!-- <el-col :span="6" class="grid">
+						<el-form-item label="MN编号状态:" style="width: 300px"  >
+							<el-select v-model="queryParam.status" placeholder="请选择MN编号状态">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col> -->
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="MN编号:" style="width: 300px"  >
+							<el-input v-model="queryParam.mnCode" placeholder="请输入MN编号"></el-input>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="运维状态:" style="width: 300px"  >
+							<el-select v-model="queryParam.status" placeholder="请选择运维状态">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="多少天未运维:" style="width: 300px"  >
+							<el-select v-model="queryParam.time" placeholder="请选择时间">
+							<el-option
+							v-for="item in timeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
 
 				</el-form>
 			</el-col>
@@ -250,6 +321,22 @@ import {
   siteInfoDelete
 } from '@/api/em-ep/siteInfoApi.js'
 
+import {
+  departInfoQueryList
+} from '@/api/em-ep/departInfoApi.js'
+
+import {
+  siteTypeQueryList
+} from '@/api/em-ep/siteTypeApi.js'
+
+import {
+  mnStatusQueryList
+} from '@/api/em-ep/mnStatusApi.js'
+
+import {
+  repairStatusCopyQueryList
+} from '@/api/em-ep/repairStatusCopyApi.js'
+
 export default {
   data () {
     return {
@@ -309,8 +396,33 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         siteId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
+      },
+      responsiblerDepartList: [],
+      siteTypeList: [],
+	  statusList: [],
+	  timeList: [
+		  {
+			  name: '---',
+			  value: '---'
+		  },
+		  {
+			  name: '>10天',
+			  value: '>10天'
+		  },
+		  {
+			  name: '>20天',
+			  value: '>20天'
+		  },
+		  {
+			  name: '>1个月',
+			  value: '>1个月'
+		  },
+		  {
+			  name: '>2个月',
+			  value: '>3个月'
+		  }
 
+      ]
     }
   },
   watch: {
@@ -324,6 +436,106 @@ export default {
     }
   },
   methods: {
+    async repairStatusCopyQueryList () {
+      const params = {}
+      repairStatusCopyQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.statusList = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.statusList.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].statusName
+              info.name = response.resultEntity[i].statusName
+              this.statusList.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    // async mnStatusQueryList () {
+    //   const params = {}
+    //   mnStatusQueryList(params).then((response) => {
+    //     const resultCode = response.resultCode
+    //     if (resultCode === '2000') {
+    //       this.statusList = []
+    //       const info = {}
+    //       info.value = '全部'
+    //       info.name = '全部'
+    //       this.statusList.push(info)
+
+    //       if (response && response.resultEntity) {
+    //         for (let i = 0; i < response.resultEntity.length; i++) {
+    //           const info = {}
+    //           info.value = response.resultEntity[i].statusName
+    //           info.name = response.resultEntity[i].statusName
+    //           this.statusList.push(info)
+    //         }
+    //       }
+    //     } else {
+    //       // 这个分支是错误返回分支
+    //       alert(response.resultMsg)
+    //     }
+    //   })
+    // },
+    async siteTypeQueryList () {
+      const params = {}
+      siteTypeQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.siteTypeList = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.siteTypeList.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].typeName
+              info.name = response.resultEntity[i].typeName
+              this.siteTypeList.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async departInfoQueryList () {
+      const params = {}
+      departInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.responsiblerDepartList = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.responsiblerDepartList.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].departName
+              info.name = response.resultEntity[i].departName
+              this.responsiblerDepartList.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -351,6 +563,18 @@ export default {
     async getDataList () {
       this.queryParam.pageNum = this.page
       this.queryParam.pageSize = this.size
+      if (this.queryParam && this.queryParam.responsiblerDepart === '全部') {
+		  this.queryParam.responsiblerDepart = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.siteType === '全部') {
+		  this.queryParam.siteType = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.status === '全部') {
+		  this.queryParam.status = ''
+	  }
+
       siteInfoQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -464,6 +688,10 @@ export default {
 
   },
   mounted () {
+    this.repairStatusCopyQueryList()
+    // this.mnStatusQueryList()
+    this.siteTypeQueryList()
+    this.departInfoQueryList()
     this.getDataList()
   }
 }

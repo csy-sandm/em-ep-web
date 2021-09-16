@@ -20,6 +20,23 @@
 							<el-input v-model="queryParam.deviceAddr" placeholder="请输入安装站点"></el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :span="6" class="grid">
+						<el-form-item label="设备名称:" style="width: 300px"  >
+							<el-input v-model="queryParam.deviceName" placeholder="请输入设备名称"></el-input>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="设备状态:" style="width: 300px"  >
+							<el-select v-model="queryParam.status" placeholder="请选择设备状态">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
 				</el-form>
 			</el-col>
 
@@ -303,6 +320,10 @@ import {
   deviceInfoDelete
 } from '@/api/em-ep/deviceInfoApi.js'
 
+import {
+  siteStatusQueryList
+} from '@/api/em-ep/siteStatusApi.js'
+
 export default {
   data () {
     return {
@@ -372,8 +393,8 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         deviceId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+      },
+      statusList: []
     }
   },
   watch: {
@@ -387,6 +408,32 @@ export default {
     }
   },
   methods: {
+    // 查询
+    async siteStatusQueryList () {
+      const params = {}
+      siteStatusQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.statusList = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.statusList.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].statusName
+              info.name = response.resultEntity[i].statusName
+              this.statusList.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -414,6 +461,10 @@ export default {
     async getDataList () {
       this.queryParam.pageNum = this.page
       this.queryParam.pageSize = this.size
+
+      if (this.queryParam && this.queryParam.status === '全部') {
+		  this.queryParam.status = ''
+	  }
       deviceInfoQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -527,6 +578,7 @@ export default {
 
   },
   mounted () {
+    this.siteStatusQueryList()
     this.getDataList()
   }
 }
