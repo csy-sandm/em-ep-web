@@ -3,14 +3,14 @@ const mapStyle = [
     featureType: 'land',
     elementType: 'geometry',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {
     featureType: 'building',
     elementType: 'geometry',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {
@@ -33,7 +33,7 @@ const mapStyle = [
     featureType: 'green',
     elementType: 'geometry',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {
@@ -47,7 +47,7 @@ const mapStyle = [
     featureType: 'subway',
     elementType: 'geometry.stroke',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {
@@ -61,7 +61,7 @@ const mapStyle = [
     featureType: 'all',
     elementType: 'labels.text.stroke',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {
@@ -75,7 +75,7 @@ const mapStyle = [
     featureType: 'manmade',
     elementType: 'geometry',
     stylers: {
-      color: '#000000ff'
+      color: '#091220ff'
     }
   },
   {

@@ -66,10 +66,10 @@
               </template>
             </ModuleTitle>
             <div class="order-content">
-                <div :class="['order-info', item.result === 0 ? 'order-finished' : 'order-unfinished']" v-for="(item,index) of orderInfo" :key="index">
-                    <span class="order-name">{{ item.name }}</span>
-                    <span class="order-result">{{ item.result | resultFilter}}</span>
-                    <span class="order-time">{{ item.time }}</span>
+                <div :class="['order-info', item.operate === '完成' ? 'order-finished' : 'order-unfinished']" v-for="(item,index) of rtWorlOrderList" :key="index">
+                    <span class="order-name">{{ item.operator }}</span>
+                    <span class="order-result">{{ item.operate | resultFilter}}</span>
+                    <span class="order-time">{{ item.dataTime ? item.dataTime.substring(0,10) : ''}}</span>
                 </div>
             </div>
         </div>
@@ -83,8 +83,11 @@ import deviceIcon from '../../../assets/img/device.png'
 import moreIcon from '../../../assets/img/more.png'
 
 import {
-  siteStatusQueryList
-} from '@/api/em-ep/siteStatusApi.js'
+  queryWorkOrdersSGY,
+  queryWorkOrdersBY,
+  queryZcqk,
+  queryRtWorlOrder
+} from '@/api/em-ep/homePageApi.js'
 
 export default {
   components: {
@@ -98,76 +101,56 @@ export default {
       workInfo: [
         {
           name: '正常完工',
-          thismonth: '101',
-          lastmonth: '52'
+          thismonth: '0',
+          lastmonth: '0'
         },
         {
           name: '提前完工',
-          thismonth: '101',
-          lastmonth: '52'
+          thismonth: '0',
+          lastmonth: '0'
         },
         {
           name: '延后完工',
-          thismonth: '101',
-          lastmonth: '52'
+          thismonth: '0',
+          lastmonth: '0'
         },
         {
           name: '等待完工',
-          thismonth: '101',
-          lastmonth: '52'
+          thismonth: '0',
+          lastmonth: '0'
         }
       ],
       assetsInfo: [
         {
           name: '站点数',
-          value: 35
+          value: 0
         },
         {
           name: '设备数',
-          value: 168
+          value: 0
         },
         {
           name: '客户数',
-          value: 245
+          value: 0
         },
         {
           name: '运维工程师',
-          value: 36
+          value: 0
         },
         {
           name: '运维部门',
-          value: 13
+          value: 0
         }
       ],
-      orderInfo: [
-        {
-          name: '刘洋',
-          result: 0,
-          time: '05-15 15:57'
-        },
-        {
-          name: '刘建国',
-          result: 0,
-          time: '05-15 15:57'
-        },
-        {
-          name: '刘建国',
-          result: 1,
-          time: '05-15 15:57'
-        },
-        {
-          name: '刘洋',
-          result: 2,
-          time: '05-15 15:57'
-        }
-      ]
+      zcqkList: {},
+      rtWorlOrderList: []
     }
   },
   filters: {
     resultFilter (val) {
-      if (Number(val) === 0) {
+      if (val === '完成') {
         return '完成了工单'
-      } else if (Number(val) === 1) {
+      } else if (val === '接收') {
         return '接收了工单'
       } else {
         return '开始了工单'
@@ -176,13 +159,99 @@ export default {
   },
   methods: {
     // 查询
-    async siteStatusQueryList () {
+    async queryRtWorlOrder () {
       const params = {}
-      siteStatusQueryList(params).then((response) => {
+      queryRtWorlOrder(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           if (response && response.resultEntity) {
+            this.rtWorlOrderList = response.resultEntity.list
+            console.log('rtWorlOrderListrtWorlOrderList', this.rtWorlOrderList)
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    // 查询
+    async queryZcqk () {
+      const params = {}
+      queryZcqk(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            this.zcqkList = response.resultEntity
+            if (this.zcqkList && this.zcqkList.length > 0) {
+              this.assetsInfo[0].value = this.zcqkList[0].siteNum
+              this.assetsInfo[1].value = this.zcqkList[0].deviceNum
+              this.assetsInfo[2].value = this.zcqkList[0].customerNum
+              this.assetsInfo[3].value = this.zcqkList[0].ywgcsNum
+              this.assetsInfo[4].value = this.zcqkList[0].departNum
+            }
             console.log('responseresponse', response)
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    // 查询
+    async queryWorkOrdersBY () {
+      const params = {}
+      queryWorkOrdersBY(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            const workOrdersBYList = response.resultEntity
+            if (workOrdersBYList && workOrdersBYList.length > 0) {
+              for (let i = 0; i < workOrdersBYList.length; i++) {
+                if (workOrdersBYList[i].orderStatus === '正常完工') {
+                  this.workInfo[0].thismonth = workOrdersBYList[i].orderNum
+                }
+                if (workOrdersBYList[i].orderStatus === '提前完工') {
+                  this.workInfo[1].thismonth = workOrdersBYList[i].orderNum
+                }
+                if (workOrdersBYList[i].orderStatus === '延后完工') {
+                  this.workInfo[2].thismonth = workOrdersBYList[i].orderNum
+                }
+                if (workOrdersBYList[i].orderStatus === '等待完工') {
+                  this.workInfo[3].thismonth = workOrdersBYList[i].orderNum
+                }
+              }
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    // 查询
+    async queryWorkOrdersSGY () {
+      const params = {}
+      queryWorkOrdersSGY(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            const workOrdersSGYList = response.resultEntity
+            if (workOrdersSGYList && workOrdersSGYList.length > 0) {
+              for (let i = 0; i < workOrdersSGYList.length; i++) {
+                if (workOrdersSGYList[i].orderStatus === '正常完工') {
+                  this.workInfo[0].lastmonth = workOrdersSGYList[i].orderNum
+                }
+                if (workOrdersSGYList[i].orderStatus === '提前完工') {
+                  this.workInfo[1].lastmonth = workOrdersSGYList[i].orderNum
+                }
+                if (workOrdersSGYList[i].orderStatus === '延后完工') {
+                  this.workInfo[2].lastmonth = workOrdersSGYList[i].orderNum
+                }
+                if (workOrdersSGYList[i].orderStatus === '等待完工') {
+                  this.workInfo[3].lastmonth = workOrdersSGYList[i].orderNum
+                }
+              }
+            }
           }
         } else {
           // 这个分支是错误返回分支
@@ -195,7 +264,10 @@ export default {
     }
   },
   mounted () {
-    this.siteStatusQueryList()
+    this.queryRtWorlOrder()
+    this.queryZcqk()
+    this.queryWorkOrdersBY()
+    this.queryWorkOrdersSGY()
   }
 }
 </script>
@@ -299,7 +371,7 @@ export default {
                 display: flex;
                 flex-direction: column;
                 // height: 450px;
-                height: calc(100vh - 540px);
+                height: calc(100vh - 630px);
                 overflow-y: scroll;
                 .order-info{
                     height: 40px;

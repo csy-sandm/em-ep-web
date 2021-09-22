@@ -28,11 +28,11 @@
                     <div slot="content">
                         <div style="width:400px;height:100%;">
                             <div style="width: 25%;height: 80px;line-height: 40px;float: left;color: #FFFC03;font-size: 15px;">
-                                <div style="width: 100%;height: 40px;line-height: 60px;text-align: center;">{{ item.hour }}</div>
-                                <div style="width: 100%;height: 40px;line-height: 20px;text-align: center;">{{ item.time }}</div>
+                                <div style="width: 100%;height: 40px;line-height: 60px;text-align: center;">{{ item.alarmTime ? item.alarmTime.substring(0,10) : '' }}</div>
+                                <div style="width: 100%;height: 40px;line-height: 20px;text-align: center;">{{ item.alarmTime ? item.alarmTime.substring(11,19) : '' }}</div>
                             </div>
                             <div style="font-size:15px;width: 65%;height: 100%;line-height:20px;margin: 20px 0px 20px 0px;text-align: left;overflow:hidden;float: left;margin: 20px 0px 20px 0px;color: #FFFC03;">
-                                {{ item.result }}
+                                {{ item.alarmContext }}
                             </div>
                             <!-- <div class="alarm-more">
                                 more
@@ -41,11 +41,11 @@
                     </div>
                     <div style="width:100%;height:100%">
                         <div class="alarm-time">
-                            <div class="time-hour">{{ item.hour }}</div>
-                            <div class="time-date">{{ item.time }}</div>
+                            <div class="time-hour">{{ item.alarmTime ? item.alarmTime.substring(0,10) : '' }}</div>
+                            <div class="time-date">{{ item.alarmTime ? item.alarmTime.substring(11,19) : '' }}</div>
                         </div>
                         <div class="alarm-result">
-                            {{ item.result }}
+                            {{ item.alarmContext }}
                         </div>
                         <!-- <div class="alarm-more">
                             more
@@ -62,6 +62,11 @@
 import ModuleTitle from '../../components/moduleTitle'
 import GaugeChart from '../../components/gaugeChart'
 import titleIcon from '../../../assets/img/title-icon.png'
+
+import {
+  queryRtAlarm,
+  querySiteList
+} from '@/api/em-ep/homePageApi.js'
 
 export default {
   components: {
@@ -98,6 +103,43 @@ export default {
           result: '总氮分钟监测值0,523mg/L，标准值2.0.00mg/L-14.000mg/L，请留意。仙林中'
         }
       ]
+    }
+  },
+  mounted () {
+    this.queryRtAlarm()
+  },
+  methods: {
+    // 查询
+    async queryRtAlarm () {
+      const params = {}
+      queryRtAlarm(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            this.alarmInfo = response.resultEntity.list || []
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    formatTime (time, type) {
+      var temp_time = new Number(time)
+      var temp_date = new Date(temp_time)
+      var temp_year1 = ''
+      var temp_month1 = ''
+      var temp_day1 = ''
+      if (type === 1) {
+        temp_year1 = temp_date.getFullYear()
+        temp_month1 = (temp_date.getMonth() + 1) > 9 ? (temp_date.getMonth() + 1) : '0' + (temp_date.getMonth() + 1)
+        temp_day1 = (temp_date.getDate()) > 9 ? (temp_date.getDate()) : '0' + (temp_date.getDate())
+        return temp_year1.toString() + temp_month1.toString() + temp_day1.toString()
+      } else if (type === 2) {
+        temp_year1 = temp_date.getFullYear()
+        temp_month1 = (temp_date.getMonth() + 1) > 9 ? (temp_date.getMonth() + 1) : '0' + (temp_date.getMonth() + 1)
+        return temp_year1.toString() + temp_month1.toString()
+      }
     }
   }
 }
