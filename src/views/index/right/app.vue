@@ -20,7 +20,7 @@
         <div class="alarm">
             <ModuleTitle
                 :title="'监控报警'"
-                :pic-url="titleIcon"
+                :pic-url="baojingIcon"
             />
             <div class="alarm-info">
                 <div class="alarm-detail" v-for="(item,index) of alarmInfo" :key="index">
@@ -62,6 +62,7 @@
 import ModuleTitle from '../../components/moduleTitle'
 import GaugeChart from '../../components/gaugeChart'
 import titleIcon from '../../../assets/img/title-icon.png'
+import baojingIcon from '../../../assets/img/icon-baojing.png'
 
 import {
   queryRtAlarm
@@ -75,6 +76,7 @@ export default {
   data () {
     return {
       titleIcon,
+      baojingIcon,
       alarmInfo: [
         {
           hour: '14:42',

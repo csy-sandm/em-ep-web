@@ -3,7 +3,7 @@
         <div class="work-finish">
             <ModuleTitle
                 :title="'工单完成情况'"
-                :pic-url="titleIcon"
+                :pic-url="gongdanIcon"
             >
               <template v-slot:soltContent>
                 <div class="more-info">
@@ -37,12 +37,16 @@
         <div class="assets">
             <ModuleTitle
                 :title="'资产情况'"
-                :pic-url="titleIcon"
+                :pic-url="zichanIcon"
             />
             <div class="assets-content">
                 <div class="assets-info" v-for="(item,index) of assetsInfo" :key="index">
                     <div class="assets-img">
-                        <img :src="deviceIcon" class="img-content">
+                        <img :src="zhandianIcon" class="img-content" v-if="index === 0">
+                        <img :src="shebeiIcon" class="img-content" v-if="index === 1">
+                        <img :src="kehuIcon" class="img-content" v-if="index === 2">
+                        <img :src="gongchengshiIcon" class="img-content" v-if="index === 3">
+                        <img :src="bumenIcon" class="img-content" v-if="index === 4">
                     </div>
                     <div class="assets-detail">
                         <span class="assets-name">{{ item.name }}</span>
@@ -54,7 +58,7 @@
         <div class="order-status">
             <ModuleTitle
                 :title="'工单动态'"
-                :pic-url="titleIcon"
+                :pic-url="gongdandngtaiIcon"
             >
             <template v-slot:soltContent>
                 <!-- <div class="more-info">
@@ -79,7 +83,16 @@
 <script>
 import ModuleTitle from '../../components/moduleTitle'
 import titleIcon from '../../../assets/img/title-icon.png'
+import gongdanIcon from '../../../assets/img/icon-gongdan.png'
+import zichanIcon from '../../../assets/img/icon-zichan.png'
+import gongdandngtaiIcon from '../../../assets/img/icon-gongdandngtai.png'
 import deviceIcon from '../../../assets/img/device.png'
+import zhandianIcon from '../../../assets/img/icon-list-zhandian.png'
+import shebeiIcon from '../../../assets/img/icon-list-shebei.png'
+import kehuIcon from '../../../assets/img/icon-list-kehu.png'
+import gongchengshiIcon from '../../../assets/img/icon-list-gongchengshi.png'
+import bumenIcon from '../../../assets/img/icon-list-bumen.png'
+
 import moreIcon from '../../../assets/img/more.png'
 
 import {
@@ -96,7 +109,15 @@ export default {
   data () {
     return {
       titleIcon,
+      gongdanIcon,
+      zichanIcon,
+      gongdandngtaiIcon,
       deviceIcon,
+      zhandianIcon,
+      shebeiIcon,
+      kehuIcon,
+      gongchengshiIcon,
+      bumenIcon,
       moreIcon,
       workInfo: [
         {

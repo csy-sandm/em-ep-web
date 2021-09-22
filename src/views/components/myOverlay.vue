@@ -14,11 +14,38 @@
       <div class="assets-content">
           <div class="assets-info">
               <div class="assets-img">
-                  <img :src="noData" class="img-content">
+                  <img :src="leixingIcon" class="img-content">
               </div>
               <div class="assets-detail">
-                  <!-- <span class="assets-name">{{ data.name }}</span> -->
-                  <span class="assets-value">{{ data.value}}</span>
+                  <span class="assets-name">站点类型</span>
+                  <span class="assets-value">{{ data.siteType}}</span>
+              </div>
+          </div>
+          <div class="assets-info">
+              <div class="assets-img">
+                  <img :src="bumenIcon" class="img-content">
+              </div>
+              <div class="assets-detail">
+                  <span class="assets-name">运维责任部门 </span>
+                  <span class="assets-value">{{ data.responsiblerDepart}}</span>
+              </div>
+          </div>
+          <div class="assets-info">
+              <div class="assets-img">
+                  <img :src="zerenrenIcon" class="img-content">
+              </div>
+              <div class="assets-detail">
+                  <span class="assets-name">运维责任人</span>
+                  <span class="assets-value">{{ data.responsiblerPerson}}</span>
+              </div>
+          </div>
+          <div class="assets-info">
+              <div class="assets-img">
+                  <img :src="dateIcon" class="img-content">
+              </div>
+              <div class="assets-detail">
+                  <span class="assets-name">上次运维时间</span>
+                  <span class="assets-value">{{ data.lastServicesTime ? data.lastServicesTime.substring(0,10) : ''}}</span>
               </div>
           </div>
           <!-- <div class="assets-info" v-for="(item,index) of data" :key="index">
@@ -37,12 +64,21 @@
 
 <script>
 import noData from '../../assets/img/no-data.png'
+import leixingIcon from '../../assets/img/icon-tc-leixing.png'
+import bumenIcon from '../../assets/img/icon-list-bumen.png'
+import zerenrenIcon from '../../assets/img/icon-tc-zerenren.png'
+import dateIcon from '../../assets/img/icon-tc-date.png'
+
 import close from '../../assets/img/close.png'
 export default {
   props: ['text', 'position', 'active', 'data'],
   data () {
     return {
       noData,
+      leixingIcon,
+      bumenIcon,
+      zerenrenIcon,
+      dateIcon,
       close
     }
   },
@@ -54,6 +90,9 @@ export default {
       deep: true
     }
   },
+  mounted () {
+    console.log('data', this.data)
+  },
   methods: {
     infoWindowClose () {
       this.$emit('infoWindowClose')
@@ -61,8 +100,8 @@ export default {
     draw ({ el, BMap, map }) {
       const { lng, lat } = this.position
       const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat))
-      el.style.left = pixel.x - 180 + 'px'
-      el.style.top = pixel.y - 150 + 'px'
+      el.style.left = pixel.x - 190 + 'px'
+      el.style.top = pixel.y - 220 + 'px'
     }
   }
 }
@@ -71,7 +110,7 @@ export default {
 <style lang="scss" scoped>
 .sample {
   width: 400px;
-  height: 120px;
+  height: 180px;
   line-height: 40px;
   overflow: hidden;
   box-shadow: 0 0 5px #000;
@@ -81,7 +120,7 @@ export default {
 
 .marker-info{
   width: 400px;
-  height: 120px;
+  height: 180px;
   background: #153761;
   text-align: left;
   .marker-title{
@@ -126,8 +165,8 @@ export default {
               justify-content: center;/*水平居中*/
               float: left;
               .img-content{
-                  width: 20px;
-                  height: 20px;
+                  width: 30px;
+                  height: 30px;
                   background-size:100% 100%;
               }
           }

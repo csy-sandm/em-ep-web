@@ -51,7 +51,7 @@ export default {
           if (response && response.resultEntity) {
             this.markerList = response.resultEntity
             for (let i = 0; i < this.markerList.length; i++) {
-              const assetsInfo = {}
+              const assetsInfo = this.markerList[i]
               assetsInfo.name = this.markerList[i].siteName
               assetsInfo.value = this.markerList[i].status
               this.markerList[i].assetsInfo = assetsInfo
