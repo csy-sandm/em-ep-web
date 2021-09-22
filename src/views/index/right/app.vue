@@ -64,8 +64,7 @@ import GaugeChart from '../../components/gaugeChart'
 import titleIcon from '../../../assets/img/title-icon.png'
 
 import {
-  queryRtAlarm,
-  querySiteList
+  queryRtAlarm
 } from '@/api/em-ep/homePageApi.js'
 
 export default {

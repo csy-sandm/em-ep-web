@@ -19,6 +19,10 @@
 import MyOverlay from '../../components/myOverlay'
 import mapMaker from '../../../assets/img/mapMaker.png'
 import mapStyle from './map.js'
+import {
+  querySiteList
+} from '@/api/em-ep/homePageApi.js'
+
 export default {
   components: {
     MyOverlay
@@ -29,7 +33,7 @@ export default {
       markerPoint: { lng: 118.816042, lat: 32.061859 },
       markerList: [
         {
-          //118.816042,32.061859
+          // 118.816042,32.061859
           markerPoint: { lng: 118.816042, lat: 32.061859 },
           assetsInfo: [
             {
@@ -39,7 +43,7 @@ export default {
           ]
         },
         {
-          //118.837961,32.014048
+          // 118.837961,32.014048
           markerPoint: { lng: 118.837961, lat: 32.014048 },
           assetsInfo: [
             {
@@ -49,7 +53,7 @@ export default {
           ]
         },
         {
-          //118.906951,32.114905
+          // 118.906951,32.114905
           markerPoint: { lng: 118.906951, lat: 32.114905 },
           assetsInfo: [
             {
@@ -64,7 +68,32 @@ export default {
       clickPoint: {}
     }
   },
+  mounted () {
+    this.querySiteList()
+  },
   methods: {
+
+    // 查询
+    async querySiteList () {
+      const params = {}
+      querySiteList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            this.markerList = response.resultEntity
+            for (let i = 0; i < this.markerList.length; i++) {
+              const assetsInfo = []
+              assetsInfo.name = this.markerList[i].siteName
+              assetsInfo.value = this.markerList[i].status
+              this.markerList.assetsInfo = assetsInfo
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     // 给地图设置主题色，我设置的是黑夜主题
     handler ({ BMap, map }) {
       // const mapStyle = { style: 'midnight' }
