@@ -30,39 +30,8 @@ export default {
   data () {
     return {
       mapMaker,
-      markerPoint: { lng: 118.816042, lat: 32.061859 },
-      markerList: [
-        {
-          // 118.816042,32.061859
-          markerPoint: { lng: 118.816042, lat: 32.061859 },
-          assetsInfo: [
-            {
-              name: '站点111',
-              value: 1111
-            }
-          ]
-        },
-        {
-          // 118.837961,32.014048
-          markerPoint: { lng: 118.837961, lat: 32.014048 },
-          assetsInfo: [
-            {
-              name: '站点222',
-              value: 222
-            }
-          ]
-        },
-        {
-          // 118.906951,32.114905
-          markerPoint: { lng: 118.906951, lat: 32.114905 },
-          assetsInfo: [
-            {
-              name: '站点333',
-              value: 3333
-            }
-          ]
-        }
-      ],
+      markerPoint: { lng: 120.729401, lat: 33.180512 },
+      markerList: [],
       show: false,
       clickInfo: [],
       clickPoint: {}
@@ -82,10 +51,15 @@ export default {
           if (response && response.resultEntity) {
             this.markerList = response.resultEntity
             for (let i = 0; i < this.markerList.length; i++) {
-              const assetsInfo = []
+              const assetsInfo = {}
               assetsInfo.name = this.markerList[i].siteName
               assetsInfo.value = this.markerList[i].status
-              this.markerList.assetsInfo = assetsInfo
+              this.markerList[i].assetsInfo = assetsInfo
+
+              const markerPoint = {}
+              markerPoint.lat = this.markerList[i].siteLat
+              markerPoint.lng = this.markerList[i].siteLon
+              this.markerList[i].markerPoint = markerPoint
             }
           }
         } else {

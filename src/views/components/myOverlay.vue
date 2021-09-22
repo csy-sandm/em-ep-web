@@ -6,13 +6,22 @@
     @draw="draw">
     <div class="marker-info">
       <div class="marker-title">
-        <span class="title-name">义达铝业-义达排口</span>
+        <span class="title-name">{{ data.name }}</span>
         <div class="info-close" @click="infoWindowClose()" >
           <img :src="close" class="img-content" />
         </div>
       </div>
       <div class="assets-content">
-          <div class="assets-info" v-for="(item,index) of data" :key="index">
+          <div class="assets-info">
+              <div class="assets-img">
+                  <img :src="noData" class="img-content">
+              </div>
+              <div class="assets-detail">
+                  <!-- <span class="assets-name">{{ data.name }}</span> -->
+                  <span class="assets-value">{{ data.value}}</span>
+              </div>
+          </div>
+          <!-- <div class="assets-info" v-for="(item,index) of data" :key="index">
               <div class="assets-img">
                   <img :src="noData" class="img-content">
               </div>
@@ -20,7 +29,7 @@
                   <span class="assets-name">{{ item.name }}</span>
                   <span class="assets-value">{{ item.value}}</span>
               </div>
-          </div>
+          </div> -->
       </div>
     </div>
   </bm-overlay>
@@ -62,7 +71,7 @@ export default {
 <style lang="scss" scoped>
 .sample {
   width: 400px;
-  height: 180px;
+  height: 120px;
   line-height: 40px;
   overflow: hidden;
   box-shadow: 0 0 5px #000;
@@ -72,7 +81,7 @@ export default {
 
 .marker-info{
   width: 400px;
-  height: 180px;
+  height: 120px;
   background: #153761;
   text-align: left;
   .marker-title{
@@ -106,7 +115,7 @@ export default {
       height: 130px;
       margin-top: 10px;
       .assets-info{
-          width: 33%;
+          width: 50%;
           height: 60px;
           float: left;
           .assets-img{

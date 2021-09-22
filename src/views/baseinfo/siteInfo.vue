@@ -145,6 +145,8 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="remark" label="备注"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="mnCode" label="现场MN编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="运维状态"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteLon" label="站点经度"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteLat" label="站点纬度"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
@@ -206,6 +208,12 @@
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.mnCode"   placeholder="请输入现场机MN编号"></el-input>
 				</el-form-item>
+				<el-form-item label="站点经度" style="width: 500px"  >
+					<el-input v-model="insertParam.siteLon"   placeholder="请输入站点经度"></el-input>
+				</el-form-item>
+				<el-form-item label="站点纬度" style="width: 500px"  >
+					<el-input v-model="insertParam.siteLat"   placeholder="请输入站点纬度"></el-input>
+				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.status"   placeholder="请输入运维状态"></el-input>
 				</el-form-item>
@@ -261,6 +269,12 @@
 				</el-form-item>
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.mnCode"  placeholder="请输入现场机MN编号"  ></el-input>
+				</el-form-item>
+				<el-form-item label="站点经度" style="width: 500px" >
+					<el-input v-model="editParam.siteLon"  placeholder="请输入站点经度"  ></el-input>
+				</el-form-item>
+				<el-form-item label="站点纬度" style="width: 500px" >
+					<el-input v-model="editParam.siteLat"  placeholder="请输入站点纬度"  ></el-input>
 				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.status"  placeholder="请输入运维状态"  ></el-input>

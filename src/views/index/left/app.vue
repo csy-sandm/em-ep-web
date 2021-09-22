@@ -57,12 +57,12 @@
                 :pic-url="titleIcon"
             >
             <template v-slot:soltContent>
-                <div class="more-info">
+                <!-- <div class="more-info">
                   <div class="more-tip" style="color:#06BCFF;">更多</div>
                   <div class="more-img">
                       <img :src="moreIcon" class="img-content">
                   </div>
-                </div>
+                </div> -->
               </template>
             </ModuleTitle>
             <div class="order-content">
