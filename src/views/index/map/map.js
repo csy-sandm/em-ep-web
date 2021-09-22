@@ -3,7 +3,7 @@ const mapStyle = [
     featureType: 'land',
     elementType: 'geometry',
     stylers: {
-      color: '#091220ff'
+      color: '#071223'
     }
   },
   {
@@ -104,7 +104,7 @@ const mapStyle = [
     featureType: 'water',
     elementType: 'geometry',
     stylers: {
-      color: '#3d85c6ff',
+      color: '#10274B',
       weight: '1',
       lightness: -29
     }
