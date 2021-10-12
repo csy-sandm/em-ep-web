@@ -1,12 +1,7 @@
 <template>
-  <bm-overlay
-    ref="customOverlay"
-    class="sample"
-    pane="labelPane"
-    @draw="draw">
-    <div class="marker-info">
+<div class="marker-info">
       <div class="marker-title">
-        <span class="title-name">{{ data.name }}</span>
+        <span class="title-name">{{ data.siteName }}</span>
         <div class="info-close" @click="infoWindowClose()" >
           <img :src="close" class="img-content" />
         </div>
@@ -59,7 +54,6 @@
           </div> -->
       </div>
     </div>
-  </bm-overlay>
 </template>
 
 <script>

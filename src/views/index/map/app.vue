@@ -1,6 +1,6 @@
 <template>
   <div class="map-container">
-        <baidu-map class="map" :center="markerPoint" :zoom="16" :scroll-wheel-zoom="true" @ready="handler">
+        <!-- <baidu-map class="map" :center="markerPoint" :zoom="16" :scroll-wheel-zoom="true" @ready="handler">
            <div v-for="(marker,index) of markerList" :key="index">
               <bm-marker :position="marker.markerPoint" @click="infoWindowOpen(marker)"
               :icon="{url: `${mapMaker}`, size: {width: 42, height: 42}}"/>
@@ -11,7 +11,16 @@
              :data="clickInfo"
              @infoWindowClose="infoWindowClose">
            </my-overlay>
-        </baidu-map>
+        </baidu-map> -->
+        <el-amap vid="amap" :zoom="16" :plugin="plugin" class="amap-demo" :center="center" :events="mapEvents">
+          <el-amap-marker v-for="marker in markers" :position="marker.position" :key="marker.id" :events="marker.events" :icon="marker.icon"></el-amap-marker>
+          <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :isCustom="true" :content="window.content" :offset="window.offset">
+            <my-overlay
+             :data="window.info"
+             @infoWindowClose="infoWindowClose">
+            </my-overlay>
+          </el-amap-info-window>
+        </el-amap>
   </div>
 </template>
 
@@ -31,17 +40,60 @@ export default {
     return {
       mapMaker,
       markerPoint: { lng: 120.729401, lat: 33.180512 },
-      markerList: [],
+
+      center: [120.729401, 33.180512],
+      mapEvents: {
+        init (o) {
+          o.setMapStyle('amap://styles/darkblue')
+        }
+      },
+
+      // markerList: [],
       show: false,
       clickInfo: [],
-      clickPoint: {}
+      clickPoint: {},
+
+      markers: [],
+      windows: [],
+      window: ''
     }
   },
   mounted () {
     this.querySiteList()
   },
   methods: {
-
+    point (markerList) {
+      const markers = []
+      const windows = []
+      const that = this
+      markerList.forEach((item, index) => {
+        markers.push({
+          position: [item.siteLon, item.siteLat],
+          icon: mapMaker,
+          events: {
+            click () {
+              that.windows.forEach(window => {
+                window.visible = false // 关闭窗体
+              })
+              that.window = that.windows[index]
+              that.window.info = item
+              that.$nextTick(() => {
+                that.window.visible = true// 点击点坐标，出现信息窗体
+              })
+            }
+          }
+        })
+        windows.push({
+          position: [item.siteLon, item.siteLat],
+          offset: [10, -35], // 窗体偏移
+          visible: false// 初始是否显示
+        })
+      })
+      //  加点
+      this.markers = markers
+      // 加弹窗
+      this.windows = windows
+    },
     // 查询
     async querySiteList () {
       const params = {}
@@ -49,18 +101,9 @@ export default {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           if (response && response.resultEntity) {
-            this.markerList = response.resultEntity
-            for (let i = 0; i < this.markerList.length; i++) {
-              const assetsInfo = this.markerList[i]
-              assetsInfo.name = this.markerList[i].siteName
-              assetsInfo.value = this.markerList[i].status
-              this.markerList[i].assetsInfo = assetsInfo
-
-              const markerPoint = {}
-              markerPoint.lat = this.markerList[i].siteLat
-              markerPoint.lng = this.markerList[i].siteLon
-              this.markerList[i].markerPoint = markerPoint
-            }
+            const markerList = response.resultEntity
+            console.log('markerListmarkerListmarkerList', markerList)
+            this.point(markerList)
           }
         } else {
           // 这个分支是错误返回分支
@@ -77,11 +120,12 @@ export default {
       })
     },
     infoWindowClose () {
-      this.show = false
+      this.window.visible = false
     },
     infoWindowOpen (marker) {
       if (marker && marker.markerPoint) {
         this.clickPoint = marker.markerPoint
+        console.log('this.clickPoint', this.clickPoint)
       }
       if (marker && marker.assetsInfo) {
         this.clickInfo = marker.assetsInfo
