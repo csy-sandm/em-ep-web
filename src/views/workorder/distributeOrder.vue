@@ -87,14 +87,14 @@
 				<template slot-scope="scope">
 					<el-button
 							type="primary"
-							icon="el-icon-edit"
+							icon="el-icon-view"
 							size="mini"
-							@click="editData(scope.row)"></el-button>
-					<el-button
+							@click="viewData(scope.row)"></el-button>
+					<!-- <el-button
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)"></el-button>
+							@click="delData(scope.row)"></el-button> -->
 				</template>
 			</el-table-column>
 		</el-table>
@@ -195,34 +195,35 @@
 					<el-input v-model="editParam.orderId" placeholder="请输入工单编码" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderType" placeholder="请输入工单类型"></el-input>
+					<el-input v-model="editParam.orderType" placeholder="请输入工单类型" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteId" placeholder="请输入运维站点"></el-input>
+					<el-input v-model="editParam.siteId" placeholder="请输入运维站点" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.instrumentId" placeholder="请输入关联仪器"></el-input>
+					<el-input v-model="editParam.instrumentId" placeholder="请输入关联仪器" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.responsiblerPerson" placeholder="请输入工单责任人"></el-input>
+					<el-input v-model="editParam.responsiblerPerson" placeholder="请输入工单责任人" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="工单协同人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.collaborator" placeholder="请输入工单协同人"></el-input>
+					<el-input v-model="editParam.collaborator" placeholder="请输入工单协同人" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderDesc" placeholder="请输入任务描述"></el-input>
+					<el-input v-model="editParam.orderDesc" placeholder="请输入任务描述" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="相关照片" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderImg" placeholder="请输入相关照片"></el-input>
+					<el-input v-model="editParam.orderImg" placeholder="请输入相关照片" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="优先级" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.priority" placeholder="请输入优先级"></el-input>
+					<el-input v-model="editParam.priority" placeholder="请输入优先级" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="工单状态" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderStatus" placeholder="请输入工单状态"></el-input>
+					<el-input v-model="editParam.orderStatus" placeholder="请输入工单状态" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="计划完工日" style="width: 50%;float: left;"  >
 					<el-date-picker
+					:disabled="true"
 						style="width: 100%;"
 						v-model="insertParam.planCompletionDay"
 						type="datetime"
@@ -231,6 +232,7 @@
 				</el-form-item>
 				<el-form-item label="接单时间" style="width: 50%;float: left;"  >
 					<el-date-picker
+					:disabled="true"
 						style="width: 100%;"
 						v-model="insertParam.receiveTime"
 						type="datetime"
@@ -245,6 +247,7 @@
 				</el-form-item> -->
 				<el-form-item label="工单创建时间" style="width: 50%;float: left;"  >
 					<el-date-picker
+					:disabled="true"
 						style="width: 100%;"
 						v-model="insertParam.createTime"
 						type="datetime"
@@ -252,12 +255,12 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="工单创建人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.creator" placeholder="请输入工单创建人"></el-input>
+					<el-input v-model="editParam.creator" placeholder="请输入工单创建人" :disabled="true"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-        <el-button type="success" @click="updateData(editParam)">提交</el-button>
-        <el-button type="primary" @click="dialogEditVisible = false">取消</el-button>
+        <!-- <el-button type="success" @click="updateData(editParam)">提交</el-button> -->
+        <el-button type="primary" @click="dialogEditVisible = false">确定</el-button>
       </span>
 		</el-dialog>
 
@@ -439,7 +442,7 @@ export default {
     },
 
     // 编辑 弹出框
-    editData (row) {
+    viewData (row) {
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true

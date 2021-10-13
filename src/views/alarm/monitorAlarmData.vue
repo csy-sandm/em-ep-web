@@ -94,16 +94,31 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column> -->
-			<el-table-column :show-overflow-tooltip="true"  prop="alarmType" label="告警类型"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dealStatus" label="告警状态"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true"  prop="alarmType" label="告警类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="alarmContext" label="报警内容"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="alarmTime" label="告警时间"></el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
+          <el-button
+							type="primary"
+              style="background:#1BAC1A"
+							icon="el-icon-check"
+							size="mini"
+              v-if="scope.row.dealStatus !== '已处理'"
+							@click="dealStatus(scope.row)"></el-button>
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
+              v-if="scope.row.dealStatus !== '已处理'"
 							@click="editData(scope.row)"></el-button>
+					<el-button
+							type="primary"
+							icon="el-icon-view"
+							size="mini"
+              v-if="scope.row.dealStatus === '已处理'"
+							@click="viewData(scope.row)"></el-button>
 					<el-button
 							type="danger"
 							icon="el-icon-delete"
@@ -227,6 +242,72 @@
       </span>
 		</el-dialog>
 
+    <!-- 查看弹出框 -->
+		<el-dialog title="查看信息"
+				   style="text-align: left !important"
+				   :visible.sync="dialogViewVisible">
+			<el-form ref="form" label-width="150px">
+				<el-form-item label="站点编号" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.siteId"  placeholder="请输入站点编号" :disabled="true" ></el-input>
+				</el-form-item>
+				<el-form-item label="监测因子编号" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.dataKey"  placeholder="请输入监测因子编号" :disabled="true" ></el-input>
+				</el-form-item>
+				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.dataName"  placeholder="请输入监测因子名称"  :disabled="true"></el-input>
+				</el-form-item>
+				<el-form-item label="数据值" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.dataValue"  placeholder="请输入数据值"  :disabled="true"></el-input>
+				</el-form-item>
+				<el-form-item label="数据采集时间" style="width: 50%;float: left;">
+					<el-date-picker
+            :disabled="true"
+						style="width: 100%;"
+						v-model="viewParam.dataTime"
+						type="datetime"
+						placeholder="请输入数据采集时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="告警编号" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.alarmId"  placeholder="请输入告警编号"  :disabled="true"></el-input>
+				</el-form-item>
+        <el-form-item label="告警状态" style="width: 50%;float: left;" >
+					<el-input v-model="viewParam.dealStatus"  placeholder="请输入告警类型"  :disabled="true"></el-input>
+				</el-form-item>
+				<el-form-item label="告警类型" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.alarmType"  placeholder="请输入告警类型"  :disabled="true"></el-input>
+				</el-form-item>
+				<el-form-item label="报警内容" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.alarmContext"  placeholder="请输入报警内容"  :disabled="true"></el-input>
+				</el-form-item>
+				<el-form-item label="告警时间" style="width: 50%;float: left;">
+					<el-date-picker
+          :disabled="true"
+						style="width: 100%;"
+						v-model="viewParam.alarmTime"
+						type="datetime"
+						placeholder="请输入告警时间">
+					</el-date-picker>
+				</el-form-item>
+        <el-form-item label="处理人" style="width: 50%;float: left;">
+					<el-input v-model="viewParam.dealPersopn"  placeholder="请输入告警类型"  :disabled="true"></el-input>
+				</el-form-item>
+        <el-form-item label="处理时间" style="width: 50%;float: left;">
+					<el-date-picker
+            :disabled="true"
+						style="width: 100%;"
+            value-format='timestamp'
+						v-model="viewParam.dealTime"
+						type="datetime"
+						placeholder="请输入告警时间">
+					</el-date-picker>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogViewVisible = false">确定</el-button>
+      </span>
+		</el-dialog>
+
 		<!-- 删除弹出框  -->
 		<el-dialog
 				title="提示"
@@ -267,6 +348,7 @@ export default {
       dialogEditVisible: false,
       // 控制 删除弹出框是否显示
       dialogDelVisible: false,
+      dialogViewVisible: false,
       // tab 页的形式设定
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
@@ -281,6 +363,7 @@ export default {
       insertParam: {},
       // 编辑时的参数
       editParam: {},
+      viewParam: {},
       // 删除时的参数
       delParam: {},
       // 下载导出需要的表头
@@ -402,6 +485,12 @@ export default {
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true
     },
+    // 编辑 弹出框
+    viewData (row) {
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.viewParam = JSON.parse(JSON.stringify(row))
+      this.dialogViewVisible = true
+    },
     // 更新
     async updateData (editParam) {
       monitorAlarmDataUpdate(editParam).then((response) => {
@@ -419,7 +508,36 @@ export default {
         }
       })
     },
-
+    // 处理
+    async dealStatus (editParam) {
+      editParam.dealStatus = '已处理'
+      editParam.dealTime = Date.parse(new Date())
+      editParam.dealPersopn = localStorage.getItem('userName')
+      monitorAlarmDataUpdate(editParam).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 这里根据插入结果，页面提示
+          alert(response.resultMsg)
+          // 修改提交后，关闭窗口
+          this.dialogEditVisible = false
+          // 页面刷新数据
+          this.getDataList()
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    getCurrentDateTime () {
+      const year = new Date().getFullYear()
+      const month = new Date().getMonth() + 1 < 10 ? '0' + new Date().getMonth() + 1 : new Date().getMonth() + 1
+      const date = new Date().getDate() < 10 ? '0' + new Date().getDate() : new Date().getDate()
+      const hh = new Date().getHours() < 10 ? '0' + new Date().getHours() : new Date().getHours()
+      const mm = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
+      const ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds()
+      const dateTime = year + '' + month + '' + date + '' + hh + '' + mm + '' + ss
+      return dateTime
+    },
     // 删除
     delData (row) {
       this.delParam = row

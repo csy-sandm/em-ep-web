@@ -5,6 +5,8 @@
                 <GaugeChart
                     id="generalLeft"
                     height="160px"
+                    :pieData='pieData'
+                    v-if="chartShow === true"
                 />
                 <!-- <div class="general-left-title">待处理报警</div> -->
             </div>
@@ -65,6 +67,8 @@ import titleIcon from '../../../assets/img/title-icon.png'
 import baojingIcon from '../../../assets/img/icon-baojing.png'
 
 import {
+  pendingWorkOrderNum,
+  pendingAlarmNum,
   queryRtAlarm
 } from '@/api/em-ep/homePageApi.js'
 
@@ -103,13 +107,62 @@ export default {
           time: '05/26',
           result: '总氮分钟监测值0,523mg/L，标准值2.0.00mg/L-14.000mg/L，请留意。仙林中'
         }
-      ]
+      ],
+      pieData: [{
+        name: '待处理报警',
+        value: 0
+      }, {
+        name: '待完成报警工单',
+        value: 0
+      }],
+      chartShow: false
     }
   },
   mounted () {
     this.queryRtAlarm()
+    this.pendingAlarmNum()
   },
   methods: {
+    // 查询
+    pendingWorkOrderNum () {
+      const params = {}
+      pendingWorkOrderNum(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            this.$nextTick(() => {
+              this.chartShow = true
+              this.pieData[1].value = response.resultEntity
+              this.$forceUpdate()
+            })
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    // 查询
+    pendingAlarmNum () {
+      const params = {}
+      pendingAlarmNum(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          if (response && response.resultEntity) {
+            this.pieData[0].value = response.resultEntity
+            this.pendingWorkOrderNum()
+            // this.$nextTick(() => {
+            //   this.chartShow = true
+            //   this.pieData[0].value = response.resultEntity
+            //   this.$forceUpdate()
+            // })
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     // 查询
     async queryRtAlarm () {
       const params = {}

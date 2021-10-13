@@ -1,5 +1,5 @@
 <template>
-    <div :id="id" :style="style" />
+    <div :id="id" :style="style"/>
 </template>
 
 <script>
@@ -11,6 +11,16 @@ export default {
     id: {
       type: String,
       default: ''
+    },
+    pieData: {
+      type: Object,
+      default: () => [{
+        name: '待处理报警',
+        value: 0
+      }, {
+        name: '待完成报警工单',
+        value: 0
+      }]
     },
     chartData: {
       type: Object,
@@ -33,7 +43,8 @@ export default {
   },
   data () {
     return {
-      chart: ''
+      chart: '',
+      chartShow: true
     }
   },
   computed: {
@@ -54,9 +65,12 @@ export default {
     }
   },
   watch: {
-    chartData () {
-      this.initChart()
-    }
+    // pieData: {
+    //   handler (newName, oldName) {
+    //     this.initChart()
+    //   },
+    //   immediate: true
+    // }
   },
   mounted () {
     this.initChart()
@@ -97,17 +111,10 @@ export default {
       const _this = this
       // 基于准备好的dom，初始化echarts实例
       this.chart = echarts.init(document.getElementById(this.id))
-      const pieData = [{
-        name: '待处理报警',
-        value: 22
-      }, {
-        name: '待完成报警工单',
-        value: 20
-      }]
-
       var titleArr = []
       var seriesArr = []
-
+      const pieData = this.pieData
+      console.log('pieData', pieData)
       pieData.forEach(function (item, index) {
         titleArr.push({
           text: item.name,

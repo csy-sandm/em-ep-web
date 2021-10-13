@@ -16,8 +16,8 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="6" class="grid">
-						<el-form-item label="安装站点:" style="width: 300px"  >
-							<el-input v-model="queryParam.deviceAddr" placeholder="请输入安装站点"></el-input>
+						<el-form-item label="所属站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入所属站点"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6" class="grid">
@@ -83,7 +83,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceId" label="设备编号"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="deviceAddr" label="安装站点"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="deviceAddr" label="安装站点"></el-table-column> -->
+			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="所属站点"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceName" label="设备名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceType" label="设备类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="状态"></el-table-column>
@@ -137,8 +138,11 @@
 				<el-form-item label="设备编号" style="width: 50%;float: left;" prop="deviceId" >
 					<el-input v-model="insertParam.deviceId"   placeholder="请输入设备编号"></el-input>
 				</el-form-item>
-				<el-form-item label="安装站点" style="width: 50%;float: left;"  >
+				<!-- <el-form-item label="安装站点" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceAddr"   placeholder="请输入安装站点"></el-input>
+				</el-form-item> -->
+				<el-form-item label="所属站点" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.siteId"   placeholder="所属站点"></el-input>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceName"   placeholder="请输入设备名称"></el-input>
@@ -218,8 +222,11 @@
 				<el-form-item label="设备编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.deviceId"  placeholder="请输入设备编号" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="安装站点" style="width: 50%;float: left;" >
+				<!-- <el-form-item label="安装站点" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.deviceAddr"  placeholder="请输入安装站点"  ></el-input>
+				</el-form-item> -->
+				<el-form-item label="所属站点" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.siteId"   placeholder="所属站点"></el-input>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.deviceName"  placeholder="请输入设备名称"  ></el-input>

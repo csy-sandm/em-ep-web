@@ -53,3 +53,19 @@ export function querySiteList (params) {
     data: params
   })
 }
+
+export function pendingAlarmNum (params) {
+  return myrequest({
+    url: '/em-ep/HomePageController/pendingAlarmNum',
+    method: 'post',
+    data: params
+  })
+}
+
+export function pendingWorkOrderNum (params) {
+  return myrequest({
+    url: '/em-ep/HomePageController/pendingWorkOrderNum',
+    method: 'post',
+    data: params
+  })
+}
