@@ -222,7 +222,7 @@ export default {
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},

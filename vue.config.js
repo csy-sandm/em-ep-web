@@ -6,7 +6,14 @@
  * @LastEditors: John Holl
  */
 
+const path = require('path');
+const webpack = require('webpack')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = ['js', 'css']
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = {
+  productionSourceMap: false,
   lintOnSave: false,
   publicPath: './', // vueConf.baseUrl, // 根域上下文目录
 
@@ -22,26 +29,32 @@ module.exports = {
         }
       }
     }
-    // proxy: {
-    //   '/emApi/em-ep/': {
-    //    // target: 'http://47.118.50.171:11004',
-    //    target: 'http://127.0.0.1:11004',
-    //     ws: false,
-    //     pathRewrite: {
-    //       '^/emApi/em-ep/': '/'
-    //     }
-    //   },
-    //   "/emApi/v1/": {
-    //     //target: "http://47.118.50.171:11003/",
-    //     target: "http://127.0.0.1:11003/",
-    //     ws: false,
-    //     pathRewrite: {
-    //       '^/emApi/': '/'
-    //     }
-    //   },
-    // }
+  
   },
   configureWebpack: {
+
+      resolve:{
+        alias:{
+          '@':path.resolve(__dirname, './src'),
+          '@i':path.resolve(__dirname, './src/assets'),
+        } 
+      },
+      plugins: [
+        // Ignore all locale files of moment.js
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        
+        // 配置compression-webpack-plugin压缩
+        new CompressionWebpackPlugin({
+          algorithm: 'gzip',
+          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+          threshold: 10240,
+          minRatio: 0.8
+        }),
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 5, 
+          minChunkSize: 100
+        })
+      ],
     externals: {
       vue: 'Vue',
       'vue-router': 'VueRouter',

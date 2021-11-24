@@ -12,7 +12,7 @@
              @infoWindowClose="infoWindowClose">
            </my-overlay>
         </baidu-map> -->
-        <el-amap vid="amap" :zoom="16" :plugin="plugin" class="amap-demo" :center="center" :events="mapEvents">
+        <el-amap vid="amap" :zoom="13" :plugin="plugin" class="amap-demo" :center="center" :events="mapEvents">
           <el-amap-marker v-for="marker in markers" :position="marker.position" :key="marker.id" :events="marker.events" :icon="marker.icon"></el-amap-marker>
           <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :isCustom="true" :content="window.content" :offset="window.offset">
             <my-overlay

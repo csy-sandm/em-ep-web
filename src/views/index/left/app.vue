@@ -23,7 +23,7 @@
             <div class="work-content">
                 <div class="work-info" v-for="(item,index) of workInfo" :key="index">
                     <div class="work-title">
-                        {{ item.name }}
+                        {{ item.name | resultFilter}}
                     </div>
                     <div class="thismonth">
                         {{ item.thismonth }}
@@ -72,7 +72,7 @@
             <div class="order-content">
                 <div :class="['order-info', item.operate === '完成' ? 'order-finished' : 'order-unfinished']" v-for="(item,index) of rtWorlOrderList" :key="index">
                     <span class="order-name">{{ item.operator }}</span>
-                    <span class="order-result">{{ item.operate | resultFilter}}</span>
+                    <span class="order-result">{{ item.operate }}</span>
                     <span class="order-time">{{ item.dataTime ? item.dataTime.substring(0,10) : ''}}</span>
                 </div>
             </div>
@@ -169,12 +169,10 @@ export default {
   },
   filters: {
     resultFilter (val) {
-      if (val === '完成') {
-        return '完成了工单'
-      } else if (val === '接收') {
-        return '接收了工单'
-      } else {
-        return '开始了工单'
+      if (val === '待处理') {
+        return '等待完工'
+      } else{
+        return val
       }
     }
   },
@@ -237,7 +235,7 @@ export default {
                 if (workOrdersBYList[i].orderStatus === '延后完工') {
                   this.workInfo[2].thismonth = workOrdersBYList[i].orderNum
                 }
-                if (workOrdersBYList[i].orderStatus === '等待完工') {
+                if (workOrdersBYList[i].orderStatus === '待处理') {
                   this.workInfo[3].thismonth = workOrdersBYList[i].orderNum
                 }
               }
@@ -268,7 +266,7 @@ export default {
                 if (workOrdersSGYList[i].orderStatus === '延后完工') {
                   this.workInfo[2].lastmonth = workOrdersSGYList[i].orderNum
                 }
-                if (workOrdersSGYList[i].orderStatus === '等待完工') {
+                if (workOrdersSGYList[i].orderStatus === '待处理') {
                   this.workInfo[3].lastmonth = workOrdersSGYList[i].orderNum
                 }
               }

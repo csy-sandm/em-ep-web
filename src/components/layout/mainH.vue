@@ -92,7 +92,7 @@ export default {
       this.getDateTime()
     }, 1000)
     this.userName = localStorage.userName
-    this.getWeatherShow()
+    // this.getWeatherShow()
   },
   created () {
 

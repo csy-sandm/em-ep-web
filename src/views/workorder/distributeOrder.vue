@@ -13,14 +13,74 @@
 					<!-- 如果怎加查询条件个数，复制以下  el-col 块 进行修改即可 -->
 					<el-col :span="6" class="grid">
 						<el-form-item label="工单编码:" style="width: 300px"  >
-							<el-input v-model="queryParam.uId" placeholder="请输入"></el-input>
+							<el-input v-model="queryParam.orderId" placeholder="请输入"></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6" class="grid">
 						<el-form-item label="运维站点:" style="width: 300px"  >
-							<el-input v-model="queryParam.siteId" placeholder="请输入运维站点"></el-input>
+							<el-select v-model="queryParam.siteId" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 						</el-form-item>
 					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="工单类型:" style="width: 300px"  >
+							<el-select v-model="queryParam.orderType" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="关联设备:" style="width: 300px"  >
+							<el-select v-model="queryParam.instrumentId" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in deviceList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="工单负责人:" style="width: 300px"  >
+							<el-select v-model="queryParam.responsiblerPerson" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="6" class="grid">
+						<el-form-item label="工单协调人:" style="width: 300px"  >
+							<el-select v-model="queryParam.collaborator" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+						</el-form-item>
+					</el-col>
+
+					<!-- <el-col :span="6" class="grid">
+						<el-form-item label="运维站点:" style="width: 300px"  >
+							<el-input v-model="queryParam.siteId" placeholder="请输入运维站点"></el-input>
+						</el-form-item>
+					</el-col> -->
 				</el-form>
 			</el-col>
 
@@ -70,15 +130,23 @@
 			<el-table-column :show-overflow-tooltip="true" prop="orderId" label="工单编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="orderType" label="工单类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="siteId" label="运维站点"></el-table-column>
-			<!-- <el-table-column :show-overflow-tooltip="true" prop="instrumentId" label="关联仪器"></el-table-column> -->
+			<el-table-column :show-overflow-tooltip="true" prop="instrumentId" label="关联设备"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="responsiblerPerson" label="工单责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="collaborator" label="工单协同人"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" prop="orderDesc" label="任务描述"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="orderImg" label="相关照片"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true" prop="priority" label="优先级"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="orderStatus" label="工单状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" prop="planCompletionDay" label="计划完工日"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" prop="receiveTime" label="接单时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="planCompletionDay" label="计划完工日">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.planCompletionDay) }}
+				</template>
+			</el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="receiveTime" label="接单时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.receiveTime) }}
+				</template>
+			</el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" prop="startTime" label="开工时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="completionTime" label="完工时间"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" prop="createTime" label="工单创建时间"></el-table-column>
@@ -86,15 +154,23 @@
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
+							v-if="scope.row.orderStatus === '驳回'"
+							type="primary"
+							icon="el-icon-edit"
+							size="mini"
+							@click="editData(scope.row)"></el-button>
+					<el-button
+							v-if="scope.row.orderStatus !== '驳回'"
 							type="primary"
 							icon="el-icon-view"
 							size="mini"
 							@click="viewData(scope.row)"></el-button>
-					<!-- <el-button
+					<el-button
+							v-if="scope.row.orderStatus === '驳回'"
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)"></el-button> -->
+							@click="delData(scope.row)"></el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -120,52 +196,93 @@
 				   :visible.sync="dialogAddVisible"
 				   :before-close="handleClose">
 			<el-form ref="form" label-width="200px" :model="insertParam"  :rules="rules"  >
-				<el-form-item label="工单编码" style="width: 50%;float: left;" prop="orderId" >
+				<!-- <el-form-item label="工单编码" style="width: 50%;float: left;" prop="orderId" >
 					<el-input v-model="insertParam.orderId" placeholder="请输入工单编码"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.orderType" placeholder="请输入工单类型"></el-input>
+						<el-select style="width: 100%;" v-model="insertParam.orderType" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.siteId" placeholder="请输入运维站点"></el-input>
+						<el-select style="width: 100%;" v-model="insertParam.siteId" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.instrumentId" placeholder="请输入关联仪器"></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="insertParam.instrumentId" placeholder="请输入关联设备">
+							<el-option
+							v-for="item in deviceListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.responsiblerPerson" placeholder="请输入工单责任人"></el-input>
+						<el-select style="width: 100%;" v-model="insertParam.responsiblerPerson" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="工单协同人" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.collaborator" placeholder="请输入工单协同人"></el-input>
+				<el-form-item label="工单协调人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="insertParam.collaborator" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.orderDesc" placeholder="请输入任务描述"></el-input>
 				</el-form-item>
-				<el-form-item label="相关照片" style="width: 50%;float: left;"  >
+				<!-- <el-form-item label="相关照片" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.orderImg" placeholder="请输入相关照片"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="优先级" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.priority" placeholder="请输入优先级"></el-input>
+					<el-select style="width: 100%;" v-model="insertParam.priority" placeholder="请选择优先级">
+							 <el-option label="紧急" value="紧急"> </el-option>
+							 <el-option label="一般" value="一般"> </el-option>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="工单状态" style="width: 50%;float: left;"  >
+				<!-- <el-form-item label="工单状态" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.orderStatus" placeholder="请输入工单状态"></el-input>
-				</el-form-item>
+				</el-form-item> -->
+				<!-- <el-form-item label="开工时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="insertParam.startTime"
+						type="date"
+						placeholder="请输入计划完工日">
+					</el-date-picker>
+				</el-form-item> -->
 				<el-form-item label="计划完工日" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.planCompletionDay"
-						type="datetime"
+						type="date"
 						placeholder="请输入计划完工日">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="接单时间" style="width: 50%;float: left;"  >
+				<!-- <el-form-item label="接单时间" style="width: 50%;float: left;"  >
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.receiveTime"
 						type="datetime"
 						placeholder="请输入接单时间">
 					</el-date-picker>
-				</el-form-item>
+				</el-form-item> -->
 				<!-- <el-form-item label="开工时间" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.startTime" placeholder="请输入开工时间"></el-input>
 				</el-form-item>
@@ -185,7 +302,7 @@
       </span>
 		</el-dialog>
 
-		<!-- 编辑弹出框 -->
+				<!-- 编辑弹出框 -->
 		<el-dialog title="修改信息"
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
@@ -195,26 +312,165 @@
 					<el-input v-model="editParam.orderId" placeholder="请输入工单编码" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderType" placeholder="请输入工单类型" :disabled="true"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.orderType" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteId" placeholder="请输入运维站点" :disabled="true"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.siteId" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.instrumentId" placeholder="请输入关联仪器" :disabled="true"></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.instrumentId" placeholder="请输入关联设备">
+							<el-option
+							v-for="item in deviceListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.responsiblerPerson" placeholder="请输入工单责任人" :disabled="true"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.responsiblerPerson" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="工单协同人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.collaborator" placeholder="请输入工单协同人" :disabled="true"></el-input>
+				<el-form-item label="工单协调人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.collaborator" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.orderDesc" placeholder="请输入任务描述" ></el-input>
+				</el-form-item>
+				<!-- <el-form-item label="相关照片" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.orderImg" placeholder="请输入相关照片" ></el-input>
+				</el-form-item> -->
+				<el-form-item label="优先级" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="insertParam.priority" placeholder="请选择优先级">
+							 <el-option label="紧急" value="紧急"> </el-option>
+							 <el-option label="一般" value="一般"> </el-option>
+						</el-select>
+				</el-form-item>
+				<!-- <el-form-item label="工单状态" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.orderStatus" placeholder="请输入工单状态" ></el-input>
+				</el-form-item> -->
+				<el-form-item label="计划完工日" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="insertParam.planCompletionDay"
+						type="datetime"
+						placeholder="请输入计划完工日">
+					</el-date-picker>
+				</el-form-item>
+				<!-- <el-form-item label="接单时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="insertParam.receiveTime"
+						type="datetime"
+						placeholder="请输入接单时间">
+					</el-date-picker>
+				</el-form-item> -->
+				<!-- <el-form-item label="开工时间" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.startTime" placeholder="请输入开工时间"></el-input>
+				</el-form-item>
+				<el-form-item label="完工时间" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.completionTime" placeholder="请输入完工时间"></el-input>
+				</el-form-item> -->
+				<el-form-item label="工单创建时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="insertParam.createTime"
+						type="datetime"
+						placeholder="请输入工单创建时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="工单创建人" style="width: 50%;float: left;"  >
+					<el-input v-model="editParam.creator" placeholder="请输入工单创建人" ></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+        <el-button type="success" @click="updateData(editParam)">提交</el-button>
+        <el-button type="primary" @click="dialogEditVisible = false">取消</el-button>
+      </span>
+		</el-dialog>
+
+		<!-- 编辑弹出框 -->
+		<el-dialog title="查看信息"
+				   style="text-align: left !important"
+				   :visible.sync="dialogViewVisible"
+				   :before-close="handleClose">
+			<el-form ref="form" label-width="200px">
+				<el-form-item label="工单编码" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.orderId" placeholder="请输入工单编码" :disabled="true" ></el-input>
+				</el-form-item>
+				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.orderType" :disabled="true" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.siteId" :disabled="true" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.instrumentId" :disabled="true" placeholder="请选择关联设备">
+							<el-option
+							v-for="item in deviceListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.responsiblerPerson" :disabled="true" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="工单协调人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.collaborator" :disabled="true" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.orderDesc" placeholder="请输入任务描述" :disabled="true"></el-input>
 				</el-form-item>
-				<el-form-item label="相关照片" style="width: 50%;float: left;"  >
+				<!-- <el-form-item label="相关照片" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.orderImg" placeholder="请输入相关照片" :disabled="true"></el-input>
-				</el-form-item>
+				</el-form-item> -->
 				<el-form-item label="优先级" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.priority" placeholder="请输入优先级" :disabled="true"></el-input>
 				</el-form-item>
@@ -260,7 +516,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
         <!-- <el-button type="success" @click="updateData(editParam)">提交</el-button> -->
-        <el-button type="primary" @click="dialogEditVisible = false">确定</el-button>
+        <el-button type="primary" @click="dialogViewVisible = false">确定</el-button>
       </span>
 		</el-dialog>
 
@@ -283,16 +539,33 @@
 <script>
 // 下载需要的API
 import { outExportExcel } from '@/api/mainApi'
-// 引入API
+
+//引入API
 import {
-  planWorkorderInfoQueryListByPage,
-  planWorkorderInfoQueryList,
-  planWorkorderInfoInsertList,
-  planWorkorderInfoInsert,
-  planWorkorderInfoUpdateList,
-  planWorkorderInfoUpdate,
-  planWorkorderInfoDelete
-} from '@/api/em-ep/planWorkorderInfoApi.js'
+		workorderSumDataQueryListByPage,
+		workorderSumDataQueryList,
+		workorderSumDataInsertList,
+		workorderSumDataInsert,
+		workorderSumDataUpdateList,
+		workorderSumDataUpdate,
+		workorderSumDataDelete
+}from "@/api/em-ep/workorderSumDataApi.js";
+
+import {
+  siteInfoQueryList
+} from '@/api/em-ep/siteInfoApi.js'
+
+import {
+  workorderTypeQueryList
+} from '@/api/em-ep/workorderTypeApi.js'
+
+import {
+  accountInfoQueryList
+} from '@/api/login/accountInfoApi.js'
+
+import {
+  deviceInfoQueryList
+} from '@/api/em-ep/deviceInfoApi.js'
 
 export default {
   data () {
@@ -303,12 +576,13 @@ export default {
       // 控制 修改弹出框是否显示
       dialogEditVisible: false,
       // 控制 删除弹出框是否显示
-      dialogDelVisible: false,
+	  dialogDelVisible: false,
+	  dialogViewVisible: false,
       // tab 页的形式设定
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -325,7 +599,7 @@ export default {
         '工单编码',
         '工单类型',
         '运维站点',
-        '关联仪器',
+        '关联设备',
         '工单责任人',
         '工单协同人',
         '任务描述',
@@ -363,8 +637,15 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         orderId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+	  },
+	  siteList: [],
+	  siteListS: [],
+	  orderTypeList: [],
+	  orderTypeListS: [],
+	  accountList: [],
+	  accountListS: [],
+	  deviceList: [],
+	  deviceListS: []
     }
   },
   watch: {
@@ -378,6 +659,135 @@ export default {
     }
   },
   methods: {
+	  getYMDHMS (timestamp) {
+      if (!timestamp) return '--'
+      const time = new Date(timestamp)
+      const year = time.getFullYear()
+      let month = time.getMonth() + 1
+      let date = time.getDate()
+      let hours = time.getHours()
+      let minute = time.getMinutes()
+      let second = time.getSeconds()
+
+      if (month < 10) { month = '0' + month }
+      if (date < 10) { date = '0' + date }
+      if (hours < 10) { hours = '0' + hours }
+      if (minute < 10) { minute = '0' + minute }
+      if (second < 10) { second = '0' + second }
+      return year + '-' + month + '-' + date
+    },
+	  async deviceInfoQueryList () {
+      const params = {}
+      deviceInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.deviceList = []
+		  this.deviceListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.deviceList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('444444', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].deviceId
+              info.name = response.resultEntity[i].deviceName
+			  this.deviceList.push(info)
+			  this.deviceListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+	  async queryAccountList () {
+      const params = {}
+      accountInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.accountList = []
+		  this.accountListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.accountList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('3333', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].userCode
+              info.name = response.resultEntity[i].userName
+			  this.accountList.push(info)
+			  this.accountListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async queryOrderTypeList () {
+      const params = {}
+      workorderTypeQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.orderTypeList = []
+		  this.orderTypeListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.orderTypeList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('111111', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].typeId
+              info.name = response.resultEntity[i].typeName
+			  this.orderTypeList.push(info)
+			  this.orderTypeListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async querySiteList () {
+      const params = {}
+      siteInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.siteList = []
+		  this.siteListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.siteList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('responseresponse', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].siteId
+              info.name = response.resultEntity[i].siteName
+			  this.siteList.push(info)
+			  this.siteListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -398,8 +808,29 @@ export default {
     // 查询
     async getDataList () {
       this.queryParam.pageNum = this.page
-      this.queryParam.pageSize = this.size
-      planWorkorderInfoQueryListByPage(this.queryParam).then((response) => {
+	  this.queryParam.pageSize = this.size
+
+	  if (this.queryParam && this.queryParam.siteId === '全部') {
+		  this.queryParam.siteId = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.orderType === '全部') {
+		  this.queryParam.orderType = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.orderType === '全部') {
+		  this.queryParam.orderType = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.collaborator === '全部') {
+		  this.queryParam.collaborator = ''
+	  }
+
+	  if (this.queryParam && this.queryParam.instrumentId === '全部') {
+		  this.queryParam.instrumentId = ''
+	  }
+
+      workorderSumDataQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据查询结果，赋值给页面
@@ -425,7 +856,9 @@ export default {
     },
     // 插入
     async insertData (insertParam) {
-      planWorkorderInfoInsert(insertParam).then((response) => {
+	  insertParam.orderStatus = '待审批'
+	  insertParam.uuid = this.guid()
+      workorderSumDataInsert(insertParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -440,16 +873,28 @@ export default {
         }
       })
     },
-
+    S4 () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+    },
+    guid () {
+      return (this.S4() + this.S4() + '-' + this.S4() + '-' + this.S4() + '-' + this.S4() + '-' + this.S4() + this.S4() + this.S4())
+    },
     // 编辑 弹出框
     viewData (row) {
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.editParam = JSON.parse(JSON.stringify(row))
+      this.dialogViewVisible = true
+    },
+    // 编辑 弹出框
+    editData (row) {
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true
     },
     // 更新
     async updateData (editParam) {
-      planWorkorderInfoUpdate(editParam).then((response) => {
+	  editParam.orderStatus = '待审批'
+      workorderSumDataUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -475,7 +920,7 @@ export default {
       const params = {
         orderId: this.delParam.orderId
       }
-      planWorkorderInfoDelete(params).then((response) => {
+      workorderSumDataDelete(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -493,7 +938,7 @@ export default {
     async exportExecl () {
       // 全量查询数据，这里可以后期修改成分页查询等
       const params = {}
-      planWorkorderInfoQueryList(params).then((response) => {
+      workorderSumDataQueryList(params).then((response) => {
         // 数据
         this.tableData = response.resultEntity
         console.log(this.tableData)
@@ -504,6 +949,10 @@ export default {
   },
   mounted () {
     this.getDataList()
+    this.querySiteList()
+    this.queryOrderTypeList()
+    this.queryAccountList()
+    this.deviceInfoQueryList()
   }
 }
 </script>
@@ -515,6 +964,10 @@ export default {
 }
 
 ::v-deep{
+// .el-input--suffix .el-input__inner {
+//     padding-right: 30px;
+//     width: 258px;
+// }
 .el-dialog__body {
   padding: 30px 20px;
   color: #606266;

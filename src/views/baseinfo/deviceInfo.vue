@@ -96,7 +96,7 @@
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column> -->
-			<el-table-column :show-overflow-tooltip="true"  prop="instrumentBrand" label="仪器品牌"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="instrumentBrand" label="设备品牌"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="instrumentStandards" label="规格"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="company" label="公司/单位"></el-table-column>
 			<el-table-column label="操作" width="200" align="center">
@@ -197,8 +197,8 @@
 						placeholder="请输入更新时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="仪器品牌" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.instrumentBrand"   placeholder="请输入仪器品牌"></el-input>
+				<el-form-item label="设备品牌" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.instrumentBrand"   placeholder="请输入设备品牌"></el-input>
 				</el-form-item>
 				<el-form-item label="规格" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.instrumentStandards"   placeholder="请输入规格"></el-input>
@@ -281,8 +281,8 @@
 						placeholder="请输入更新时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="仪器品牌" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.instrumentBrand"  placeholder="请输入仪器品牌"  ></el-input>
+				<el-form-item label="设备品牌" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.instrumentBrand"  placeholder="请输入设备品牌"  ></el-input>
 				</el-form-item>
 				<el-form-item label="规格" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.instrumentStandards"  placeholder="请输入规格"  ></el-input>
@@ -345,7 +345,7 @@ export default {
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -372,7 +372,7 @@ export default {
         '创建时间',
         '创建人',
         '更新时间',
-        '仪器品牌',
+        '设备品牌',
         '规格',
         '公司/单位'
       ],

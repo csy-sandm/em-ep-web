@@ -70,18 +70,31 @@
 			<el-table-column :show-overflow-tooltip="true" prop="orderId" label="工单编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="orderType" label="工单类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="siteName" label="运维站点"></el-table-column>
-			<!-- <el-table-column :show-overflow-tooltip="true" prop="instrumentId" label="关联仪器"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="instrumentId" label="关联设备"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" prop="instrumentId" label="关联设备"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="responsiblerPerson" label="工单责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="collaborator" label="工单协同人"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true" prop="orderDesc" label="任务描述"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" prop="orderImg" label="相关照片"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true" prop="priority" label="优先级"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="orderStatus" label="审核状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" prop="planCompletionDay" label="计划完工日"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" prop="receiveTime" label="接单时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="planCompletionDay" label="计划完工日">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.completionTime) }}
+				</template>
+			</el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="receiveTime" label="接单时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.receiveTime) }}
+				</template>
+			</el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" prop="startWorkTime" label="开工时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="completionTime" label="完工时间"></el-table-column> -->
-			<el-table-column :show-overflow-tooltip="true" prop="createTime" label="工单创建时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" prop="createTime" label="工单创建时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.createTime) }}
+				</template>
+			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true" prop="creator" label="工单创建人"></el-table-column>
 			<el-table-column label="操作" width="300" align="center">
 				<template slot-scope="scope">
@@ -137,8 +150,8 @@
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteId" placeholder="请输入运维站点"></el-input>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.instrumentId" placeholder="请输入关联仪器"></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.instrumentId" placeholder="请输入关联设备"></el-input>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.responsiblerPerson" placeholder="请输入工单责任人"></el-input>
@@ -162,7 +175,7 @@
 					<el-date-picker
 						style="width: 100%;"
 						v-model="insertParam.planCompletionDay"
-						type="datetime"
+						type="date"
 						placeholder="请输入计划完工日">
 					</el-date-picker>
 				</el-form-item>
@@ -218,19 +231,49 @@
 					<el-input v-model="editParam.orderId" placeholder="请输入工单编号" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.orderType" placeholder="请输入工单类型"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.orderType" :disabled="true" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteId" placeholder="请输入运维站点"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.siteId" :disabled="true" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.instrumentId" placeholder="请输入关联仪器"></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.instrumentId" :disabled="true" placeholder="请选择关联设备">
+							<el-option
+							v-for="item in deviceListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.responsiblerPerson" placeholder="请输入工单责任人"></el-input>
+						<el-select style="width: 100%;" v-model="editParam.responsiblerPerson" :disabled="true" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
-				<el-form-item label="工单协同人" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.collaborator" placeholder="请输入工单协同人"></el-input>
+				<el-form-item label="工单协调人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="editParam.collaborator" :disabled="true" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.orderDesc" placeholder="请输入任务描述"></el-input>
@@ -307,7 +350,6 @@
       </span>
 		</el-dialog>
 
-		
 		<!-- 驳回弹出框  -->
 		<el-dialog
 				title="提示"
@@ -327,16 +369,32 @@
 <script>
 // 下载需要的API
 import { outExportExcel } from '@/api/mainApi'
-// 引入API
+//引入API
 import {
-  planWorkorderInfoQueryListByPage,
-  planWorkorderInfoQueryList,
-  planWorkorderInfoInsertList,
-  planWorkorderInfoInsert,
-  planWorkorderInfoUpdateList,
-  planWorkorderInfoUpdate,
-  planWorkorderInfoDelete
-} from '@/api/em-ep/planWorkorderInfoApi.js'
+		workorderSumDataQueryListByPage,
+		workorderSumDataQueryList,
+		workorderSumDataInsertList,
+		workorderSumDataInsert,
+		workorderSumDataUpdateList,
+		workorderSumDataUpdate,
+		workorderSumDataDelete
+}from "@/api/em-ep/workorderSumDataApi.js";
+
+import {
+  siteInfoQueryList
+} from '@/api/em-ep/siteInfoApi.js'
+
+import {
+  workorderTypeQueryList
+} from '@/api/em-ep/workorderTypeApi.js'
+
+import {
+  accountInfoQueryList
+} from '@/api/login/accountInfoApi.js'
+
+import {
+  deviceInfoQueryList
+} from '@/api/em-ep/deviceInfoApi.js'
 
 export default {
   data () {
@@ -356,7 +414,7 @@ export default {
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -377,7 +435,7 @@ export default {
         '工单编号',
         '工单类型',
         '运维站点',
-        '关联仪器',
+        '关联设备',
         '工单责任人',
         '工单协同人',
         '任务描述',
@@ -415,7 +473,15 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         orderId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
+	  },
+	  siteList: [],
+	  siteListS: [],
+	  orderTypeList: [],
+	  orderTypeListS: [],
+	  accountList: [],
+	  accountListS: [],
+	  deviceList: [],
+	  deviceListS: []
 
     }
   },
@@ -430,6 +496,135 @@ export default {
     }
   },
   methods: {
+	  getYMDHMS (timestamp) {
+      if (!timestamp) return '--'
+      const time = new Date(timestamp)
+      const year = time.getFullYear()
+      let month = time.getMonth() + 1
+      let date = time.getDate()
+      let hours = time.getHours()
+      let minute = time.getMinutes()
+      let second = time.getSeconds()
+
+      if (month < 10) { month = '0' + month }
+      if (date < 10) { date = '0' + date }
+      if (hours < 10) { hours = '0' + hours }
+      if (minute < 10) { minute = '0' + minute }
+      if (second < 10) { second = '0' + second }
+      return year + '-' + month + '-' + date
+    },
+	  async deviceInfoQueryList () {
+      const params = {}
+      deviceInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.deviceList = []
+		  this.deviceListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.deviceList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('444444', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].deviceId
+              info.name = response.resultEntity[i].deviceName
+			  this.deviceList.push(info)
+			  this.deviceListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+	  async queryAccountList () {
+      const params = {}
+      accountInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.accountList = []
+		  this.accountListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.accountList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('3333', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].userCode
+              info.name = response.resultEntity[i].userName
+			  this.accountList.push(info)
+			  this.accountListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async queryOrderTypeList () {
+      const params = {}
+      workorderTypeQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.orderTypeList = []
+		  this.orderTypeListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.orderTypeList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('111111', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].typeId
+              info.name = response.resultEntity[i].typeName
+			  this.orderTypeList.push(info)
+			  this.orderTypeListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async querySiteList () {
+      const params = {}
+      siteInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+		  this.siteList = []
+		  this.siteListS = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.siteList.push(info)
+
+          if (response && response.resultEntity) {
+			  console.log('responseresponse', response)
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].siteId
+              info.name = response.resultEntity[i].siteName
+			  this.siteList.push(info)
+			  this.siteListS.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -450,8 +645,10 @@ export default {
     // 查询
     async getDataList () {
       this.queryParam.pageNum = this.page
-      this.queryParam.pageSize = this.size
-      planWorkorderInfoQueryListByPage(this.queryParam).then((response) => {
+	  this.queryParam.pageSize = this.size
+	  this.queryParam.orderStatus = '待审批'
+
+      workorderSumDataQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据查询结果，赋值给页面
@@ -475,9 +672,44 @@ export default {
       this.dialogAddVisible = true
       this.insertParam = {}
     },
+
+    async handleNo () {
+	  this.delParam.orderStatus = '驳回'
+      workorderSumDataUpdate(this.delParam).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 这里根据插入结果，页面提示
+          alert(response.resultMsg)
+          // 新增保存后，关闭窗口
+          this.dialogNoVisible = false
+          // 刷新界面
+          this.getDataList()
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    async handleOk () {
+	  this.okParam.orderStatus = '待处理'
+      workorderSumDataUpdate(this.okParam).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 这里根据插入结果，页面提示
+          alert(response.resultMsg)
+          // 新增保存后，关闭窗口
+          this.dialogOkVisible = false
+          // 刷新界面
+          this.getDataList()
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     // 插入
     async insertData (insertParam) {
-      planWorkorderInfoInsert(insertParam).then((response) => {
+      workorderSumDataInsert(insertParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -501,7 +733,7 @@ export default {
     },
     // 更新
     async updateData (editParam) {
-      planWorkorderInfoUpdate(editParam).then((response) => {
+      workorderSumDataUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -521,9 +753,9 @@ export default {
     okData (row) {
       this.okParam = row
       this.dialogOkVisible = true
-	},
+    },
 
-	// 驳回
+    // 驳回
 	  delData (row) {
       this.delParam = row
       this.dialogNoVisible = true
@@ -534,7 +766,7 @@ export default {
       const params = {
         orderId: this.delParam.orderId
       }
-      planWorkorderInfoDelete(params).then((response) => {
+      workorderSumDataDelete(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -552,7 +784,7 @@ export default {
     async exportExecl () {
       // 全量查询数据，这里可以后期修改成分页查询等
       const params = {}
-      planWorkorderInfoQueryList(params).then((response) => {
+      workorderSumDataQueryList(params).then((response) => {
         // 数据
         this.tableData = response.resultEntity
         console.log(this.tableData)
@@ -563,6 +795,10 @@ export default {
   },
   mounted () {
     this.getDataList()
+    this.querySiteList()
+    this.queryOrderTypeList()
+    this.queryAccountList()
+    this.deviceInfoQueryList()
   }
 }
 </script>

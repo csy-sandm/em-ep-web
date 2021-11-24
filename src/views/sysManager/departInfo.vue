@@ -154,14 +154,14 @@
 import { outExportExcel } from '@/api/mainApi'
 // 引入API
 import {
-  departInfoQueryListByPage,
-  departInfoQueryList,
+  departmentInfoQueryListByPage,
+  departmentInfoQueryList,
   departInfoInsertList,
-  departInfoInsert,
+  departmentInfoInsert,
   departInfoUpdateList,
-  departInfoUpdate,
-  departInfoDelete
-} from '@/api/login/departInfoApi.js'
+  departmentInfoUpdate,
+  departmentInfoDelete
+} from '@/api/login/departmentInfoApi.js'
 
 export default {
   data () {
@@ -177,7 +177,7 @@ export default {
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -240,7 +240,7 @@ export default {
     async getDataList () {
       this.queryParam.pageNum = this.page
       this.queryParam.pageSize = this.size
-      departInfoQueryListByPage(this.queryParam).then((response) => {
+      departmentInfoQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据查询结果，赋值给页面
@@ -266,7 +266,7 @@ export default {
     },
     // 插入
     async insertData (insertParam) {
-      departInfoInsert(insertParam).then((response) => {
+      departmentInfoInsert(insertParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -290,7 +290,7 @@ export default {
     },
     // 更新
     async updateData (editParam) {
-      departInfoUpdate(editParam).then((response) => {
+      departmentInfoUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -316,7 +316,7 @@ export default {
       const params = {
         departId: this.delParam.departId
       }
-      departInfoDelete(params).then((response) => {
+      departmentInfoDelete(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           // 这里根据插入结果，页面提示
@@ -334,7 +334,7 @@ export default {
     async exportExecl () {
       // 全量查询数据，这里可以后期修改成分页查询等
       const params = {}
-      departInfoQueryList(params).then((response) => {
+      departmentInfoQueryList(params).then((response) => {
         // 数据
         this.tableData = response.resultEntity
         console.log(this.tableData)

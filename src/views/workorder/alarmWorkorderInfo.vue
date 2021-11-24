@@ -69,23 +69,47 @@
 			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderId" label="工单编码"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderType" label="工单类型"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="failureTime" label="发生时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="failureTime" label="发生时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.failureTime) }}
+				</template>
+			</el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="reportTime" label="报备时间"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="运维站点"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="instrumentId" label="关联仪器"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="instrumentId" label="关联设备"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="工单责任人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="collaborator" label="工单协同人"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="priority" label="优先级"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true"  prop="orderDesc" label="任务描述"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="orderImg" label="相关照片"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="orderStatus" label="工单状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dispatchTime" label="派单时间"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="completionTime" label="解决时间"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dispatchTime" label="派单时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.dispatchTime) }}
+				</template>
+			</el-table-column>
+			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="completionTime" label="解决时间">
+				<template slot-scope="scope">
+					{{ getYMDHMS(scope.row.completionTime) }}
+				</template>
+			</el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="工单创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="工单创建人/派单人"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
 					<el-button
+							type="primary"
+							icon="el-icon-info"
+							size="mini"
+							@click="viewData(scope.row)"></el-button>
+
+					<el-button
+							v-if="scope.row.orderStatus == '待处理'"
+							type="success"
+							icon="el-icon-check"
+							size="mini"
+							@click="okData(scope.row)"></el-button>
+					<!-- <el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
@@ -94,7 +118,7 @@
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)"></el-button>
+							@click="delData(scope.row)"></el-button> -->
 				</template>
 			</el-table-column>
 		</el-table>
@@ -112,6 +136,120 @@
           :total="total">
       </el-pagination>
     </div>
+
+			<el-dialog title="详细信息"
+				   style="text-align: left !important"
+				   :visible.sync="dialogViewVisible"
+				   :before-close="handleClose">
+			<el-form ref="form" label-width="200px"  :disabled="true">
+				<el-form-item label="工单编号" style="width: 50%;float: left;" >
+					<el-input v-model="viewParam.orderId" placeholder="请输入工单编号" :disabled="true" ></el-input>
+				</el-form-item>
+				<el-form-item label="工单类型" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="viewParam.orderType" :disabled="true" placeholder="请选择工单类型">
+							<el-option
+							v-for="item in orderTypeListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="viewParam.siteId" :disabled="true" placeholder="请选择运维站点">
+							<el-option
+							v-for="item in siteListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="viewParam.instrumentId" :disabled="true" placeholder="请选择关联设备">
+							<el-option
+							v-for="item in deviceListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="viewParam.responsiblerPerson" :disabled="true" placeholder="请选择工单负责人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="工单协调人" style="width: 50%;float: left;"  >
+						<el-select style="width: 100%;" v-model="viewParam.collaborator" :disabled="true" placeholder="请选择工单协调人">
+							<el-option
+							v-for="item in accountListS"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
+				</el-form-item>
+				<el-form-item label="任务描述" style="width: 50%;float: left;"  >
+					<el-input v-model="viewParam.orderDesc" placeholder="请输入任务描述"></el-input>
+				</el-form-item>
+				<el-form-item label="相关照片" style="width: 50%;float: left;"  >
+					<el-input v-model="viewParam.orderImg" placeholder="请输入相关照片"></el-input>
+				</el-form-item>
+				<el-form-item label="优先级" style="width: 50%;float: left;"  >
+					<el-input v-model="viewParam.priority" placeholder="请输入优先级"></el-input>
+				</el-form-item>
+				<el-form-item label="工单状态" style="width: 50%;float: left;"  >
+					<el-input v-model="viewParam.orderStatus" placeholder="请输入工单状态"></el-input>
+				</el-form-item>
+				<el-form-item label="计划完工日" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="viewParam.planCompletionDay"
+						type="datetime"
+						placeholder="请输入计划完工日">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="接单时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="viewParam.receiveTime"
+						type="datetime"
+						placeholder="请输入接单时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="开工时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="viewParam.startWorkTime"
+						type="datetime"
+						placeholder="请输入开工时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="完工时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="viewParam.completionTime"
+						type="datetime"
+						placeholder="请输入完工时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="工单创建时间" style="width: 50%;float: left;"  >
+					<el-date-picker
+						style="width: 100%;"
+						v-model="viewParam.createTime"
+						type="datetime"
+						placeholder="请输入工单创建时间">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="工单创建人" style="width: 50%;float: left;"  >
+					<el-input v-model="viewParam.creator" placeholder="请输入工单创建人"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogViewVisible = false">确定</el-button>
+      </span>
+		</el-dialog>
 
 		<!-- 新增弹出框  -->
 		<el-dialog title="新增信息"
@@ -144,8 +282,8 @@
 				<el-form-item label="运维站点" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteId"   placeholder="请输入运维站点"></el-input>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.instrumentId"   placeholder="请输入关联仪器"></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.instrumentId"   placeholder="请输入关联设备"></el-input>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.responsiblerPerson"   placeholder="请输入工单责任人"></el-input>
@@ -230,8 +368,8 @@
 				<el-form-item label="运维站点" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.siteId"  placeholder="请输入运维站点"  ></el-input>
 				</el-form-item>
-				<el-form-item label="关联仪器" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.instrumentId"  placeholder="请输入关联仪器"  ></el-input>
+				<el-form-item label="关联设备" style="width: 50%;float: left;" >
+					<el-input v-model="editParam.instrumentId"  placeholder="请输入关联设备"  ></el-input>
 				</el-form-item>
 				<el-form-item label="工单责任人" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.responsiblerPerson"  placeholder="请输入工单责任人"  ></el-input>
@@ -285,6 +423,18 @@
       </span>
 		</el-dialog>
 
+		<el-dialog
+				title="提示"
+				style="text-align: left !important"
+				:visible.sync="dialogOkVisible"
+				:before-close="handleClose" >
+			<span>你确定要完成这条工单吗?</span>
+			<span slot="footer" class="dialog-footer">
+        <el-button @click="handleOk()">确定</el-button>
+        <el-button type="primary" @click="dialogOkVisible = false">取消</el-button>
+      </span>
+		</el-dialog>
+
 		<!-- 删除弹出框  -->
 		<el-dialog
 				title="提示"
@@ -325,11 +475,13 @@ export default {
       dialogEditVisible: false,
       // 控制 删除弹出框是否显示
       dialogDelVisible: false,
+      dialogOkVisible: false,
+      dialogViewVisible: false,
       // tab 页的形式设定
       activeIndex2: '1',
       // 下面三个参数事分页需要的参数
       total: 0,
-      size: 5,
+      size: 10,
       page: 1,
       // 查询条件
       queryParam: {},
@@ -341,6 +493,7 @@ export default {
       editParam: {},
       // 删除时的参数
       delParam: {},
+      viewParam: {},
       // 下载导出需要的表头
       tableHeader: [
         '工单编码',
@@ -348,7 +501,7 @@ export default {
         '发生时间',
         '报备时间',
         '运维站点',
-        '关联仪器',
+        '关联设备',
         '工单责任人',
         '工单协同人',
         '优先级',
@@ -384,8 +537,8 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         orderId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+      },
+      okParam: {}
     }
   },
   watch: {
@@ -399,6 +552,67 @@ export default {
     }
   },
   methods: {
+    async handleOk () {
+      var timestamp = Date.parse(new Date())
+
+      //   if (this.okParam.completionTime) {
+      // 	  alert('该工单暂无计划完成时间')
+      // 	  return
+      //   }
+
+      if (this.getYMDHMS(timestamp) > this.getYMDHMS(this.okParam.planCompletionDay)) {
+		  this.okParam.orderStatus = '推迟完工'
+      }
+	  if (this.getYMDHMS(timestamp) === this.getYMDHMS(this.okParam.planCompletionDay)) {
+		  this.okParam.orderStatus = '正常完工'
+      }
+	  if (this.getYMDHMS(timestamp) < this.getYMDHMS(this.okParam.planCompletionDay)) {
+		  this.okParam.orderStatus = '提前完工'
+      }
+
+	  this.okParam.completionTime = timestamp
+
+      alarmWorkorderInfoUpdate(this.okParam).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 这里根据插入结果，页面提示
+          alert(response.resultMsg)
+          // 新增保存后，关闭窗口
+          this.dialogOkVisible = false
+          // 刷新界面
+          this.getDataList()
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+    okData (row) {
+      this.okParam = row
+      this.dialogOkVisible = true
+    },
+    viewData (row) {
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.viewParam = JSON.parse(JSON.stringify(row))
+      this.dialogViewVisible = true
+    },
+    getYMDHMS (timestamp) {
+      if (!timestamp) return '--'
+      const time = new Date(timestamp)
+      const year = time.getFullYear()
+      let month = time.getMonth() + 1
+      let date = time.getDate()
+      let hours = time.getHours()
+      let minute = time.getMinutes()
+      let second = time.getSeconds()
+
+      if (month < 10) { month = '0' + month }
+      if (date < 10) { date = '0' + date }
+      if (hours < 10) { hours = '0' + hours }
+      if (minute < 10) { minute = '0' + minute }
+      if (second < 10) { second = '0' + second }
+      return year + '-' + month + '-' + date
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },

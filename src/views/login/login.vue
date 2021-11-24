@@ -74,7 +74,7 @@ export default {
           // 存用户信息
           localStorage.setItem('userToken', response.resultEntity.userToken)
           localStorage.setItem('userName', response.resultEntity.userName)
-          localStorage.setItem('departId', response.resultEntity.departId)
+          localStorage.setItem('workStation', response.resultEntity.workStation)
           this.$router.push('/main')
         } else {
           // 这个分支是错误返回分支
@@ -124,7 +124,6 @@ export default {
     height: 100%;
     left: 0px;
 }
-
 
 .text{
     color: white;
@@ -211,11 +210,6 @@ export default {
     color: rgb(187, 187, 187);
     cursor: pointer;
     padding: 0 5px;
-}
-
-.typePwd {
-    type:
-
 }
 
 </style>
