@@ -208,10 +208,10 @@
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.mnCode"   placeholder="请输入现场机MN编号"></el-input>
 				</el-form-item>
-				<el-form-item label="站点经度" style="width: 500px"  >
+				<el-form-item label="站点经度" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteLon"   placeholder="请输入站点经度"></el-input>
 				</el-form-item>
-				<el-form-item label="站点纬度" style="width: 500px"  >
+				<el-form-item label="站点纬度" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteLat"   placeholder="请输入站点纬度"></el-input>
 				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;"  >
@@ -270,10 +270,10 @@
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.mnCode"  placeholder="请输入现场机MN编号"  ></el-input>
 				</el-form-item>
-				<el-form-item label="站点经度" style="width: 500px" >
+				<el-form-item label="站点经度" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.siteLon"  placeholder="请输入站点经度"  ></el-input>
 				</el-form-item>
-				<el-form-item label="站点纬度" style="width: 500px" >
+				<el-form-item label="站点纬度" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.siteLat"  placeholder="请输入站点纬度"  ></el-input>
 				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;" >
