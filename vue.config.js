@@ -23,6 +23,7 @@ module.exports = {
     proxy: {
       '/emApi/': {
         target: 'http://47.118.50.171:9003',
+         //target: 'http://127.0.0.1:9003',
         ws: false,
         pathRewrite: {
           '^/emApi/': '/'

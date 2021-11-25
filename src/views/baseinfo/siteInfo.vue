@@ -336,8 +336,8 @@ import {
 } from '@/api/em-ep/siteInfoApi.js'
 
 import {
-  departInfoQueryList
-} from '@/api/em-ep/departInfoApi.js'
+ departmentInfoQueryList
+} from '@/api/login/departmentInfoApi.js'
 
 import {
   siteTypeQueryList
@@ -525,9 +525,9 @@ export default {
         }
       })
     },
-    async departInfoQueryList () {
+    asyncdepartmentInfoQueryList () {
       const params = {}
-      departInfoQueryList(params).then((response) => {
+     departmentInfoQueryList(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           this.responsiblerDepartList = []
