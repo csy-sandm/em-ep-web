@@ -25,7 +25,7 @@
 						<el-form-item label="责任部门:" style="width: 300px"  >
 							<el-select v-model="queryParam.responsiblerDepart" placeholder="请选择责任部门">
 							<el-option
-							v-for="item in responsiblerDepartList"
+							v-for="item in responsiblerDepartListAll"
 							:key="item.value"
 							:label="item.name"
 							:value="item.value"/>
@@ -197,7 +197,14 @@
 					<el-input v-model="insertParam.siteType"   placeholder="请输入站点类型"></el-input>
 				</el-form-item>
 				<el-form-item label="责任部门" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.responsiblerDepart"   placeholder="请输入责任部门"></el-input>
+					<el-select v-model="insertParam.responsiblerDepart" placeholder="请选择责任部门" style="width: 100%;">
+						<el-option
+						v-for="item in responsiblerDepartList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
+					<!-- <el-input v-model="insertParam.responsiblerDepart"   placeholder="请输入责任部门"></el-input> -->
 				</el-form-item>
 				<el-form-item label="关系责任人" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.responsiblerPerson"   placeholder="请输入关系责任人"></el-input>
@@ -259,7 +266,15 @@
 					<el-input v-model="editParam.siteType"  placeholder="请输入站点类型"  ></el-input>
 				</el-form-item>
 				<el-form-item label="责任部门" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.responsiblerDepart"  placeholder="请输入责任部门"  ></el-input>
+					<el-select v-model="editParam.responsiblerDepart" placeholder="请选择责任部门" style="width: 100%;">
+						<el-option
+						v-for="item in responsiblerDepartList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
+
+					<!-- <el-input v-model="editParam.responsiblerDepart"  placeholder="请输入责任部门"  ></el-input> -->
 				</el-form-item>
 				<el-form-item label="关系责任人" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.responsiblerPerson"  placeholder="请输入关系责任人"  ></el-input>
@@ -336,7 +351,7 @@ import {
 } from '@/api/em-ep/siteInfoApi.js'
 
 import {
- departmentInfoQueryList
+  departmentInfoQueryList
 } from '@/api/login/departmentInfoApi.js'
 
 import {
@@ -411,6 +426,7 @@ export default {
       rules: {
         siteId: [{ required: true, message: '请输入', trigger: 'blur' }]
       },
+	  responsiblerDepartListAll: [],
       responsiblerDepartList: [],
       siteTypeList: [],
 	  statusList: [],
@@ -525,23 +541,25 @@ export default {
         }
       })
     },
-    asyncdepartmentInfoQueryList () {
+    async departmentInfoQueryList () {
       const params = {}
-     departmentInfoQueryList(params).then((response) => {
+      departmentInfoQueryList(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
-          this.responsiblerDepartList = []
+          this.responsiblerDepartListAll = []
+		  this.responsiblerDepartList = []
           const info = {}
           info.value = '全部'
           info.name = '全部'
-          this.responsiblerDepartList.push(info)
+          this.responsiblerDepartListAll.push(info)
 
           if (response && response.resultEntity) {
             for (let i = 0; i < response.resultEntity.length; i++) {
               const info = {}
               info.value = response.resultEntity[i].departName
               info.name = response.resultEntity[i].departName
-              this.responsiblerDepartList.push(info)
+              this.responsiblerDepartListAll.push(info)
+			  this.responsiblerDepartList.push(info)
             }
           }
         } else {
@@ -705,7 +723,8 @@ export default {
     this.repairStatusCopyQueryList()
     // this.mnStatusQueryList()
     this.siteTypeQueryList()
-    this.departInfoQueryList()
+    this.departmentInfoQueryList()
+    // this.departInfoQueryList()
     this.getDataList()
   }
 }
