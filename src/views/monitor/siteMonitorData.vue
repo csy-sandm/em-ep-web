@@ -72,15 +72,23 @@
 					<span>{{ (page - 1) * size + scope.$index + 1 }}</span>
 				</template>
 			</el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="uuid" label="数据唯一标识"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编码"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="uuid" label="数据唯一标识"></el-table-column> -->
+			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true"  prop="siteName" label="站点名称"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true"  prop="deviceMn" label="设备MN号"></el-table-column>
+      <el-table-column :show-overflow-tooltip="true"  prop="deviceName" label="设备名称"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="因子编号"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="dataName" label="因子名称"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column> -->
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
-					<el-button
+          <el-button
+							type="primary"
+							icon="el-icon-info"
+							size="mini"
+							@click="viewData(scope.row)"></el-button>
+					<!-- <el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
@@ -89,7 +97,7 @@
 							type="danger"
 							icon="el-icon-delete"
 							size="mini"
-							@click="delData(scope.row)"></el-button>
+							@click="delData(scope.row)"></el-button> -->
 				</template>
 			</el-table-column>
 		</el-table>
@@ -145,38 +153,95 @@
 		</el-dialog>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="修改信息"
+		<el-dialog :title="editSwitch === true ? '修改信息' : '查看信息'"
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
-			<el-form ref="form" label-width="150px">
+			<el-form ref="form" label-width="200px">
 				<el-form-item label="数据唯一标识" style="width: 50%;float: left;">
 					<el-input v-model="editParam.uuid"  placeholder="请输入数据唯一标识"  :disabled="true"  ></el-input>
 				</el-form-item>
-				<el-form-item label="站点编码" style="width: 50%;float: left;">
-					<el-input v-model="editParam.siteId"  placeholder="请输入站点编码" :disabled="true" ></el-input>
+				<el-form-item label="因子编码" style="width: 50%;float: left;">
+					<el-input v-model="editParam.dataKey"  placeholder="因子编码" :disabled="true" ></el-input>
 				</el-form-item>
-				<el-form-item label="数据因子编号" style="width: 50%;float: left;">
-					<el-input v-model="editParam.dataKey"  placeholder="请输入数据因子编号"  ></el-input>
+				<el-form-item label="因子" style="width: 50%;float: left;">
+					<el-input v-model="editParam.dataName"  placeholder="因子" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
-				<el-form-item label="监测因子名称" style="width: 50%;float: left;">
-					<el-input v-model="editParam.dataName"  placeholder="请输入监测因子名称"  ></el-input>
+        <el-form-item label="设备MN号" style="width: 50%;float: left;">
+					<el-input v-model="editParam.deviceMn"  placeholder="设备MN号" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
-				<el-form-item label="数据值" style="width: 50%;float: left;">
-					<el-input v-model="editParam.dataValue"  placeholder="请输入数据值"  ></el-input>
+        <el-form-item label="设备名称" style="width: 50%;float: left;">
+					<el-input v-model="editParam.deviceName"  placeholder="设备名称" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
-				<el-form-item label="数据采集时间" style="width: 50%;float: left;">
+        <el-form-item label="结束时间" style="width: 50%;float: left;">
 					<el-date-picker
+          :disabled="!editSwitch"
 						style="width: 100%;"
-						v-model="editParam.dataTime"
+						v-model="editParam.endTime"
 						type="datetime"
-						placeholder="请输入数据采集时间">
+						placeholder="结束时间">
 					</el-date-picker>
 				</el-form-item>
+				<el-form-item label="污染物实时采样数据" style="width: 50%;float: left;">
+					<el-input v-model="editParam.rtd"  placeholder="污染物实时采样数据" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物采样时间" style="width: 50%;float: left;">
+					<el-date-picker
+          :disabled="!editSwitch"
+						style="width: 100%;"
+						v-model="editParam.sampleTime"
+						type="datetime"
+						placeholder="污染物采样时间">
+					</el-date-picker>
+				</el-form-item>
+        <el-form-item label="站点编码" style="width: 50%;float: left;">
+					<el-input v-model="editParam.siteId"  placeholder="站点编码" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="站点名称" style="width: 50%;float: left;">
+					<el-input v-model="editParam.siteName"  placeholder="站点名称" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="工作站" style="width: 50%;float: left;">
+					<el-input v-model="editParam.workStation"  placeholder="工作站" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+
+        <!-- <el-form-item label="污染物指定时间内平均值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.avg"  placeholder="污染物指定时间内平均值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物指定时间内最大折算值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.max"  placeholder="污染物指定时间内最大折算值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物实时采样折算数据" style="width: 50%;float: left;">
+					<el-input v-model="editParam.zsRtd"  placeholder="污染物实时采样折算数据" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物指定时间内最小折算值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.zsMin"  placeholder="污染物指定时间内最小折算值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物指定时间内平均折算值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.zsAvg"  placeholder="污染物指定时间内平均折算值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物指定时间内最大折算值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.zsMax"  placeholder="污染物指定时间内最大折算值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="监测仪器数据标记" style="width: 50%;float: left;">
+					<el-input v-model="editParam.flag"  placeholder="监测仪器数据标记" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+         <el-form-item label="监测仪器扩充数据标记" style="width: 50%;float: left;">
+					<el-input v-model="editParam.eFlag"  placeholder="监测仪器扩充数据标记" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物指定时间内累计值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.cou"  placeholder="污染物指定时间内累计值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="污染物报警期间内采样值" style="width: 50%;float: left;">
+					<el-input v-model="editParam.ala"  placeholder="污染物报警期间内采样值" :disabled="!editSwitch" ></el-input>
+				</el-form-item>
+        <el-form-item label="噪声监测时间段内数据" style="width: 50%;float: left;">
+					<el-input v-model="editParam.data"  placeholder="噪声监测时间段内数据" :disabled="!editSwitch" ></el-input>
+				</el-form-item> -->
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-        <el-button type="success" @click="updateData(editParam)">提交</el-button>
-        <el-button type="primary" @click="dialogEditVisible = false">取消</el-button>
+        <el-button type="success" @click="updateData(editParam)" v-if="editSwitch">提交</el-button>
+        <el-button type="primary" @click="dialogEditVisible = false" v-if="editSwitch">取消</el-button>
+		    <el-button type="primary" @click="dialogEditVisible = false" v-if="!editSwitch">确定</el-button>
       </span>
 		</el-dialog>
 
@@ -259,8 +324,8 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         siteId: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+      },
+      editSwitch: false
     }
   },
   watch: {
@@ -343,16 +408,23 @@ export default {
       })
     },
 
+    viewData (row) {
+	    this.editSwitch = false
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.editParam = JSON.parse(JSON.stringify(row))
+      this.dialogEditVisible = true
+    },
+
     // 编辑 弹出框
     editData (row) {
+      this.editSwitch = true
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true
     },
     // 更新
     async updateData (editParam) {
-
-      console.log(editParam);
+      console.log(editParam)
       siteMonitorDataUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {

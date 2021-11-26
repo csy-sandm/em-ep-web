@@ -37,7 +37,7 @@
 						<el-form-item label="站点类型:" style="width: 300px"  >
 							<el-select v-model="queryParam.siteType" placeholder="请选择站点类型">
 							<el-option
-							v-for="item in siteTypeList"
+							v-for="item in siteTypeListAll"
 							:key="item.value"
 							:label="item.name"
 							:value="item.value"/>
@@ -73,7 +73,7 @@
 						<el-form-item label="运维状态:" style="width: 300px"  >
 							<el-select v-model="queryParam.status" placeholder="请选择运维状态">
 							<el-option
-							v-for="item in statusList"
+							v-for="item in statusListAll"
 							:key="item.value"
 							:label="item.name"
 							:value="item.value"/>
@@ -140,18 +140,23 @@
 			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编号"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteName" label="站点名称"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="siteType" label="站点类型"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerDepart" label="责任部门"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="关系责任人"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="remark" label="备注"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="mnCode" label="现场MN编号"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="responsiblerDepart" label="责任部门"></el-table-column> -->
+			<el-table-column :show-overflow-tooltip="true"  prop="responsiblerPerson" label="责任人"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="remark" label="备注"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="mnCode" label="现场MN编号"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="运维状态"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteLon" label="站点经度"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true"  prop="siteLat" label="站点纬度"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="siteLon" label="站点经度"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteLat" label="站点纬度"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="lastServicesTime" label="最后一次服务时间"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
+					<el-button
+							type="primary"
+							icon="el-icon-info"
+							size="mini"
+							@click="viewData(scope.row)"></el-button>
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
@@ -194,7 +199,13 @@
 					<el-input v-model="insertParam.siteName"   placeholder="请输入站点名称"></el-input>
 				</el-form-item>
 				<el-form-item label="站点类型" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.siteType"   placeholder="请输入站点类型"></el-input>
+					<el-select v-model="insertParam.siteType" placeholder="请选择站点类型" style="width: 100%;">
+						<el-option
+						v-for="item in siteTypeList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="责任部门" style="width: 50%;float: left;"  >
 					<el-select v-model="insertParam.responsiblerDepart" placeholder="请选择责任部门" style="width: 100%;">
@@ -207,7 +218,13 @@
 					<!-- <el-input v-model="insertParam.responsiblerDepart"   placeholder="请输入责任部门"></el-input> -->
 				</el-form-item>
 				<el-form-item label="关系责任人" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.responsiblerPerson"   placeholder="请输入关系责任人"></el-input>
+					<el-select v-model="insertParam.responsiblerPerson" placeholder="请选择关系责任人" style="width: 100%;">
+						<el-option
+						v-for="item in accountInfoList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="备注" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.remark"   placeholder="请输入备注"></el-input>
@@ -222,7 +239,13 @@
 					<el-input v-model="insertParam.siteLat"   placeholder="请输入站点纬度"></el-input>
 				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.status"   placeholder="请输入运维状态"></el-input>
+					<el-select v-model="insertParam.status" placeholder="请选择运维状态" style="width: 100%;">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="最后一次服务时间" style="width: 50%;float: left;"  >
 					<el-date-picker
@@ -251,7 +274,7 @@
 		</el-dialog>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="修改信息"
+		<el-dialog :title="editSwitch === true ? '修改信息' : '查看信息'"
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
@@ -260,13 +283,19 @@
 					<el-input v-model="editParam.siteId"  placeholder="请输入站点编号" :disabled="true" ></el-input>
 				</el-form-item>
 				<el-form-item label="站点名称" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.siteName"  placeholder="请输入站点名称"  ></el-input>
+					<el-input v-model="editParam.siteName"  placeholder="请输入站点名称" :disabled="!editSwitch"></el-input>
 				</el-form-item>
 				<el-form-item label="站点类型" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.siteType"  placeholder="请输入站点类型"  ></el-input>
+					<el-select v-model="editParam.siteType" placeholder="请选择站点类型" :disabled="!editSwitch" style="width: 100%;">
+						<el-option
+						v-for="item in siteTypeList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="责任部门" style="width: 50%;float: left;" >
-					<el-select v-model="editParam.responsiblerDepart" placeholder="请选择责任部门" style="width: 100%;">
+					<el-select v-model="editParam.responsiblerDepart" placeholder="请选择责任部门" :disabled="!editSwitch" style="width: 100%;">
 						<el-option
 						v-for="item in responsiblerDepartList"
 						:key="item.value"
@@ -277,25 +306,38 @@
 					<!-- <el-input v-model="editParam.responsiblerDepart"  placeholder="请输入责任部门"  ></el-input> -->
 				</el-form-item>
 				<el-form-item label="关系责任人" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.responsiblerPerson"  placeholder="请输入关系责任人"  ></el-input>
+					<el-select v-model="editParam.responsiblerPerson" placeholder="请选择关系责任人" :disabled="!editSwitch" style="width: 100%;">
+						<el-option
+						v-for="item in accountInfoList"
+						:key="item.value"
+						:label="item.name"
+						:value="item.value"/>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="备注" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.remark"  placeholder="请输入备注"  ></el-input>
+					<el-input v-model="editParam.remark"  placeholder="请输入备注"  :disabled="!editSwitch"></el-input>
 				</el-form-item>
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.mnCode"  placeholder="请输入现场机MN编号"  ></el-input>
+					<el-input v-model="editParam.mnCode"  placeholder="请输入现场机MN编号" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="站点经度" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteLon"  placeholder="请输入站点经度"  ></el-input>
+					<el-input v-model="editParam.siteLon"  placeholder="请输入站点经度"  :disabled="!editSwitch"></el-input>
 				</el-form-item>
 				<el-form-item label="站点纬度" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteLat"  placeholder="请输入站点纬度"  ></el-input>
+					<el-input v-model="editParam.siteLat"  placeholder="请输入站点纬度"  :disabled="!editSwitch"></el-input>
 				</el-form-item>
 				<el-form-item label="运维状态" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.status"  placeholder="请输入运维状态"  ></el-input>
+					<el-select v-model="editParam.status" placeholder="请选择运维状态" :disabled="!editSwitch" style="width: 100%;">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="最后一次服务时间" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.lastServicesTime"
 						type="datetime"
@@ -304,6 +346,7 @@
 				</el-form-item>
 				<el-form-item label="创建时间" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.createTime"
 						type="datetime"
@@ -311,12 +354,13 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="创建人" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.creator"  placeholder="请输入创建人"  ></el-input>
+					<el-input v-model="editParam.creator"  placeholder="请输入创建人" :disabled="!editSwitch"></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-        <el-button type="success" @click="updateData(editParam)">提交</el-button>
-        <el-button type="primary" @click="dialogEditVisible = false">取消</el-button>
+        <el-button type="success" @click="updateData(editParam)" v-if="editSwitch">提交</el-button>
+        <el-button type="primary" @click="dialogEditVisible = false" v-if="editSwitch">取消</el-button>
+		<el-button type="primary" @click="dialogEditVisible = false" v-if="!editSwitch">确定</el-button>
       </span>
 		</el-dialog>
 
@@ -349,6 +393,10 @@ import {
   siteInfoUpdate,
   siteInfoDelete
 } from '@/api/em-ep/siteInfoApi.js'
+
+import {
+  accountInfoQueryList
+} from '@/api/login/accountInfoApi.js'
 
 import {
   departmentInfoQueryList
@@ -428,8 +476,12 @@ export default {
       },
 	  responsiblerDepartListAll: [],
       responsiblerDepartList: [],
+	  siteTypeListAll: [],
       siteTypeList: [],
+	  statusListAll: [],
 	  statusList: [],
+	  accountInfoList: [],
+	  accountInfoListAll: [],
 	  timeList: [
 		  {
 			  name: '---',
@@ -451,8 +503,8 @@ export default {
 			  name: '>2个月',
 			  value: '>3个月'
 		  }
-
-      ]
+      ],
+	  editSwitch: false
     }
   },
   watch: {
@@ -471,11 +523,12 @@ export default {
       repairStatusCopyQueryList(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
+          this.statusListAll = []
           this.statusList = []
           const info = {}
           info.value = '全部'
           info.name = '全部'
-          this.statusList.push(info)
+          this.statusListAll.push(info)
 
           if (response && response.resultEntity) {
             for (let i = 0; i < response.resultEntity.length; i++) {
@@ -483,6 +536,7 @@ export default {
               info.value = response.resultEntity[i].statusName
               info.name = response.resultEntity[i].statusName
               this.statusList.push(info)
+              this.statusListAll.push(info)
             }
           }
         } else {
@@ -516,16 +570,46 @@ export default {
     //     }
     //   })
     // },
+    // 账号
+    async accountInfoQueryList () {
+      const params = {}
+      accountInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.accountInfoList = []
+		  this.accountInfoListAll = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.accountInfoListAll.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].userName
+              info.name = response.resultEntity[i].userName
+              this.accountInfoList.push(info)
+			  this.accountInfoListAll.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+
     async siteTypeQueryList () {
       const params = {}
       siteTypeQueryList(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
           this.siteTypeList = []
+		  this.siteTypeListAll = []
           const info = {}
           info.value = '全部'
           info.name = '全部'
-          this.siteTypeList.push(info)
+          this.siteTypeListAll.push(info)
 
           if (response && response.resultEntity) {
             for (let i = 0; i < response.resultEntity.length; i++) {
@@ -533,6 +617,7 @@ export default {
               info.value = response.resultEntity[i].typeName
               info.name = response.resultEntity[i].typeName
               this.siteTypeList.push(info)
+			  this.siteTypeListAll.push(info)
             }
           }
         } else {
@@ -630,6 +715,8 @@ export default {
     addData () {
       this.dialogAddVisible = true
       this.insertParam = {}
+      this.insertParam.createTime = new Date()
+      this.insertParam.creator = localStorage.getItem('userName')
     },
     // 插入
     async insertData (insertParam) {
@@ -650,7 +737,16 @@ export default {
     },
 
     // 编辑 弹出框
+    viewData (row) {
+	  this.editSwitch = false
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.editParam = JSON.parse(JSON.stringify(row))
+      this.dialogEditVisible = true
+    },
+
+    // 编辑 弹出框
     editData (row) {
+      this.editSwitch = true
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true
@@ -724,6 +820,7 @@ export default {
     // this.mnStatusQueryList()
     this.siteTypeQueryList()
     this.departmentInfoQueryList()
+    this.accountInfoQueryList()
     // this.departInfoQueryList()
     this.getDataList()
   }

@@ -17,7 +17,13 @@
 					</el-col>
 					<el-col :span="6" class="grid">
 						<el-form-item label="所属站点:" style="width: 300px"  >
-							<el-input v-model="queryParam.siteId" placeholder="请输入所属站点"></el-input>
+							<el-select v-model="queryParam.siteId" placeholder="请输入所属站点" style="width: 100%;">
+								<el-option
+								v-for="item in siteInfoAll"
+								:key="item.value"
+								:label="item.name"
+								:value="item.value"/>
+							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :span="6" class="grid">
@@ -30,7 +36,7 @@
 						<el-form-item label="设备状态:" style="width: 300px"  >
 							<el-select v-model="queryParam.status" placeholder="请选择设备状态">
 							<el-option
-							v-for="item in statusList"
+							v-for="item in statusListAll"
 							:key="item.value"
 							:label="item.name"
 							:value="item.value"/>
@@ -83,24 +89,28 @@
 				</template>
 			</el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceId" label="设备编号"></el-table-column>
-			<!-- <el-table-column :show-overflow-tooltip="true"  prop="deviceAddr" label="安装站点"></el-table-column> -->
-			<el-table-column :show-overflow-tooltip="true"  prop="siteId" label="所属站点"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceName" label="设备名称"></el-table-column>
+			<el-table-column :show-overflow-tooltip="true"  prop="siteName" label="所属站点"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceType" label="设备类型"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="status" label="状态"></el-table-column>
 			<!-- <el-table-column :show-overflow-tooltip="true"  prop="deviceLat" label="设备百度坐标_维度"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="deviceLon" label="设备百度坐标_经度"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="installTime" label="安装日期"></el-table-column>
-			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="estimatRetirementTime" label="预计报废时间"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="estimatRetirementTime" label="预计报废时间"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true"  prop="contractId" label="关联合同"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="createTime" label="创建时间"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="creator" label="创建人"></el-table-column> -->
 			<!-- <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="updateTime" label="更新时间"></el-table-column> -->
-			<el-table-column :show-overflow-tooltip="true"  prop="instrumentBrand" label="设备品牌"></el-table-column>
+			<!-- <el-table-column :show-overflow-tooltip="true"  prop="instrumentBrand" label="设备品牌"></el-table-column> -->
 			<el-table-column :show-overflow-tooltip="true"  prop="instrumentStandards" label="规格"></el-table-column>
 			<el-table-column :show-overflow-tooltip="true"  prop="company" label="公司/单位"></el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
+					<el-button
+							type="primary"
+							icon="el-icon-info"
+							size="mini"
+							@click="viewData(scope.row)"></el-button>
 					<el-button
 							type="primary"
 							icon="el-icon-edit"
@@ -142,16 +152,34 @@
 					<el-input v-model="insertParam.deviceAddr"   placeholder="请输入安装站点"></el-input>
 				</el-form-item> -->
 				<el-form-item label="所属站点" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.siteId"   placeholder="所属站点"></el-input>
+					<el-select v-model="insertParam.siteName" placeholder="请输入所属站点" style="width: 100%;">
+								<el-option
+								v-for="item in siteInfo"
+								:key="item.value"
+								:label="item.name"
+								:value="item.value"/>
+							</el-select>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceName"   placeholder="请输入设备名称"></el-input>
 				</el-form-item>
 				<el-form-item label="设备类型" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.deviceType"   placeholder="请输入设备类型"></el-input>
+					<el-select v-model="insertParam.deviceType" placeholder="请选择设备类型" style="width: 100%;">
+							<el-option
+							v-for="item in deviceTypeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="状态" style="width: 50%;float: left;"  >
-					<el-input v-model="insertParam.status"   placeholder="请输入状态"></el-input>
+					<el-select v-model="insertParam.status" placeholder="请选择设备状态" style="width: 100%;">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="设备百度坐标_维度" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceLat"   placeholder="请输入设备百度坐标_维度"></el-input>
@@ -214,7 +242,7 @@
 		</el-dialog>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="修改信息"
+		<el-dialog :title="editSwitch === true ? '修改信息' : '查看信息'"
 				   style="text-align: left !important"
 				   :visible.sync="dialogEditVisible"
 				   :before-close="handleClose">
@@ -226,25 +254,44 @@
 					<el-input v-model="editParam.deviceAddr"  placeholder="请输入安装站点"  ></el-input>
 				</el-form-item> -->
 				<el-form-item label="所属站点" style="width: 50%;float: left;"  >
-					<el-input v-model="editParam.siteId"   placeholder="所属站点"></el-input>
+					<el-select v-model="editParam.siteName" placeholder="请输入所属站点" :disabled="!editSwitch" style="width: 100%;">
+								<el-option
+								v-for="item in siteInfo"
+								:key="item.value"
+								:label="item.name"
+								:value="item.value"/>
+							</el-select>
 				</el-form-item>
 				<el-form-item label="设备名称" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.deviceName"  placeholder="请输入设备名称"  ></el-input>
+					<el-input v-model="editParam.deviceName"  placeholder="请输入设备名称" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="设备类型" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.deviceType"  placeholder="请输入设备类型"  ></el-input>
+					<el-select v-model="editParam.deviceType" placeholder="请选择设备类型" :disabled="!editSwitch" style="width: 100%;">
+							<el-option
+							v-for="item in deviceTypeList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="状态" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.status"  placeholder="请输入状态"  ></el-input>
+					<el-select v-model="editParam.status" placeholder="请选择设备状态" :disabled="!editSwitch" style="width: 100%;">
+							<el-option
+							v-for="item in statusList"
+							:key="item.value"
+							:label="item.name"
+							:value="item.value"/>
+						</el-select>
 				</el-form-item>
 				<el-form-item label="设备百度坐标_维度" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.deviceLat"  placeholder="请输入设备百度坐标_维度"  ></el-input>
+					<el-input v-model="editParam.deviceLat"  placeholder="请输入设备百度坐标_维度" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="设备百度坐标_经度" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.deviceLon"  placeholder="请输入设备百度坐标_经度"  ></el-input>
+					<el-input v-model="editParam.deviceLon"  placeholder="请输入设备百度坐标_经度" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="安装日期" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.installTime"
 						type="datetime"
@@ -253,6 +300,7 @@
 				</el-form-item>
 				<el-form-item label="预计报废时间" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.estimatRetirementTime"
 						type="datetime"
@@ -260,10 +308,11 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="关联合同" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.contractId"  placeholder="请输入关联合同"  ></el-input>
+					<el-input v-model="editParam.contractId"  placeholder="请输入关联合同" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="创建时间" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.createTime"
 						type="datetime"
@@ -271,10 +320,11 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="创建人" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.creator"  placeholder="请输入创建人"  ></el-input>
+					<el-input v-model="editParam.creator"  placeholder="请输入创建人" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="更新时间" style="width: 50%;float: left;" >
 					<el-date-picker
+						:disabled="!editSwitch"
 						style="width: 100%;"
 						v-model="editParam.updateTime"
 						type="datetime"
@@ -282,18 +332,20 @@
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="设备品牌" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.instrumentBrand"  placeholder="请输入设备品牌"  ></el-input>
+					<el-input v-model="editParam.instrumentBrand"  placeholder="请输入设备品牌" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 				<el-form-item label="规格" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.instrumentStandards"  placeholder="请输入规格"  ></el-input>
+					<el-input v-model="editParam.instrumentStandards"  placeholder="请输入规格" :disabled="!editSwitch"  ></el-input>
 				</el-form-item>
 				<el-form-item label="公司/单位" style="width: 50%;float: left;" >
-					<el-input v-model="editParam.company"  placeholder="请输入公司/单位"  ></el-input>
+					<el-input v-model="editParam.company"  placeholder="请输入公司/单位" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
-        <el-button type="success" @click="updateData(editParam)">提交</el-button>
-        <el-button type="primary" @click="dialogEditVisible = false">取消</el-button>
+		<el-button type="success" @click="updateData(editParam)" v-if="editSwitch">提交</el-button>
+        <el-button type="primary" @click="dialogEditVisible = false" v-if="editSwitch">取消</el-button>
+		<el-button type="primary" @click="dialogEditVisible = false" v-if="!editSwitch">确定</el-button>
+
       </span>
 		</el-dialog>
 
@@ -326,6 +378,10 @@ import {
   deviceInfoUpdate,
   deviceInfoDelete
 } from '@/api/em-ep/deviceInfoApi.js'
+
+import {
+  siteInfoQueryList
+} from '@/api/em-ep/siteInfoApi.js'
 
 import {
   siteStatusQueryList
@@ -401,7 +457,44 @@ export default {
       rules: {
         deviceId: [{ required: true, message: '请输入', trigger: 'blur' }]
       },
-      statusList: []
+	  statusListAll: [],
+      statusList: [],
+
+      siteInfoAll: [],
+      siteInfo: [],
+      deviceTypeListAll: [
+        {
+		  name: '全部',
+		  value: '全部'
+	  	},
+        {
+		  name: '地下水',
+		  value: '地下水'
+	  	},
+		  {
+		  name: '地表水',
+		  value: '地表水'
+	  	},
+        {
+		  name: '大气站',
+		  value: '大气站'
+	  	}
+	  ],
+      deviceTypeList: [
+		  {
+		  name: '地下水',
+		  value: '地下水'
+	  	},
+		  {
+		  name: '地表水',
+		  value: '地表水'
+	  	},
+        {
+		  name: '大气站',
+		  value: '大气站'
+	  	}
+	  ],
+	  editSwitch: false
     }
   },
   watch: {
@@ -421,18 +514,20 @@ export default {
       siteStatusQueryList(params).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
+		  this.statusListAll = []
           this.statusList = []
           const info = {}
           info.value = '全部'
           info.name = '全部'
-          this.statusList.push(info)
+          this.statusListAll.push(info)
 
           if (response && response.resultEntity) {
             for (let i = 0; i < response.resultEntity.length; i++) {
               const info = {}
               info.value = response.resultEntity[i].statusName
               info.name = response.resultEntity[i].statusName
-              this.statusList.push(info)
+              this.statusListAll.push(info)
+			  this.statusList.push(info)
             }
           }
         } else {
@@ -472,6 +567,11 @@ export default {
       if (this.queryParam && this.queryParam.status === '全部') {
 		  this.queryParam.status = ''
 	  }
+
+      if (this.queryParam && this.queryParam.siteId === '全部') {
+		  this.queryParam.siteId = ''
+	  }
+
       deviceInfoQueryListByPage(this.queryParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
@@ -484,6 +584,35 @@ export default {
         }
       })
     },
+
+    async siteInfoQueryList () {
+      const params = {}
+      siteInfoQueryList(params).then((response) => {
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          this.siteInfoAll = []
+		  this.siteInfo = []
+          const info = {}
+          info.value = '全部'
+          info.name = '全部'
+          this.siteInfoAll.push(info)
+
+          if (response && response.resultEntity) {
+            for (let i = 0; i < response.resultEntity.length; i++) {
+              const info = {}
+              info.value = response.resultEntity[i].siteName
+              info.name = response.resultEntity[i].siteName
+              this.siteInfoAll.push(info)
+			  this.siteInfo.push(info)
+            }
+          }
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
+
     // 查询条件重置
     resetForm () {
       this.queryParam = {}
@@ -495,6 +624,13 @@ export default {
     addData () {
       this.dialogAddVisible = true
       this.insertParam = {}
+      this.insertParam.installTime = new Date()
+	  this.insertParam.createTime = new Date()
+	  this.insertParam.updateTime = new Date()
+      this.insertParam.creator = localStorage.getItem('userName')
+	  var d = new Date()
+      d.setFullYear(d.getFullYear() + 3) // 加三年
+	  this.insertParam.estimatRetirementTime = d
     },
     // 插入
     async insertData (insertParam) {
@@ -515,7 +651,16 @@ export default {
     },
 
     // 编辑 弹出框
+    viewData (row) {
+	  this.editSwitch = false
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.editParam = JSON.parse(JSON.stringify(row))
+      this.dialogEditVisible = true
+    },
+
+    // 编辑 弹出框
     editData (row) {
+	  this.editSwitch = true
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
       this.dialogEditVisible = true
@@ -586,6 +731,7 @@ export default {
   },
   mounted () {
     this.siteStatusQueryList()
+    this.siteInfoQueryList()
     this.getDataList()
   }
 }
