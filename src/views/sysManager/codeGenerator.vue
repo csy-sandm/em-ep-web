@@ -6,23 +6,19 @@
   <!-- <div> <iframe src="https://www.baidu.com/" width="100%" height="800" frameborder="0" scrolling="auto" id="iframename" name="iframename"></iframe> </div>-->
 </template>
 
-
-
 <script>
 
 export default {
-  name: "NifiTool",
+  name: 'NifiTool',
   props: {},
-  data() {
+  data () {
     return {
-        eurekaUrl:''
-    };
+      eurekaUrl: ''
+    }
   },
-  methods: {},
-};
+  methods: {}
+}
 </script>
-
 
 <style scoped>
 </style>
-
