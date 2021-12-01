@@ -181,6 +181,10 @@
 							:value="item.value"/>
 						</el-select>
 				</el-form-item>
+				<el-form-item label="设备地址" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.address" placeholder="请选择设备地址"></el-input>
+				</el-form-item>
+				<div style="width: 50%;float: left;height: 40px;margin-left:72%"><div @click="handleMapPointEvent()" style="color:#0000EE;">地图选点</div></div>
 				<el-form-item label="设备百度坐标_维度" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.deviceLat"   placeholder="请输入设备百度坐标_维度"></el-input>
 				</el-form-item>
@@ -283,6 +287,10 @@
 							:value="item.value"/>
 						</el-select>
 				</el-form-item>
+				<el-form-item label="设备地址" style="width: 50%;float: left;"  :disabled="!editSwitch">
+					<el-input v-model="editParam.address" placeholder="请选择设备地址"></el-input>
+				</el-form-item>
+				<div style="width: 50%;float: left;height: 40px;margin-left:72%"><div @click="handleMapPointEvent()" style="color:#0000EE;">地图选点</div></div>
 				<el-form-item label="设备百度坐标_维度" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.deviceLat"  placeholder="请输入设备百度坐标_维度" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
@@ -362,10 +370,27 @@
       </span>
 		</el-dialog>
 		</div>
+
+		<el-dialog
+			title="请选择坐标点"
+			style="text-align: left !important"
+			:visible.sync="mapVisible"
+			:before-close="handleClose" >
+			<div class="map-dialog">
+				<div class="toolbar">
+					当前坐标: {{ lng }}, {{ lat }}
+					address: {{ address ? address : '暂无'}}
+					<el-button style="margin-left:40px" type="primary" @click="handleSelectEvent()">确定</el-button>
+				</div>
+				<el-amap vid="amap" :zoom="11" :plugin="plugin" class="amap-demo" :center="center" :events="events">
+				</el-amap>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
+import mapStyle from '../index/map/map.js'
 // 下载需要的API
 import { outExportExcel } from '@/api/mainApi'
 // 引入API
@@ -389,6 +414,7 @@ import {
 
 export default {
   data () {
+    const self = this
     return {
       activeName: 'first',
       // 控制 新增弹出框是否显示
@@ -494,7 +520,39 @@ export default {
 		  value: '大气站'
 	  	}
 	  ],
-	  editSwitch: false
+	  editSwitch: false,
+	  mapVisible: false,
+	  center: [120.729401, 33.180512],
+	  events: {
+        init (o) {
+          o.setMapStyle('amap://styles/darkblue')
+        },
+        click (e) {
+          const { lng, lat } = e.lnglat
+          self.lng = lng
+          self.lat = lat
+          // 这里通过高德 SDK 完成。
+          var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: 'all'
+          })
+          geocoder.getAddress([lng, lat], function (status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+              if (result && result.regeocode) {
+                self.address = result.regeocode.formattedAddress
+                self.$nextTick()
+              }
+            }
+          })
+        }
+      },
+	  searchOption: {
+        city: '上海',
+        citylimit: false
+      },
+	  address: '',
+      lng: 0,
+      lat: 0
     }
   },
   watch: {
@@ -508,6 +566,46 @@ export default {
     }
   },
   methods: {
+    handleSelectEvent () {
+      if (this.dialogAddVisible === true) {
+        this.insertParam.deviceLon = this.lng
+        this.insertParam.deviceLat = this.lat
+        this.insertParam.address = this.address
+      } else {
+        this.editParam.deviceLon = this.lng
+        this.editParam.deviceLat = this.lat
+        this.editParam.address = this.address
+	  }
+	  this.mapVisible = false
+	  console.log('insertParaminsertParam', this.insertParam)
+	  this.$forceUpdate()
+    },
+    onSearchResult (pois) {
+      let latSum = 0
+      let lngSum = 0
+      if (pois.length > 0) {
+        pois.forEach(poi => {
+          const { lng, lat } = poi
+          lngSum += lng
+          latSum += lat
+        })
+        const center = {
+          lng: lngSum / pois.length,
+          lat: latSum / pois.length
+        }
+        this.mapCenter = [center.lng, center.lat]
+      }
+    },
+    handler ({ BMap, map }) {
+      // const mapStyle = { style: 'midnight' }
+      // map.setMapStyle(mapStyle)
+      map.setMapStyle({
+        styleJson: mapStyle
+      })
+    },
+    handleMapPointEvent () {
+      this.mapVisible = true
+    },
     // 查询
     async siteStatusQueryList () {
       const params = {}
@@ -624,6 +722,7 @@ export default {
     addData () {
       this.dialogAddVisible = true
       this.insertParam = {}
+	  this.insertParam.address = ''
       this.insertParam.installTime = new Date()
 	  this.insertParam.createTime = new Date()
 	  this.insertParam.updateTime = new Date()
@@ -741,6 +840,20 @@ export default {
 .box-container{
     background: white;
     margin: 35px 15px;
+}
+
+.map-dialog{
+	width: 100%;
+    height: 500px;
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.amap-demo {
+	margin-top: 10px;
+	height: 450px;
 }
 
 ::v-deep{

@@ -17,12 +17,13 @@ Vue.config.productionTip = false
 //  ak: 'jwsn9UCQ9I4AyKeF7rM0pyphQlpZhteE'
 // }) // 引入echarts
 
-Vue.use(AMap);
+Vue.use(AMap)
 
 AMap.initAMapApiLoader({
   // 高德key
   key: 'a345d6e1947011601f4f68d17de7b0e4',
-});
+  plugin: ['AMap.PlaceSearch', 'AMap.Scale', 'Geocoder'] // 依赖配置，根据自己的需求引入
+})
 
 new Vue({
   axios,

@@ -232,6 +232,10 @@
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.mnCode"   placeholder="请输入现场机MN编号"></el-input>
 				</el-form-item>
+				<el-form-item label="设备地址" style="width: 50%;float: left;"  >
+					<el-input v-model="insertParam.address" placeholder="请选择设备地址"></el-input>
+				</el-form-item>
+				<div style="width: 50%;float: left;height: 40px;margin-left:72%"><div @click="handleMapPointEvent()" style="color:#0000EE;">地图选点</div></div>
 				<el-form-item label="站点经度" style="width: 50%;float: left;"  >
 					<el-input v-model="insertParam.siteLon"   placeholder="请输入站点经度"></el-input>
 				</el-form-item>
@@ -320,6 +324,10 @@
 				<el-form-item label="现场机MN编号" style="width: 50%;float: left;" >
 					<el-input v-model="editParam.mnCode"  placeholder="请输入现场机MN编号" :disabled="!editSwitch" ></el-input>
 				</el-form-item>
+				<el-form-item label="设备地址" style="width: 50%;float: left;" :disabled="!editSwitch" >
+					<el-input v-model="editParam.address" placeholder="请选择设备地址"></el-input>
+				</el-form-item>
+				<div style="width: 50%;float: left;height: 40px;margin-left:72%"><div @click="handleMapPointEvent()" style="color:#0000EE;">地图选点</div></div>
 				<el-form-item label="站点经度" style="width: 50%;float: left;"  >
 					<el-input v-model="editParam.siteLon"  placeholder="请输入站点经度"  :disabled="!editSwitch"></el-input>
 				</el-form-item>
@@ -376,11 +384,33 @@
         <el-button type="primary" @click="dialogDelVisible = false">取消</el-button>
       </span>
 		</el-dialog>
+
+		<el-dialog
+			title="请选择坐标点"
+			style="text-align: left !important"
+			:visible.sync="mapVisible"
+			:before-close="handleClose" >
+			<div class="map-dialog">
+				<div class="toolbar">
+					当前坐标: {{ lng }}, {{ lat }}
+					address: {{ address ? address : '暂无'}}
+					<el-button style="margin-left:40px" type="primary" @click="handleSelectEvent()">确定</el-button>
+				</div>
+				<el-amap vid="amap" :zoom="11" :plugin="plugin" class="amap-demo" :center="center" :events="events">
+				</el-amap>
+			</div>
+			<!-- <span slot="footer" class="dialog-footer">
+				<el-button @click="mapVisible = false">确定</el-button>
+				<el-button type="primary" @click="mapVisible = false">取消</el-button>
+			</span> -->
+		</el-dialog>
+
 		</div>
 	</div>
 </template>
 
 <script>
+import mapStyle from '../index/map/map.js'
 // 下载需要的API
 import { outExportExcel } from '@/api/mainApi'
 // 引入API
@@ -416,6 +446,7 @@ import {
 
 export default {
   data () {
+    const self = this
     return {
       activeName: 'first',
       // 控制 新增弹出框是否显示
@@ -504,20 +535,92 @@ export default {
 			  value: '>3个月'
 		  }
       ],
-	  editSwitch: false
+	  editSwitch: false,
+	  mapVisible: false,
+	  center: [120.729401, 33.180512],
+	  events: {
+        init (o) {
+          o.setMapStyle('amap://styles/darkblue')
+        },
+        click (e) {
+          const { lng, lat } = e.lnglat
+          self.lng = lng
+          self.lat = lat
+          // 这里通过高德 SDK 完成。
+          var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: 'all'
+          })
+          geocoder.getAddress([lng, lat], function (status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+              if (result && result.regeocode) {
+                self.address = result.regeocode.formattedAddress
+                self.$nextTick()
+              }
+            }
+          })
+        }
+      },
+	  searchOption: {
+        city: '上海',
+        citylimit: false
+      },
+	  address: '',
+      lng: 0,
+      lat: 0
     }
   },
   watch: {
     // 2.x版本的bug 以前用1.x发现没有 假如现在是第三页，只有一条数据了。将其删除，就没有第三页了。应该跳到第二页展示出5条数据。
     // 可是数据没有展示。原因是获取list的时候page参数没有改变。依然是3
     total () {
-      if (this.total == (this.page - 1) * this.size && this.total != 0) {
+      if (this.total === (this.page - 1) * this.size && this.total != 0) {
         this.page -= 1
         this.getDataList()
       }
     }
   },
   methods: {
+    handleSelectEvent () {
+      if (this.dialogAddVisible === true) {
+        this.insertParam.siteLon = this.lng
+        this.insertParam.siteLat = this.lat
+        this.insertParam.address = this.address
+      } else {
+        this.editParam.siteLon = this.lng
+        this.editParam.siteLat = this.lat
+        this.editParam.address = this.address
+	  }
+	  this.mapVisible = false
+	  console.log('insertParaminsertParam', this.insertParam)
+	  this.$forceUpdate()
+    },
+    onSearchResult (pois) {
+      let latSum = 0
+      let lngSum = 0
+      if (pois.length > 0) {
+        pois.forEach(poi => {
+          const { lng, lat } = poi
+          lngSum += lng
+          latSum += lat
+        })
+        const center = {
+          lng: lngSum / pois.length,
+          lat: latSum / pois.length
+        }
+        this.mapCenter = [center.lng, center.lat]
+      }
+    },
+    handler ({ BMap, map }) {
+      // const mapStyle = { style: 'midnight' }
+      // map.setMapStyle(mapStyle)
+      map.setMapStyle({
+        styleJson: mapStyle
+      })
+    },
+    handleMapPointEvent () {
+      this.mapVisible = true
+    },
     async repairStatusCopyQueryList () {
       const params = {}
       repairStatusCopyQueryList(params).then((response) => {
@@ -717,6 +820,7 @@ export default {
       this.insertParam = {}
       this.insertParam.createTime = new Date()
       this.insertParam.creator = localStorage.getItem('userName')
+	  this.insertParam.address = ''
     },
     // 插入
     async insertData (insertParam) {
@@ -749,6 +853,7 @@ export default {
       this.editSwitch = true
       // 这里需要深度克隆，不然，修改时页面会直接一起变
       this.editParam = JSON.parse(JSON.stringify(row))
+      //   this.editParam.address = ''
       this.dialogEditVisible = true
     },
     // 更新
@@ -831,6 +936,20 @@ export default {
 .box-container{
     background: white;
     margin: 35px 15px;
+}
+
+.map-dialog{
+	width: 100%;
+    height: 500px;
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.amap-demo {
+	margin-top: 10px;
+	height: 450px;
 }
 
 ::v-deep{
