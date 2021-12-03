@@ -91,11 +91,16 @@
 			<el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column>
 			<el-table-column label="操作" width="200" align="center">
 				<template slot-scope="scope">
-					<el-button
+          <el-button
+							type="primary"
+							icon="el-icon-info"
+							size="mini"
+							@click="viewData(scope.row)"></el-button>
+					<!-- <el-button
 							type="primary"
 							icon="el-icon-edit"
 							size="mini"
-							@click="editData(scope.row)"></el-button>
+							@click="editData(scope.row)"></el-button> -->
 					<el-button
 							type="danger"
 							icon="el-icon-delete"
@@ -207,6 +212,72 @@
       </span>
 		</el-dialog>
 		</div>
+
+    <el-dialog
+				title="查看详情"
+				style="text-align: left !important"
+				:visible.sync="dialogViewVisible"
+				:before-close="handleClose" >
+        <div style="width: 100%;display: flex;flex-direction: column;">
+        <div style="width: 100%;height: 40px;display: flex;">
+        <!-- <span style="height: 40px;line-height:40px">预计报废时间:</span>
+        <el-date-picker
+                style="margin-left:20px"
+                v-model="sampleTime"
+                type="datetime"
+                placeholder="请选择污染物采样时间">
+              </el-date-picker>
+        <el-button
+            style="margin-left:20px"
+						class="serach-button"
+						type="primary"
+						@click="getAllDataList()"
+						icon="el-icon-search"
+						size="mini" >查询</el-button> -->
+        <el-button
+						class="export-button"
+						type="primary"
+						@click="exportExecl()"
+						icon="el-icon-download"
+						size="mini" >导出</el-button>
+        <!-- <el-button
+            style="margin-left:20px"
+						class="serach-button"
+						type="primary"
+						@click="getAllDataList()"
+						icon="el-icon-search"
+						size="mini" >下载</el-button> -->
+        </div>
+
+					<!-- 表格 -->
+        <el-table
+            :data="allDataList"
+            stripe
+            max-height="450"
+            style="width: 100%;margin-top:10px"
+            :header-cell-style="{color:'#313E5D',background:'#C3D2E6',fontFamily:'MicrosoftYaHeiUI',fontSize:'14px'}"
+            :row-class-name="tabRowClassName"
+            ref="multipleTable"
+            tooltip-effect="dark">
+          <el-table-column label="序号" type="index" width="80px" align="center">
+            <template slot-scope="scope">
+              <span>{{ (page - 1) * size + scope.$index + 1 }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :show-overflow-tooltip="true"  prop="uuid" label="数据唯一标识"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true"  prop="siteId" label="站点编码"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true"  prop="dataKey" label="数据因子编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true"  prop="dataName" label="监测因子名称"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true"  prop="dataValue" label="数据值"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" :formatter="formatDate" prop="dataTime" label="数据采集时间"></el-table-column>
+        </el-table>
+        </div>
+			<span slot="footer" class="dialog-footer">
+        <el-button @click="dialogViewVisible = false">确定</el-button>
+        <el-button type="primary" @click="dialogViewVisible = false">取消</el-button>
+      </span>
+		</el-dialog>
+
 	</div>
 </template>
 
@@ -273,8 +344,10 @@ export default {
       // 必填字段 前面加'*'
       rules: {
         uuid: [{ required: true, message: '请输入', trigger: 'blur' }]
-      }
-
+      },
+      dialogViewVisible: false,
+      allDataList: [],
+      sampleTime: ''
     }
   },
   watch: {
@@ -312,6 +385,21 @@ export default {
     },
 
     // 查询
+    async getAllDataList () {
+      const params = {}
+      siteMonitorHisQueryList(params).then((response) => {
+        console.log('responseresponse', response)
+        const resultCode = response.resultCode
+        if (resultCode === '2000') {
+          // 这里根据查询结果，赋值给页面
+          this.allDataList = response.resultEntity
+          this.dialogViewVisible = true
+        } else {
+          // 这个分支是错误返回分支
+          alert(response.resultMsg)
+        }
+      })
+    },
     async getDataList () {
       this.queryParam.pageNum = this.page
       this.queryParam.pageSize = this.size
@@ -356,6 +444,10 @@ export default {
         }
       })
     },
+    viewData (row) {
+      // 这里需要深度克隆，不然，修改时页面会直接一起变
+      this.getAllDataList()
+    },
 
     // 编辑 弹出框
     editData (row) {
@@ -365,8 +457,8 @@ export default {
     },
     // 更新
     async updateData (editParam) {
-       console.log(editParam);
-       
+      console.log(editParam)
+
       siteMonitorHisUpdate(editParam).then((response) => {
         const resultCode = response.resultCode
         if (resultCode === '2000') {
